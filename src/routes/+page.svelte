@@ -7,6 +7,8 @@
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import Header from './Header.svelte';
 
+	export let data: any;
+
 	let episodes: Array<Episode> | null = null;
 	let siteName: string = '';
 	let siteDescription: string = '';

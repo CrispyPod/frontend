@@ -4,7 +4,7 @@
 	import type { Episode } from '$lib/models/episode';
 	import EpisodeItem from '../EpisodeItem.svelte';
 	import Pager from '../../Pager.svelte';
-	import { Icon, Plus } from 'svelte-hero-icons';
+	// import { Icon, Plus } from 'svelte-hero-icons';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { get } from 'svelte/store';
 	import { token } from '$lib/stores/tokenStore';
@@ -71,7 +71,20 @@
 	<span slot="actions">
 		<div class="mt-5 flex lg:ml-4 lg:mt-0">
 			<a class="sm:ml-3" href="/admin/episode/new">
-				<button class="btn btn-active btn-primary"> <Icon src={Plus} size="24" />New</button>
+				<button class="btn btn-active btn-primary">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="currentColor"
+						class="w-6 h-6"
+					>
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+					</svg>
+
+					New</button
+				>
 			</a>
 		</div>
 	</span>
