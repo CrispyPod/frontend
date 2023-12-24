@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host=0.0.0.0",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
@@ -36,8 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@bytemd/plugin-gfm": "^1.21.0",
-		"bytemd": "^1.21.0",
+		"cherry-markdown": "^0.8.32",
 		"github-markdown-css": "^5.5.0",
 		"wavesurfer.js": "^7.5.3"
 	}

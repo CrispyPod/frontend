@@ -4,28 +4,24 @@
 	import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 
-	import { Editor, Viewer } from 'bytemd';
-	import gfm from '@bytemd/plugin-gfm';
-	import 'bytemd/dist/index.css';
-	import 'github-markdown-css/github-markdown.css';
+	import 'cherry-markdown/dist/cherry-markdown.css';
+	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	import { onMount } from 'svelte';
 
-	let value = '';
-	const plugins = [
-		gfm()
-		// Add more plugins here
-	];
-
-	function handleChange(e: any) {
-		value = e.detail.value;
-		errMessage = null;
-	}
+	let cherryInstance: Cherry;
+	onMount(() => {
+		cherryInstance = new Cherry({
+			id: 'markdown-container',
+			value: '# type down description for your awesome podcast here!'
+		});
+	});
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
 
 	let errMessage: string | null = null;
 	async function onFormSubmit(e: SubmitEvent) {
-		if (value.length == 0) {
+		if (cherryInstance.getValue().length == 0) {
 			errMessage = 'Please type in description of this episode.';
 			return;
 		}
@@ -39,7 +35,7 @@
 			`mutation{createEpisode(input: {title:"` +
 				encodeURIComponent(formData.get('title')!.toString()) +
 				`",description:"` +
-				encodeURIComponent(value) +
+				encodeURIComponent(cherryInstance.getValue()) +
 				`"}){id,title,description}}`
 		);
 		const resultJson = await result.json();
@@ -70,7 +66,9 @@
 		<label for="description" class="label-text mt-4">Description</label>
 		<div class="mt-2">
 			<div class="w-full">
-				<Editor {value} {plugins} on:change={handleChange} />
+				<!-- <svelte:component this={cherryInstance}/> -->
+				<div id="markdown-container" class=" border-4 border-gray-500 min-h-96"></div>
+				<!-- <Editor {value} {plugins} on:change={handleChange} /> -->
 			</div>
 			<!-- <textarea
 				required
