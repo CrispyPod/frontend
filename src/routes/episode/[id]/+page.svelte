@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount, tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import SiteLayout from '../../SiteLayout.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { Episode } from '$lib/models/episode';
@@ -15,22 +15,12 @@
 
 	let episodeData: Episode;
 	let siteConfig: SiteConfig;
-	export let data;
+	export let data: any;
 	let cherryInstance: Cherry;
-	// const plugins = [gfm()];
 
 	onMount(async () => {
-		await siteConfigS.init();
-		siteConfig = get(siteConfigS);
-		const result = await graphqlRequest(
-			null,
-			`{episode(id:"` +
-				data.id +
-				`"){id,title,createTime,description,audioFileName,audioFileDuration}}`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data != null) {
-			episodeData = jsonResp.data.episode;
+		if (data != null) {
+			episodeData = data.episode;
 			cherryInstance = new Cherry({
 				id: 'markdown-preview',
 				isPreviewOnly: true
