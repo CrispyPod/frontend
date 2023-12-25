@@ -91,8 +91,3 @@
 	</div>
 </form>
 
-<style>
-	div :global(.bytemd) {
-		z-index: 50;
-	}
-</style>

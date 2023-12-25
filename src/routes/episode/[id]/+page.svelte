@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import SiteLayout from '../../SiteLayout.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { Episode } from '$lib/models/episode';
@@ -7,14 +7,17 @@
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
-	import { Viewer } from 'bytemd';
-	import gfm from '@bytemd/plugin-gfm';
-	import 'github-markdown-css/github-markdown.css';
+	import 'cherry-markdown/dist/cherry-markdown.css';
+	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	// import { Viewer } from 'bytemd';
+	// import gfm from '@bytemd/plugin-gfm';
+	// import 'github-markdown-css/github-markdown.css';
 
 	let episodeData: Episode;
 	let siteConfig: SiteConfig;
 	export let data;
-	const plugins = [gfm()];
+	let cherryInstance: Cherry;
+	// const plugins = [gfm()];
 
 	onMount(async () => {
 		await siteConfigS.init();
@@ -28,6 +31,11 @@
 		const jsonResp = await result.json();
 		if (jsonResp.data != null) {
 			episodeData = jsonResp.data.episode;
+			cherryInstance = new Cherry({
+				id: 'markdown-preview',
+				isPreviewOnly: true
+			});
+			cherryInstance.setValue(episodeData.description);
 			await tick();
 			// audioFile = episodeData.audioFiles[0];
 		}
@@ -63,7 +71,8 @@
 			</div>
 		{/if}
 		<article class="markdown-body">
-			<Viewer value={episodeData.description} {plugins} />
+			<div id="markdown-preview"></div>
+			<!-- <Viewer value={episodeData.description} {plugins} /> -->
 		</article>
 		<!-- {episodeData.description} -->
 	{/if}

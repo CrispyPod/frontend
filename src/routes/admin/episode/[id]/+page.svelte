@@ -8,28 +8,19 @@
 	import { goto } from '$app/navigation';
 	import type { AudioFile } from '$lib/models/audioFile';
 	import WaveForm from '../../../WaveForm.svelte';
-
-	import { Editor } from 'bytemd';
-	import gfm from '@bytemd/plugin-gfm';
-	import 'bytemd/dist/index.css';
-	import 'github-markdown-css/github-markdown.css';
-
-	let value = '';
-	const plugins = [
-		gfm()
-		// Add more plugins here
-	];
-
-	function handleChange(e: any) {
-		value = e.detail.value;
-		errMessage = null;
-	}
+	import 'cherry-markdown/dist/cherry-markdown.css';
+	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 
 	let fetchedEpisode: Episode;
 	let errMessage: string | null = null;
+	let cherryInstance: Cherry;
 
 	onMount(() => {
 		(document!.getElementById('afUpload') as HTMLInputElement)!.value = '';
+		cherryInstance = new Cherry({
+			id: 'markdown-container',
+			value: '# type down description for your awesome podcast here!'
+		});
 	});
 
 	$: if (fetchedEpisode) {
@@ -61,7 +52,7 @@
 		const jsonResp = await result.json();
 		if (jsonResp.data != null) {
 			fetchedEpisode = jsonResp.data.episode;
-			value = fetchedEpisode.description;
+			cherryInstance.setValue(fetchedEpisode.description);
 		}
 	});
 
@@ -71,7 +62,7 @@
 	let handlePopupConfirm: () => void = () => {};
 
 	async function handleSubmit(e: SubmitEvent, episodeData: Episode) {
-		if (value.length == 0) {
+		if (cherryInstance.getValue().length == 0) {
 			errMessage = 'Please type in description of this episode.';
 			return;
 		}
@@ -99,7 +90,7 @@
 				`",input: {title:"` +
 				encodeURIComponent(formData.get('title')!.toString()) +
 				`",description:"` +
-				encodeURIComponent(value) +
+				encodeURIComponent(cherryInstance.getValue()) +
 				`",episodeStatus:` +
 				stat +
 				audioFileField +
@@ -213,7 +204,8 @@
 			</label>
 
 			<div class="w-full">
-				<Editor {value} {plugins} on:change={handleChange} />
+				<div id="markdown-container" class=" border-4 border-gray-500 min-h-96"></div>
+				<!-- <Editor {value} {plugins} on:change={handleChange} /> -->
 			</div>
 		</div>
 
@@ -308,9 +300,3 @@
 		</div>
 	</dialog>
 {/if}
-
-<style>
-	div :global(.bytemd) {
-		z-index: 50;
-	}
-</style>

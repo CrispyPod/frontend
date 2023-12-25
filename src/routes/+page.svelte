@@ -2,8 +2,14 @@
 	import PagedEpisodes from './PagedEpisodes.svelte';
 	import SiteLayout from './SiteLayout.svelte';
 	import Header from './Header.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: any;
+
+	onMount(() => {
+		// prossible a bug in cherry-markdown
+		document.getElementById('markdown-preview')?.remove();
+	});
 </script>
 
 <svelte:head>
