@@ -13,4 +13,4 @@ COPY build.sh build.sh
 COPY src ./src
 COPY static ./static
 RUN npm install && npm run build
-CMD [ "npm run preview" ]
+CMD [ "node","build/index.js" ]
