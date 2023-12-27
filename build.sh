@@ -9,6 +9,7 @@ TARGET=$1
 recoverConfig(){
     # default build target is node
     echo "recovering svelte build config"
+    rm routes/+layout.ts
     cp svelte-configs/node-adapter.js svelte.config.js
 }
 
@@ -22,6 +23,7 @@ if [ "$TARGET" = "node" ]; then
     npm run build
 elif [ "$TARGET" = "static" ]; then
     echo "build for static"
+    echo "export const prerender = true;" > src/routes/+layout.ts
     npm run build-static
     recoverConfig
 else
