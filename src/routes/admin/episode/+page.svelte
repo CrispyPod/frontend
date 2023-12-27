@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '../AdminLayout.svelte';
+	import AdminLayout from '../../../lib/components/AdminLayout.svelte';
 	import type { Episode } from '$lib/models/episode';
-	import EpisodeItem from '../EpisodeItem.svelte';
-	import Pager from '../../Pager.svelte';
+	import EpisodeItem from '../../../lib/components/EpisodeItem.svelte';
+	import Pager from '../../../lib/components/Pager.svelte';
 	// import { Icon, Plus } from 'svelte-hero-icons';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { get } from 'svelte/store';

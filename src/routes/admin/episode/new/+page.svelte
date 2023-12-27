@@ -1,12 +1,12 @@
 <script lang="ts">
-	import AdminLayout from '../../AdminLayout.svelte';
+	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { goto } from '$app/navigation';
 	import type { Episode } from '$lib/models/episode';
-	import CreateEpisodeData from './CreateEpisodeData.svelte';
-	import Steps from './Steps.svelte';
-	import UploadAudioFile from './UploadAudioFile.svelte';
-	import UploadThumbnail from './UploadThumbnail.svelte';
-	import Visibility from './Visibility.svelte';
+	import CreateEpisodeData from '$lib/components/admin-episode/CreateEpisodeData.svelte';
+	import Steps from '$lib/components/admin-episode/Steps.svelte';
+	import UploadAudioFile from '$lib/components/admin-episode/UploadAudioFile.svelte';
+	import UploadThumbnail from '$lib/components/admin-episode/UploadThumbnail.svelte';
+	import Visibility from '$lib/components/admin-episode/Visibility.svelte';
 
 	let episodeData: Episode | null = null;
 	let steps = 0;

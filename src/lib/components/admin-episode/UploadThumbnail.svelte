@@ -3,8 +3,9 @@
 	import type { Episode } from '$lib/models/episode';
 	import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
-	import WaveForm from '../../../WaveForm.svelte';
+	import WaveForm from '$lib/components/WaveForm.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
+	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
@@ -34,7 +35,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', episodeData!.id);
-		let resp = await fetch('/api/audioFile', {
+		let resp = await fetch(PUBLIC_FRONT_END_URL + '/api/thumbnail', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -44,10 +45,10 @@
 			// TODO: show popup
 		}
 
-		let audioFile: AudioFile = await resp.json();
+		let audioFile = await resp.json();
 
-		episodeData!.audioFileName = audioFile.audioFileName;
-		episodeData!.audioFileUploadName = file?.name!;
+		episodeData!.thumbnailFileName = audioFile.thumbnailFileName;
+		episodeData!.thumbnailUploadName = file?.name!;
 		uploading = false;
 	}
 
@@ -57,10 +58,10 @@
 			tokenS,
 			`mutation{modifyEpisode(id:"` +
 				episodeData?.id +
-				`",input:{audioFileName:"` +
-				episodeData?.audioFileName +
-				`",audioFileUploadName:"` +
-				episodeData?.audioFileUploadName +
+				`",input:{thumbnailFileName:"` +
+				episodeData?.thumbnailFileName +
+				`",thumbnailFileUploadName:"` +
+				episodeData?.thumbnailUploadName +
 				`"}){title}}`
 		);
 		const resultJson = await result.json();
@@ -72,26 +73,39 @@
 	}
 
 	function handleReupload() {
-		episodeData!.audioFileName = null;
-		episodeData!.audioFileUploadName = null;
+		episodeData!.thumbnailFileName = null;
+		episodeData!.thumbnailUploadName = null;
 	}
 </script>
 
 <div class="flex flex-col justify-center items-center">
-	{#if episodeData == null || episodeData.audioFileName == null || episodeData.audioFileName.length == 0}
+	{#if episodeData == null || episodeData.thumbnailFileName == null || episodeData.thumbnailFileName.length == 0}
 		<div>
 			<p>Upload audio file</p>
 			<input
 				id="afUpload"
 				type="file"
-				accept=".mp3,.wav,.aac"
+				accept=".png,.jpeg,.jpg"
 				bind:files={fileList}
 				class="file-input file-input-bordered w-full max-w-xs"
 			/>
 		</div>
 	{:else}
 		<div class="w-full">
-			<WaveForm fileUrl="/api/audioFile/{episodeData.audioFileName}" />
+			<p class="text-center">This is what will display in episode page.</p>
+			<div class="card lg:card-side bg-base-100 shadow-xl m-10">
+				<img
+					class="w-80 h-80"
+					src={episodeData.thumbnailFileName
+						? PUBLIC_FRONT_END_URL + '/api/thumbnail/' + episodeData.thumbnailFileName
+						: '/EpisodeDefaultThumbnailSquare.png'}
+					alt={episodeData.title}
+				/>
+
+				<div class="card-body">
+					<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{episodeData.audioFileName}" />
+				</div>
+			</div>
 
 			<div class="w-full flex">
 				<button
@@ -103,16 +117,6 @@
 	{/if}
 </div>
 <div class="mt-6 flex items-center justify-end gap-x-6">
-	{#if errMessage != null}
-		<div class="mr-auto">
-			<div
-				class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-				role="alert"
-			>
-				<strong class="font-bold">{errMessage}</strong>
-			</div>
-		</div>
-	{/if}
 	<a href="/admin/episode" type="button" class="btn btn-active">Cancel</a>
 	{#if uploading}
 		<button class="btn btn-info">

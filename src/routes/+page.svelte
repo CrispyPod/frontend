@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PagedEpisodes from './PagedEpisodes.svelte';
-	import SiteLayout from './SiteLayout.svelte';
-	import Header from './Header.svelte';
+	import PagedEpisodes from '../lib/components/PagedEpisodes.svelte';
+	import SiteLayout from '../lib/components/SiteLayout.svelte';
+	import Header from '../lib/components/Header.svelte';
 	import { onMount } from 'svelte';
 
 	export let data: any;

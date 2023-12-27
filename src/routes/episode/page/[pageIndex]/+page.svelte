@@ -12,7 +12,7 @@
 <SiteLayout>
 	<PagedEpisodes
 		episodes={data.episodes}
-		curPage={1}
+		curPage={data.curPage}
 		sum={data.sum}
 		hasNextPage={data.hasNextPage}
 		hasPreviousPage={data.hasPreviousPage}

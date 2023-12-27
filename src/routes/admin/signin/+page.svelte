@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import SiteLayout from '../../SiteLayout.svelte';
+	import SiteLayout from '../../../lib/components/SiteLayout.svelte';
 	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';

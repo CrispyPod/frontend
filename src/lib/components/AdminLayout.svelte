@@ -5,10 +5,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
-	// import { Icon, UserCircle } from 'svelte-hero-icons';
 	import { graphqlRequest } from '$lib/graphqlRequest';
-	// import type { SiteConfig } from '$lib/models/siteConfig';
-	// import { siteConfigS } from '$lib/stores/siteConfigStore';
 
 	// let siteConfig: SiteConfig;
 

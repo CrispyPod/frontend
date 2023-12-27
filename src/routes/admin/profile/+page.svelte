@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '../AdminLayout.svelte';
+	import AdminLayout from '../../../lib/components/AdminLayout.svelte';
 	import { get } from 'svelte/store';
 	import { userS } from '$lib/stores/userStore';
 	import { graphqlRequest } from '$lib/graphqlRequest';
@@ -33,40 +33,40 @@
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		const form = document.querySelector('#ProfileForm');
-		const formData = new FormData(form as HTMLFormElement);
-		const tokenS = get(token);
-		var passwordField = '';
-		if (formData.get('Password')!.length > 0) {
-			passwordField += ',password:"' + formData.get('Password') + '"';
-		}
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-  modifyMe(input:{email:"` +
-				formData.get('Email') +
-				`",displayName:"` +
-				formData.get('DisplayName') +
-				`",userName:"` +
-				formData.get('UserName') +
-				`"` +
-				passwordField +
-				`}){
-    email
-    userName
-    id
-    displayName
-  }
-}`
-		);
+// 		const form = document.querySelector('#ProfileForm');
+// 		const formData = new FormData(form as HTMLFormElement);
+// 		const tokenS = get(token);
+// 		var passwordField = '';
+// 		if (formData.get('Password')!.length > 0) {
+// 			passwordField += ',password:"' + formData.get('Password') + '"';
+// 		}
+// 		const result = await graphqlRequest(
+// 			tokenS,
+// 			`mutation{
+//   modifyMe(input:{email:"` +
+// 				formData.get('Email') +
+// 				`",displayName:"` +
+// 				formData.get('DisplayName') +
+// 				`",userName:"` +
+// 				formData.get('UserName') +
+// 				`"` +
+// 				passwordField +
+// 				`}){
+//     email
+//     userName
+//     id
+//     displayName
+//   }
+// }`
+// 		);
 
-		const resultJson = await result.json();
-		if (resultJson.data != null) {
-			userS.set(resultJson.data.modifyMe);
-			goto('/admin');
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+// 		const resultJson = await result.json();
+// 		if (resultJson.data != null) {
+// 			userS.set(resultJson.data.modifyMe);
+// 			goto('/admin');
+// 		} else {
+// 			errMessage = resultJson.errors[0].message;
+// 		}
 	}
 </script>
 

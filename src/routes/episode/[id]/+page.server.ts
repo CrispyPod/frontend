@@ -18,7 +18,7 @@ export async function load({ params }) {
     );
 
     const jsonResp = await result.json();
-    console.log(jsonResp);
+    // console.log(jsonResp);
 
     return jsonResp.data;
 }

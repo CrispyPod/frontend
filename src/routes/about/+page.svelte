@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import SiteLayout from '../SiteLayout.svelte';
+	import SiteLayout from '../../lib/components/SiteLayout.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { get } from 'svelte/store';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';

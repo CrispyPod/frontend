@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import SiteLayout from '../../SiteLayout.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	import SiteLayout from '../../../lib/components/SiteLayout.svelte';
 	import type { Episode } from '$lib/models/episode';
-	import WaveForm from '../../WaveForm.svelte';
+	import WaveForm from '../../../lib/components/WaveForm.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	import { get } from 'svelte/store';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 	// import { Viewer } from 'bytemd';
 	// import gfm from '@bytemd/plugin-gfm';
 	// import 'github-markdown-css/github-markdown.css';
@@ -50,13 +48,13 @@
 				<img
 					class="w-80 h-80"
 					src={episodeData.thumbnailFileName
-						? '/api/thumbnail/' + episodeData.thumbnailFileName
+						? PUBLIC_FRONT_END_URL + '/api/thumbnail/' + episodeData.thumbnailFileName
 						: '/EpisodeDefaultThumbnailSquare.png'}
 					alt={episodeData.title}
 				/>
 
 				<div class="card-body">
-					<WaveForm fileUrl="/api/audioFile/{episodeData.audioFileName}" />
+					<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{episodeData.audioFileName}" />
 				</div>
 			</div>
 		{/if}

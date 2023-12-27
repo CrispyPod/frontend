@@ -23,11 +23,11 @@ export default defineConfig({
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, '')
 			},
-			'/rss': {
-				target: `${env.BACK_END_URL}/rss`,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/rss/, '')
-			}
+			// '/rss': {
+			// 	target: `${env.BACK_END_URL}/rss`,
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace(/^\/rss/, '')
+			// }
 		}
 	}
 });

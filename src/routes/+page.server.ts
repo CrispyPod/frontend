@@ -15,7 +15,7 @@ export async function load({ }) {
   let result = await serverGraphQLRequest(
     null,
     `query{
-          episodes(pagination: {pageIndex: 1, perPage: 10}){
+          episodes(pagination: {pageIndex: 1, perPage: 25}){
           items{
             id,
             title,

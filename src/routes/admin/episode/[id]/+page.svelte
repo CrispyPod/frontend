@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '../../AdminLayout.svelte';
+	import AdminLayout from '../../../../lib/components/AdminLayout.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { get } from 'svelte/store';
 	import { token } from '$lib/stores/tokenStore';
 	import { EpisodeState, type Episode } from '$lib/models/episode';
 	import { goto } from '$app/navigation';
 	import type { AudioFile } from '$lib/models/audioFile';
-	import WaveForm from '../../../WaveForm.svelte';
+	import WaveForm from '../../../../lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 
 	let fetchedEpisode: Episode;
 	let errMessage: string | null = null;
@@ -159,7 +160,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', fetchedEpisode.id);
-		let resp = await fetch('/api/audioFile', {
+		let resp = await fetch(PUBLIC_FRONT_END_URL + '/api/audioFile', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -224,7 +225,7 @@
 				{#if fileUploadedAndNotSaved}
 					Please hit save so that changes are committed.
 				{/if}
-				<WaveForm fileUrl="/api/audioFile/{fetchedEpisode.audioFileName}" />
+				<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{fetchedEpisode.audioFileName}" />
 
 				<div class="w-full flex mt-2">
 					<button
