@@ -17,7 +17,6 @@
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/adapter-static": "^3.0.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"autoprefixer": "^10.4.16",
@@ -39,6 +38,8 @@
 	"dependencies": {
 		"cherry-markdown": "^0.8.32",
 		"github-markdown-css": "^5.5.0",
-		"wavesurfer.js": "^7.5.3"
+		"wavesurfer.js": "^7.5.3",
+		"@sveltejs/adapter-node": "^2.0.2",
+		"@sveltejs/adapter-static": "^3.0.1"
 	}
 }
