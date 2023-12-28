@@ -2,20 +2,20 @@ import type { Episode } from '$lib/models/episode';
 import { serverGraphQLRequest } from '$lib/serverGrqphQLRequest';
 
 export async function load({ params }) {
-    const page = Number(params.pageIndex) ?? 1;
+  const page = Number(params.pageIndex) ?? 1;
 
-    let episodes: Array<Episode> | null = null;
-    let siteName: string = '';
-    let siteDescription: string = '';
+  let episodes: Array<Episode> | null = null;
+  let siteName: string = '';
+  let siteDescription: string = '';
 
-    let sum = 0;
-    let hasNextPage = false;
-    let hasPreviousPage = false;
+  let sum = 0;
+  let hasNextPage = false;
+  let hasPreviousPage = false;
 
 
-    let result = await serverGraphQLRequest(
-        null,
-        `query{
+  let result = await serverGraphQLRequest(
+    null,
+    `query{
           episodes(pagination: {pageIndex: ${page}, perPage: 25}){
           items{
             id,
@@ -36,26 +36,28 @@ export async function load({ params }) {
               siteDescription,
             }
           }`
-    );
+  );
 
-    let json_resp = await result.json();
-    episodes = json_resp.data.episodes.items;
+  let json_resp = await result.json();
+  episodes = json_resp.data.episodes.items;
 
-    hasPreviousPage = json_resp.data.episodes.pageInfo.hasPreviousPage ?? false;
-    hasNextPage = json_resp.data.episodes.pageInfo.hasNextPage ?? false;
-    sum = json_resp.data.episodes.totalCount ?? 0;
+  hasPreviousPage = json_resp.data.episodes.pageInfo.hasPreviousPage ?? false;
+  hasNextPage = json_resp.data.episodes.pageInfo.hasNextPage ?? false;
+  sum = json_resp.data.episodes.totalCount ?? 0;
 
-    siteName = json_resp.data.siteConfig.siteName;
-    siteDescription = json_resp.data.siteConfig.siteDescription;
+  siteName = json_resp.data.siteConfig.siteName;
+  siteDescription = json_resp.data.siteConfig.siteDescription;
+  let siteUrl = json_resp.data.siteConfig.siteUrl;
 
-    return {
-        page,
-        episodes,
-        siteName,
-        siteDescription,
-        sum,
-        hasNextPage,
-        hasPreviousPage,
-    };
+  return {
+    page,
+    episodes,
+    siteName,
+    siteDescription,
+    siteUrl,
+    sum,
+    hasNextPage,
+    hasPreviousPage,
+  };
 }
 

@@ -1,14 +1,13 @@
 <script lang="ts">
-	import type { AudioFile } from '$lib/models/audioFile';
 	import type { Episode } from '$lib/models/episode';
 	import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
+	export let siteUrl: string = '';
 
 	let canClickNext: boolean = false;
 	let errMessage: string | null = null;
@@ -35,7 +34,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', episodeData!.id);
-		let resp = await fetch(PUBLIC_FRONT_END_URL + '/api/thumbnail', {
+		let resp = await fetch('/api/thumbnail', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -97,13 +96,13 @@
 				<img
 					class="w-80 h-80"
 					src={episodeData.thumbnailFileName
-						? PUBLIC_FRONT_END_URL + '/api/thumbnail/' + episodeData.thumbnailFileName
+						? siteUrl + '/api/thumbnail/' + episodeData.thumbnailFileName
 						: '/EpisodeDefaultThumbnailSquare.png'}
 					alt={episodeData.title}
 				/>
 
 				<div class="card-body">
-					<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{episodeData.audioFileName}" />
+					<WaveForm fileUrl="{siteUrl}/api/audioFile/{episodeData.audioFileName}" />
 				</div>
 			</div>
 

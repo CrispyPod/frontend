@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 	import type { Episode } from '$lib/models/episode';
 	import Pager from './Pager.svelte';
 
 	export let episodes: Array<Episode> = [];
 	export let curPage: number = 1;
+	export let siteUrl: string = '';
+	// console.log(siteUrl);
 
 	export let sum = 0;
 	export let hasNextPage = false;
@@ -19,7 +20,7 @@
 					<figure>
 						<img
 							src={e.thumbnailFileName
-								? PUBLIC_FRONT_END_URL + '/api/thumbnail/' + e.thumbnailFileName
+								? siteUrl + '/api/thumbnail/' + e.thumbnailFileName
 								: '/EpisodeDefaultThumbnailSquare.png'}
 							alt={e.title}
 						/>

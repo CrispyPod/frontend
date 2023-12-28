@@ -8,6 +8,8 @@
 	import UploadThumbnail from '$lib/components/admin-episode/UploadThumbnail.svelte';
 	import Visibility from '$lib/components/admin-episode/Visibility.svelte';
 
+	export let data: any;
+
 	let episodeData: Episode | null = null;
 	let steps = 0;
 
@@ -44,6 +46,11 @@
 		<Steps curStep={steps} />
 	</div>
 	<div class="mt-8">
-		<svelte:component this={curStepComponent} {episodeData} handleNext={next} />
+		<svelte:component
+			this={curStepComponent}
+			{episodeData}
+			handleNext={next}
+			siteUrl={data.siteUrl}
+		/>
 	</div>
 </AdminLayout>

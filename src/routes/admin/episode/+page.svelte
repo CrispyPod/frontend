@@ -94,5 +94,5 @@
 			<EpisodeItem episode={p} />
 		{/each}
 	</ul>
-	<Pager {handlePageChange} {sum} {perPage} {hasNextPage} {hasPreviousPage} />
+	<Pager {sum} {hasNextPage} {hasPreviousPage} />
 </AdminLayout>

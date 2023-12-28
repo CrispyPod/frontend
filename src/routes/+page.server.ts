@@ -46,11 +46,13 @@ export async function load({ }) {
 
   siteName = json_resp.data.siteConfig.siteName;
   siteDescription = json_resp.data.siteConfig.siteDescription;
+  let siteUrl = json_resp.data.siteConfig.siteUrl;
 
   return {
     episodes,
     siteName,
     siteDescription,
+    siteUrl,
     sum,
     hasNextPage,
     hasPreviousPage,

@@ -5,10 +5,10 @@
 	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
+	export let siteUrl: string = '';
 
 	let canClickNext: boolean = false;
 	let errMessage: string | null = null;
@@ -35,7 +35,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', episodeData!.id);
-		let resp = await fetch(PUBLIC_FRONT_END_URL + '/api/audioFile', {
+		let resp = await fetch('/api/audioFile', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -92,7 +92,7 @@
 		</div>
 	{:else}
 		<div class="w-full">
-			<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{episodeData.audioFileName}" />
+			<WaveForm fileUrl="{siteUrl}/api/audioFile/{episodeData.audioFileName}" />
 
 			<div class="w-full flex">
 				<button

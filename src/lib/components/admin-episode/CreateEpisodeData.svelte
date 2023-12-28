@@ -8,6 +8,8 @@
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import { onMount } from 'svelte';
 
+	export let siteUrl: string = '';
+
 	let cherryInstance: Cherry;
 	onMount(() => {
 		cherryInstance = new Cherry({
@@ -90,4 +92,3 @@
 		<button type="submit" class="btn btn-active btn-primary">Next</button>
 	</div>
 </form>
-

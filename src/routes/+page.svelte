@@ -1,7 +1,7 @@
 <script lang="ts">
-	import PagedEpisodes from '../lib/components/PagedEpisodes.svelte';
-	import SiteLayout from '../lib/components/SiteLayout.svelte';
-	import Header from '../lib/components/Header.svelte';
+	import PagedEpisodes from '$lib/components/PagedEpisodes.svelte';
+	import SiteLayout from '$lib/components/SiteLayout.svelte';
+	import Header from '$lib/components/Header.svelte';
 	import { onMount } from 'svelte';
 
 	export let data: any;
@@ -34,6 +34,7 @@
 		<div class="container mx-auto mt-5">
 			<div class="w-full flex justify-center">Episodes</div>
 			<PagedEpisodes
+				siteUrl={data.siteUrl}
 				episodes={data.episodes}
 				hasNextPage={data.hasNextPage}
 				hasPreviousPage={data.hasPreviousPage}

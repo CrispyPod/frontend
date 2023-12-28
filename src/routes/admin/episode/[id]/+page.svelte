@@ -10,7 +10,8 @@
 	import WaveForm from '../../../../lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
-	import { PUBLIC_FRONT_END_URL } from '$env/static/public';
+
+	export let siteUrl: string = '';
 
 	let fetchedEpisode: Episode;
 	let errMessage: string | null = null;
@@ -160,7 +161,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', fetchedEpisode.id);
-		let resp = await fetch(PUBLIC_FRONT_END_URL + '/api/audioFile', {
+		let resp = await fetch( '/api/audioFile', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -225,7 +226,7 @@
 				{#if fileUploadedAndNotSaved}
 					Please hit save so that changes are committed.
 				{/if}
-				<WaveForm fileUrl="{PUBLIC_FRONT_END_URL}/api/audioFile/{fetchedEpisode.audioFileName}" />
+				<WaveForm fileUrl="{siteUrl}/api/audioFile/{fetchedEpisode.audioFileName}" />
 
 				<div class="w-full flex mt-2">
 					<button
