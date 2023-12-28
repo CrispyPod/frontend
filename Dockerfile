@@ -2,12 +2,13 @@ FROM node:18-alpine
 
 ENV BACK_END_URL="http://backend:8080"
 
-ENV PUBLIC_FRONT_END_URL="http://localhost:3000"
-WORKDIR /crispypod
+WORKDIR /src
 COPY *.js *.json ./
 COPY svelte-configs svelte-configs
 COPY *.sh ./
 COPY src ./src
 COPY static ./static
 RUN npm install && npm run build
-CMD [ "node","build/index.js" ]
+WORKDIR /crispypod
+RUN cp -r /src/build-node /src/package.json /src/node_modules /crispypod
+CMD [ "node","build-node/index.js" ]
