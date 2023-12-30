@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
-	import SiteLayout from '../../../lib/components/SiteLayout.svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
+	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import type { Episode } from '$lib/models/episode';
-	import WaveForm from '../../../lib/components/WaveForm.svelte';
+	import WaveForm from '$lib/components/WaveForm.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
-
-	// import { Viewer } from 'bytemd';
-	// import gfm from '@bytemd/plugin-gfm';
-	// import 'github-markdown-css/github-markdown.css';
+	import { browser } from '$app/environment';
 
 	let episodeData: Episode;
 	let siteConfig: SiteConfig;
@@ -21,11 +18,16 @@
 			episodeData = data.episode;
 			cherryInstance = new Cherry({
 				id: 'markdown-preview',
-				isPreviewOnly: true
+				isPreviewOnly: true,
+				value: episodeData.description
 			});
-			cherryInstance.setValue(episodeData.description);
+		}
+	});
+
+	onDestroy(async () => {
+		if (browser) {
 			await tick();
-			// audioFile = episodeData.audioFiles[0];
+			document.getElementById('markdown-preview')?.remove();
 		}
 	});
 </script>
