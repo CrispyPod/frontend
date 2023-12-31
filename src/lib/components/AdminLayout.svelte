@@ -89,11 +89,9 @@
 				>
 			</label>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<ul
-				tabindex="0"
-				class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52"
-			>
+			<ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
 				<li><a href="/admin/episode" class="btn-neutral">Episodes</a></li>
+				<li><a href="/admin/site-setting" class="btn-neutral">Settings</a></li>
 				<!-- <li>
 					<a>Parent</a>
 					<ul class="p-2">
@@ -109,6 +107,7 @@
 	<div class="navbar-center hidden lg:flex">
 		<ul class="menu-horizontal px-1">
 			<li><a href="/admin/episode" class="btn btn-neutral">Episodes</a></li>
+			<li><a href="/admin/site-setting" class="btn btn-neutral">Settings</a></li>
 			<!-- <li tabindex="0">
 				<details>
 					<summary>Parent</summary>
@@ -146,7 +145,7 @@
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 			<ul
 				tabindex="0"
-				class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+				class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 text-black"
 			>
 				<li>
 					<a class="justify-between" href="/admin/profile">
@@ -154,7 +153,7 @@
 						<!-- <span class="badge">New</span> -->
 					</a>
 				</li>
-				<li><a href="/admin/site-setting">Settings</a></li>
+				<!-- <li><a href="/admin/site-setting">Settings</a></li> -->
 				<li><button on:click={handleSignOut}>Logout</button></li>
 			</ul>
 		</div>

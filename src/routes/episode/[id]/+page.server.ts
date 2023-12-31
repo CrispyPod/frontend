@@ -9,7 +9,7 @@ export async function load({ params }) {
         null,
         `{episode(id:"` +
         episodeId +
-        `"){id,title,createTime,description,audioFileName,audioFileDuration},
+        `"){id,title,createTime,description,audioFileName,audioFileDuration,thumbnailFileName},
         siteConfig{
           siteName,
           siteUrl,

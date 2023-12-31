@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount, tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import type { Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
@@ -21,7 +21,6 @@
 				id: 'markdown-preview',
 				isPreviewOnly: true,
 				value: episodeData.description,
-				forceAppend: false
 			});
 		}
 	});
@@ -36,21 +35,23 @@
 </svelte:head>
 
 <SiteLayout>
-	<div class="w-full flex justify-center items-center mt-10">
+	<div class="w-full flex justify-center items-center mt-10 mx-2">
 		<div class="container">
 			{#if episodeData != null}
 				<h1 class="text-3xl text-center">
 					{episodeData.title}
 				</h1>
 				{#if episodeData.audioFileName != null && episodeData.audioFileName.length > 0}
-					<div class="card lg:card-side bg-base-100 shadow-xl m-10">
-						<img
-							class="w-80 h-80"
-							src={episodeData.thumbnailFileName
-								? data.siteConfig.siteUrl + '/api/thumbnail/' + episodeData.thumbnailFileName
-								: '/EpisodeDefaultThumbnailSquare.png'}
-							alt={episodeData.title}
-						/>
+					<div class="card lg:card-side bg-base-100 shadow-xl my-10 mr-6">
+						<figure>
+							<img
+								class="w-80 h-80"
+								src={episodeData.thumbnailFileName
+									? data.siteConfig.siteUrl + '/api/thumbnail/' + episodeData.thumbnailFileName
+									: '/EpisodeDefaultThumbnailSquare.png'}
+								alt={episodeData.title}
+							/>
+						</figure>
 
 						<div class="card-body">
 							<WaveForm
@@ -60,7 +61,7 @@
 					</div>
 				{/if}
 
-				<div class="w-full">
+				<div class="mr-6">
 					<div id="markdown-preview"></div>
 				</div>
 			{/if}

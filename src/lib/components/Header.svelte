@@ -19,7 +19,7 @@
 				<a class="btn btn-ghost normal-case text-xl" href="/">{siteName}</a>
 			</div>
 			<div class="flex-none">
-				<ul class="menu menu-horizontal px-1">
+				<ul class="menu menu-horizontal">
 					<li><a href="/episode">Episodes</a></li>
 
 					<li><a href="/about">About</a></li>
