@@ -7,6 +7,4 @@
 {#if showHeader}
 	<Header />
 {/if}
-<!-- <div class="container mx-auto"> -->
 <slot />
-<!-- </div> -->

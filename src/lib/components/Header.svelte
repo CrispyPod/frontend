@@ -12,16 +12,20 @@
 	});
 </script>
 
-<div class="navbar">
-	<div class="flex-1">
-		<a class="btn btn-ghost normal-case text-xl" href="/">{siteName}</a>
-	</div>
-	<div class="flex-none">
-		<ul class="menu menu-horizontal px-1">
-			<li><a href="/episode">Episodes</a></li>
+<div class="w-full flex justify-center items-center">
+	<div class="container">
+		<div class="navbar">
+			<div class="flex-1">
+				<a class="btn btn-ghost normal-case text-xl" href="/">{siteName}</a>
+			</div>
+			<div class="flex-none">
+				<ul class="menu menu-horizontal px-1">
+					<li><a href="/episode">Episodes</a></li>
 
-			<li><a href="/about">About</a></li>
-			<li><a href="/rss">RSS</a></li>
-		</ul>
+					<li><a href="/about">About</a></li>
+					<li><a href="/rss">RSS</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>
