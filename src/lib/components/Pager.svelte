@@ -5,6 +5,7 @@
 	export let sum: number = 0;
 	export let hasPreviousPage: boolean = false;
 	export let hasNextPage: boolean = false;
+	export let pagePrefix: string = '/episode/page/';
 
 	let pageIndecies: number[] = [curPage];
 
@@ -29,21 +30,19 @@
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasPreviousPage}
-			href={hasPreviousPage ? '/episode/page/' + (curPage - 1) : 'javascript:void(0)'}
+			href={hasPreviousPage ? pagePrefix + (curPage - 1) : 'javascript:void(0)'}
 		>
 			«
 		</a>
 		{#each pageIndecies as pageIndex}
-			<a
-				class="join-item btn"
-				class:btn-active={pageIndex == curPage}
-				href={'/episode/page/' + pageIndex}>{pageIndex}</a
+			<a class="join-item btn" class:btn-active={pageIndex == curPage} href={pagePrefix + pageIndex}
+				>{pageIndex}</a
 			>
 		{/each}
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasNextPage}
-			href={hasNextPage ? '/episode/page/' + (curPage + 1) : 'javascript:void(0)'}>»</a
+			href={hasNextPage ? pagePrefix + (curPage + 1) : 'javascript:void(0)'}>»</a
 		>
 	</div>
 </div>

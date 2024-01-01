@@ -25,7 +25,7 @@
 	</div>
 	<!-- <div class="divider" /> -->
 	{#if data.episodes != null}
-		<div class="container mx-auto mt-5">
+		<div class="w-full container mt-5">
 			<!-- <div class="w-full flex justify-center">Episodes</div> -->
 			<PagedEpisodes
 				siteUrl={data.siteUrl}
