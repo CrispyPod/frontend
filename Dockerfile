@@ -1,6 +1,7 @@
 FROM node:18-alpine
 
 ENV BACK_END_URL="http://backend:8080"
+ENV SRC_FOLDER="/src"
 
 WORKDIR /src
 COPY *.js *.json ./
