@@ -4,7 +4,7 @@ ENV BACK_END_URL="http://backend:8080"
 ENV SRC_FOLDER="/src"
 
 WORKDIR /src
-COPY *.js *.json ./
+COPY *.js *.json *.toml ./
 RUN npm install
 COPY svelte-configs svelte-configs
 COPY *.sh ./
