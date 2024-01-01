@@ -2,14 +2,13 @@
 	import { onMount } from 'svelte';
 	import SiteLayout from '../../lib/components/SiteLayout.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { get } from 'svelte/store';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
+
+	export let data: any;
 
 	let siteConfig: SiteConfig;
 
 	onMount(async () => {
-		await siteConfigS.init();
-		siteConfig = get(siteConfigS);
+		siteConfig = data;
 	});
 </script>
 

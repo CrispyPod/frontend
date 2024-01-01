@@ -1,15 +1,11 @@
 <script lang="ts">
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
-
-	let siteName: string = '';
-
-	onMount(async () => {
-		await siteConfigS.init();
-		const siteConfi = get(siteConfigS);
-		siteName = siteConfi.siteName;
-	});
+	import { page } from '$app/stores';
+	let siteName: string;
+	if ($page.data.siteConfig == null) {
+		siteName = $page.data.siteName;
+	} else {
+		siteName = $page.data.siteConfig.siteName;
+	}
 </script>
 
 <div class="w-full flex justify-center items-center">
