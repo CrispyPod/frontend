@@ -4,7 +4,7 @@ import { exec } from "child_process";
 import { SRC_FOLDER } from "$env/static/private";
 import { dev } from "$app/environment";
 
-export const POST: RequestHandler = async ({ request, url }) => {
+export const POST: RequestHandler = async ({ request }) => {
 
     if (dev) {
         return new Response("Can not deploy in dev mode");
@@ -25,8 +25,6 @@ export const POST: RequestHandler = async ({ request, url }) => {
             console.log(`exec error: ${err}`);
         }
     });
-
-    // console.log(await result.text());
 
     return new Response(String("Building"));
 }
