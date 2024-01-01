@@ -6,6 +6,7 @@
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	import { browser } from '$app/environment';
 
 	let episodeData: Episode;
 	let siteConfig: SiteConfig;
@@ -13,14 +14,14 @@
 	let cherryInstance: Cherry;
 
 	onMount(async () => {
-		if (data != null) {
+		if (browser && data != null) {
 			episodeData = data.episode;
 			// trigger update hook since episodeData updated
 			await tick();
 			cherryInstance = new Cherry({
 				id: 'markdown-preview',
 				isPreviewOnly: true,
-				value: episodeData.description,
+				value: episodeData.description
 			});
 		}
 	});
@@ -44,19 +45,11 @@
 				{#if episodeData.audioFileName != null && episodeData.audioFileName.length > 0}
 					<div class="card lg:card-side bg-base-100 shadow-xl my-10 mr-6">
 						<figure>
-							<img
-								class="w-80 h-80"
-								src={episodeData.thumbnailFileName
-									? data.siteConfig.siteUrl + '/api/thumbnail/' + episodeData.thumbnailFileName
-									: '/EpisodeDefaultThumbnailSquare.png'}
-								alt={episodeData.title}
-							/>
+							<img class="w-80 h-80" src={episodeData.thumbnailFileName} alt={episodeData.title} />
 						</figure>
 
 						<div class="card-body">
-							<WaveForm
-								fileUrl="{data.siteConfig.siteUrl}/api/audioFile/{episodeData.audioFileName}"
-							/>
+							<WaveForm fileUrl={episodeData.audioFileName} />
 						</div>
 					</div>
 				{/if}

@@ -12,7 +12,6 @@
 <SiteLayout>
 	<div class="w-full container">
 		<PagedEpisodes
-			siteUrl={data.siteUrl}
 			episodes={data.episodes}
 			curPage={1}
 			sum={data.sum}

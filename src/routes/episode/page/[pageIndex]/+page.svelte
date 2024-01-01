@@ -11,7 +11,6 @@
 
 <SiteLayout>
 	<PagedEpisodes
-		siteUrl={data.siteUrl}
 		episodes={data.episodes}
 		curPage={data.curPage}
 		sum={data.sum}

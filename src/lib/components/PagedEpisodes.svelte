@@ -1,11 +1,10 @@
 <script lang="ts">
+	import { getSiteUrlPrefix } from '$lib/helpers/siteUrlPrefix';
 	import type { Episode } from '$lib/models/episode';
 	import Pager from './Pager.svelte';
 
 	export let episodes: Array<Episode> = [];
 	export let curPage: number = 1;
-	export let siteUrl: string = '';
-	// console.log(siteUrl);
 
 	export let sum = 0;
 	export let hasNextPage = false;
@@ -18,12 +17,7 @@
 			<a href="/episode/{e.id}">
 				<div class="card w-64 md:w-96 shadow-xl m-10 bg-base-200">
 					<figure>
-						<img
-							src={e.thumbnailFileName
-								? siteUrl + '/api/thumbnail/' + e.thumbnailFileName
-								: '/EpisodeDefaultThumbnailSquare.png'}
-							alt={e.title}
-						/>
+						<img src={e.thumbnailFileName} alt={e.title} />
 					</figure>
 					<div class="card-body">
 						<h2 class="card-title">

@@ -28,7 +28,6 @@
 		<div class="w-full container mt-5">
 			<!-- <div class="w-full flex justify-center">Episodes</div> -->
 			<PagedEpisodes
-				siteUrl={data.siteUrl}
 				episodes={data.episodes}
 				hasNextPage={data.hasNextPage}
 				hasPreviousPage={data.hasPreviousPage}

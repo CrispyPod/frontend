@@ -1,3 +1,4 @@
+import { getSiteUrlPrefix } from '$lib/helpers/siteUrlPrefix';
 import type { Episode } from '$lib/models/episode';
 import { serverGraphQLRequest } from '$lib/serverGrqphQLRequest';
 
@@ -48,6 +49,13 @@ export async function load({ params }) {
   siteDescription = json_resp.data.siteConfig.siteDescription;
   let siteUrl = json_resp.data.siteConfig.siteUrl;
 
+  episodes?.forEach((e) => {
+    if (e.thumbnailFileName != null) {
+      e.thumbnailFileName = getSiteUrlPrefix() + '/api/thumbnail/' + e.thumbnailFileName;
+    } else {
+      e.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
+    }
+  })
   return {
     episodes,
     siteName,

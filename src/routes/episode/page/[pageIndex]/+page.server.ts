@@ -1,3 +1,4 @@
+import { getSiteUrlPrefix } from '$lib/helpers/siteUrlPrefix';
 import type { Episode } from '$lib/models/episode';
 import { serverGraphQLRequest } from '$lib/serverGrqphQLRequest';
 
@@ -39,7 +40,6 @@ export async function load({ params }) {
   );
 
   let json_resp = await result.json();
-  episodes = json_resp.data.episodes.items;
 
   hasPreviousPage = json_resp.data.episodes.pageInfo.hasPreviousPage ?? false;
   hasNextPage = json_resp.data.episodes.pageInfo.hasNextPage ?? false;
@@ -49,6 +49,14 @@ export async function load({ params }) {
   siteDescription = json_resp.data.siteConfig.siteDescription;
   let siteUrl = json_resp.data.siteConfig.siteUrl;
 
+  episodes = json_resp.data.episodes.items;
+  episodes?.forEach((e) => {
+    if (e.thumbnailFileName != null) {
+      e.thumbnailFileName = getSiteUrlPrefix() + '/api/thumbnail/' + e.thumbnailFileName;
+    } else {
+      e.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
+    }
+  })
   return {
     page,
     episodes,
