@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '../../../../lib/components/AdminLayout.svelte';
+	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { get } from 'svelte/store';
 	import { token } from '$lib/stores/tokenStore';
 	import { EpisodeState, type Episode } from '$lib/models/episode';
 	import { goto } from '$app/navigation';
 	import type { AudioFile } from '$lib/models/audioFile';
-	import WaveForm from '../../../../lib/components/WaveForm.svelte';
+	import WaveForm from '$lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 
@@ -42,7 +42,7 @@
 
 	$: fileList && fileListChanged();
 
-	export let data;
+	export let data: any;
 	onMount(async () => {
 		const tokenS = get(token);
 		const result = await graphqlRequest(
@@ -55,6 +55,8 @@
 		if (jsonResp.data != null) {
 			fetchedEpisode = jsonResp.data.episode;
 			cherryInstance.setValue(fetchedEpisode.description);
+		} else {
+			goto('/admin/episode');
 		}
 	});
 
@@ -161,7 +163,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', fetchedEpisode.id);
-		let resp = await fetch( '/api/audioFile', {
+		let resp = await fetch('/api/audioFile', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data

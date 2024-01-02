@@ -2,8 +2,54 @@
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import EpisodeItem from '$lib/components/EpisodeItem.svelte';
 	import Pager from '$lib/components/Pager.svelte';
+	import { graphqlRequest } from '$lib/graphqlRequest';
+	import type { Episode } from '$lib/models/episode';
+	import { token } from '$lib/stores/tokenStore';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
-	export let data: any;
+	let sum = 0;
+	let hasNextPage = false;
+	let hasPreviousPage = false;
+
+	let episodes: Array<Episode> = [];
+
+	let curPage = 1;
+
+	onMount(async () => {
+		const tokenS = get(token);
+		const result = await graphqlRequest(
+			tokenS,
+			`{
+            episodes(pagination: {pageIndex:` +
+				curPage +
+				`, perPage: 25}){
+items{
+  id
+  title
+  description
+  createTime
+  episodeStatus
+  thumbnailFileName
+}
+totalCount
+pageInfo{
+  hasNextPage
+  hasPreviousPage
+}
+} 
+}`
+		);
+		// console.log(tokenS);
+
+		const resultJson = await result.json();
+
+		episodes = resultJson.data.episodes.items ?? [];
+		hasPreviousPage = resultJson.data.episodes.pageInfo.hasPreviousPage ?? false;
+		hasNextPage = resultJson.data.episodes.pageInfo.hasNextPage ?? false;
+		sum = resultJson.data.episodes.totalCount ?? 0;
+
+	});
 </script>
 
 <AdminLayout pageTitle="Episodes">
@@ -29,14 +75,9 @@
 	</span>
 
 	<ul role="list" class="divide-y divide-gray-100">
-		{#each data.episodes as p, i}
+		{#each episodes as p, i}
 			<EpisodeItem episode={p} />
 		{/each}
 	</ul>
-	<Pager
-		sum={data.sum}
-		hasNextPage={data.hasNextPage}
-		hasPreviousPage={data.hasPreviousPage}
-		pagePrefix="/admin/episode/page/"
-	/>
+	<Pager {sum} {hasNextPage} {hasPreviousPage} pagePrefix="/admin/episode/page/" />
 </AdminLayout>
