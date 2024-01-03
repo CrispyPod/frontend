@@ -4,13 +4,14 @@ ENV BACK_END_URL="http://backend:8080"
 ENV SRC_FOLDER="/src"
 
 WORKDIR /src
-COPY *.js *.json *.toml ./
+COPY *.json ./
 RUN npm install
 COPY svelte-configs svelte-configs
 COPY *.sh ./
 COPY src ./src
 COPY static ./static
-RUN npm run build
+RUN npm run build;
+COPY *.js ./
 WORKDIR /crispypod
-RUN cp -r /src/build-node /src/package.json /src/node_modules /crispypod
-CMD [ "node","build-node/index.js" ]
+RUN cp -r /src/build-node /src/package.json /src/node_modules /src/start-server.js /crispypod
+CMD [ "node","start-server.js" ]
