@@ -42,7 +42,6 @@ pageInfo{
 } 
 }`
 		);
-		// console.log(tokenS);
 
 		const resultJson = await result.json();
 

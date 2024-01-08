@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getSiteUrlPrefix } from '$lib/helpers/siteUrlPrefix';
 	import type { Episode } from '$lib/models/episode';
 	import Pager from './Pager.svelte';
 
