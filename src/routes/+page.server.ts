@@ -17,7 +17,7 @@ export async function load({ }) {
   let result = await serverGraphQLRequest(
     null,
     `query{
-          episodes(pagination: {pageIndex: 1, perPage: 25}){
+      episodeList(pagination: {pageIndex: 1, perPage: 25}){
           items{
             id,
             title,
@@ -41,9 +41,9 @@ export async function load({ }) {
 
   let json_resp = await result.json();
 
-  hasPreviousPage = json_resp.data.episodes.pageInfo.hasPreviousPage ?? false;
-  hasNextPage = json_resp.data.episodes.pageInfo.hasNextPage ?? false;
-  sum = json_resp.data.episodes.totalCount ?? 0;
+  hasPreviousPage = json_resp.data.episodeList.pageInfo.hasPreviousPage ?? false;
+  hasNextPage = json_resp.data.episodeList.pageInfo.hasNextPage ?? false;
+  sum = json_resp.data.episodeList.totalCount ?? 0;
 
   siteName = json_resp.data.siteConfig.siteName;
   siteDescription = json_resp.data.siteConfig.siteDescription;
@@ -55,7 +55,7 @@ export async function load({ }) {
     siteUrl
   });
 
-  episodes = json_resp.data.episodes.items;
+  episodes = json_resp.data.episodeList.items;
   episodes?.forEach((e) => {
     if (e.thumbnailFileName != null) {
       e.thumbnailFileName = getSiteUrlPrefix() + '/api/thumbnail/' + e.thumbnailFileName;

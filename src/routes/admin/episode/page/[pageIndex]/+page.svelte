@@ -23,7 +23,7 @@
 		const result = await graphqlRequest(
 			tokenS,
 			`{
-            episodes(pagination: {pageIndex:` +
+				episodeList(pagination: {pageIndex:` +
 				curPage +
 				`, perPage: 25}){
 items{
@@ -45,10 +45,10 @@ pageInfo{
 
 		const resultJson = await result.json();
 
-		episodes = resultJson.data.episodes.items ?? [];
-		hasPreviousPage = resultJson.data.episodes.pageInfo.hasPreviousPage ?? false;
-		hasNextPage = resultJson.data.episodes.pageInfo.hasNextPage ?? false;
-		sum = resultJson.data.episodes.totalCount ?? 0;
+		episodes = resultJson.data.episodeList.items ?? [];
+		hasPreviousPage = resultJson.data.episodeList.pageInfo.hasPreviousPage ?? false;
+		hasNextPage = resultJson.data.episodeList.pageInfo.hasNextPage ?? false;
+		sum = resultJson.data.episodeList.totalCount ?? 0;
 	});
 </script>
 
