@@ -108,6 +108,7 @@
 				<li><a href="/admin/episode" class="btn-neutral">Episodes</a></li>
 				<li><a href="/admin/site-setting" class="btn-neutral">Settings</a></li>
 				<li><a href="/admin/static-deploy" class="btn-neutral">Deploy</a></li>
+				<li><a href="/admin/hooks" class="btn-neutral">Hooks</a></li>
 				<!-- <li>
 					<a>Parent</a>
 					<ul class="p-2">
@@ -125,6 +126,7 @@
 			<li><a href="/admin/episode" class="btn btn-neutral">Episodes</a></li>
 			<li><a href="/admin/site-setting" class="btn btn-neutral">Settings</a></li>
 			<li><a href="/admin/static-deploy" class="btn btn-neutral">Deploy</a></li>
+			<li><a href="/admin/hooks" class="btn btn-neutral">Hooks</a></li>
 			<!-- <li tabindex="0">
 				<details>
 					<summary>Parent</summary>
@@ -197,6 +199,7 @@
 			>
 				{pageTitle}
 			</h2>
+			<slot name="err" />
 			<slot name="actions" />
 		</div>
 		<div class="divider" />
