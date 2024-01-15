@@ -3,16 +3,22 @@
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { onMount } from 'svelte';
 	import { HeaderObject } from '$lib/models/headerObject';
+	import MessageToast from '$lib/components/MessageToast.svelte';
+	import { token } from '$lib/stores/tokenStore';
+	import { get } from 'svelte/store';
+	import { graphqlRequest } from '$lib/graphqlRequest';
 
-	export let handleSave: (hd: Hook) => any;
+	export let handleSave: (hd: Hook, doRedirect: boolean) => Promise<any>;
 	export let pageTitle: string;
 
 	export let hookData: Hook;
 	export let errMsg: string = '';
 
+	let messages: Array<string> = [];
+
 	const httpMethods: Array<string> = ['GET', 'POST', 'DELETE', 'PUT', 'HEAD', 'PATCH'];
 
-	function handleSubmit() {
+	function processHeader() {
 		if (headers.length == 1 && headers[0].key == '' && headers[0].value == '') {
 		} else {
 			let headersRecord: Record<string, any> = {};
@@ -21,7 +27,11 @@
 			});
 			hookData.headers = JSON.stringify(headersRecord);
 		}
-		handleSave(hookData);
+	}
+
+	function handleSubmit() {
+		processHeader();
+		handleSave(hookData, true);
 	}
 
 	function handleSaveClicked() {
@@ -36,12 +46,24 @@
 	}
 
 	let headers: Array<HeaderObject> = [];
+	let headersInitialized = false;
 
-	onMount(async () => {
-		if (hookData.headers != null) {
-			// TODO
-			let parsedJson = JSON.parse(hookData.headers);
-		} else {
+	$: if (hookData && !headersInitialized) {
+		if (hookData.headers != null && hookData.headers.length > 0) {
+			const parsedJson = JSON.parse(hookData.headers);
+			let keys = Object.keys(parsedJson);
+			if (keys.length != 0) {
+				headers.length = 0;
+				keys.forEach((v) => {
+					headers.push(new HeaderObject(v, parsedJson[v]));
+				});
+				headers = headers;
+			}
+			headersInitialized = true;
+		}
+	}
+	onMount(() => {
+		if (hookData.headers == null) {
 			headersAppendEmpty();
 		}
 	});
@@ -49,6 +71,30 @@
 	function headersAppendEmpty() {
 		headers.push(new HeaderObject('', ''));
 		headers = headers;
+	}
+
+	async function handleTestrun() {
+		await handleSave(hookData, false);
+		if (errMsg.length != 0) {
+			return;
+		}
+		messages.push('Hook saved.');
+		messages = messages;
+
+		let tokenS = get(token);
+		let result = await graphqlRequest(
+			tokenS,
+			`{
+  triggerHook(id:"${hookData.id}"){
+    result
+  }
+}`
+		);
+		let jsonResp = await result.json();
+		if (jsonResp.data != null && jsonResp.data.triggerHook.result) {
+			messages.push('Hook Triggered.');
+			messages = messages;
+		}
 	}
 </script>
 
@@ -62,9 +108,9 @@
 	</span>
 	<span slot="actions">
 		{#if hookData.id != null}
-			<button class="btn btn-active">Test Run</button>
+			<button class="btn btn-active" on:click={handleTestrun}>Test Run</button>
 		{/if}
-		<button class="btn btn-active btn-primary" on:click={handleSaveClicked}>Save</button>
+		<button class="btn btn-active btn-primary ml-4" on:click={handleSaveClicked}>Save</button>
 	</span>
 
 	<form id="newHookForm" on:submit|preventDefault={handleSubmit}>
@@ -157,7 +203,7 @@
 					class="input input-bordered w-full"
 					bind:value={hookData.webURL}
 					required
-                    type="url"
+					type="url"
 				/>
 			</label>
 		</div>
@@ -169,7 +215,7 @@
 				<label class="form-control w-full">
 					{#if i == 0}
 						<div class="label">
-							<span class="label-text">Key</span>
+							<span class="label-text">Name</span>
 						</div>
 					{/if}
 					<input
@@ -223,7 +269,7 @@
 
 		<button
 			class="btn mt-4"
-			on:click={() => {
+			on:click|preventDefault={() => {
 				headersAppendEmpty();
 			}}
 		>
@@ -240,4 +286,18 @@
 			Add Header
 		</button>
 	</form>
+
+	<div class="toast">
+		{#each messages as m}
+			<MessageToast
+				message={m}
+				onTimeout={() => {
+					setTimeout(() => {
+						messages = messages.filter((x) => x != m);
+						console.log(messages);
+					}, 500);
+				}}
+			/>
+		{/each}
+	</div>
 </AdminLayout>

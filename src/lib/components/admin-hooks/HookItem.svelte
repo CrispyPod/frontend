@@ -28,7 +28,7 @@
 		</div>
 	</div>
 	<div class="sm:flex sm:flex-col sm:items-end">
-		<a class="sm:ml-3" href="/admin/hook/{hook.id}">
+		<a class="sm:ml-3" href="/admin/hooks/{hook.id}">
 			<button class="btn btn-active">
 				<!-- <Icon src={Pencil} size="16" /> -->
 				<svg

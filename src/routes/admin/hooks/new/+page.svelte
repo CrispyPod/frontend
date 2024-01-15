@@ -20,16 +20,21 @@
 	};
 	let errMsg: string = '';
 
-	async function handleSave(hd: Hook) {
+	async function handleSave(hd: Hook, doRedirect: boolean) {
+		let headersArg = '';
+		if (hd.headers != null) {
+			headersArg = `,headers:"${encodeURI(hd.headers)}"`;
+		}
+
 		let tokenS = get(token);
 		let result = await graphqlRequest(
 			tokenS,
 			`mutation{
-  createHook(input:{name:"${hookData.name}",trigger:${hookData.trigger},webURL:"${hookData.webURL}",method:"${hookData.method}"}){id}}`
+  createHook(input:{name:"${hookData.name}",trigger:${hookData.trigger},webURL:"${hookData.webURL}",method:"${hookData.method}"${headersArg}}){id}}`
 		);
 		let jsonResp = await result.json();
 		if (jsonResp.data != null) {
-			goto(`/admin/hooks/${jsonResp.data.createHook.id}`);
+			doRedirect && goto(`/admin/hooks/${jsonResp.data.createHook.id}`);
 		} else {
 			errMsg = jsonResp.errors[0].message;
 		}
