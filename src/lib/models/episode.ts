@@ -12,6 +12,7 @@ export class Episode {
 	createTime: number;
 	publishTime: Date | null;
 	episodeStatus: EpisodeState;
+	namedLink: string;
 	// audioFiles: AudioFile[] = [];
 	thumbnailFileName: string | null = null;
 	thumbnailUploadName: string | null = null;
@@ -27,11 +28,13 @@ export class Episode {
 		title: string,
 		description: string,
 		createTime: number,
+		namedLink: string,
 		episodeStatus: EpisodeState,
 		publishTime: Date | null
 	) {
 		this.id = id;
 		this.title = title;
+		this.namedLink = namedLink;
 		this.episodeStatus = episodeStatus;
 		this.description = description;
 		this.createTime = createTime;

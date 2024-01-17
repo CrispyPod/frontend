@@ -6,7 +6,7 @@ export async function load({ params }) {
 
   const result = await serverGraphQLRequest(
     null,
-    `{episode(id:"` +
+    `{episode(namedLink:"` +
     episodeId +
     `"){id,title,createTime,description,audioFileName,audioFileDuration,thumbnailFileName},
         siteConfig{

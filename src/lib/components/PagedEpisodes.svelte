@@ -13,7 +13,7 @@
 <div class="grid lg:grid-cols-2">
 	{#each episodes as e}
 		<div class="w-full flex justify-center">
-			<a href="/episode/{e.id}">
+			<a href="/episode/{e.namedLink}">
 				<div class="card w-64 md:w-96 shadow-xl m-10 bg-base-200">
 					<figure>
 						<img src={e.thumbnailFileName} alt={e.title} />

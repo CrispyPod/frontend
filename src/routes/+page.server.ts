@@ -24,6 +24,7 @@ export async function load({ }) {
             description,
             createTime,
             thumbnailFileName,
+            namedLink,
           },
           totalCount,
           pageInfo{
