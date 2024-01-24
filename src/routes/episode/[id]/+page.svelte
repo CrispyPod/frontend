@@ -14,6 +14,7 @@
 	let cherryInstance: Cherry;
 
 	onMount(async () => {
+		// console.log(data);
 		if (browser && data != null) {
 			episodeData = data.episode;
 			// trigger update hook since episodeData updated
@@ -45,7 +46,14 @@
 				{#if episodeData.audioFileName != null && episodeData.audioFileName.length > 0}
 					<div class="card lg:card-side bg-base-100 shadow-xl my-10 mr-6">
 						<figure>
-							<img class="w-80 h-80" src={episodeData.thumbnailFileName} alt={episodeData.title} />
+							<img
+								class="w-80 h-80"
+								src={episodeData.thumbnailFileName != null &&
+								episodeData.thumbnailFileName.length > 0
+									? episodeData.thumbnailFileName
+									: `/api/imageFile/${data.siteConfig.defaultThumbnail}`}
+								alt={episodeData.title}
+							/>
 						</figure>
 
 						<div class="card-body">

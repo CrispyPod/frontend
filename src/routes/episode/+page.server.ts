@@ -1,6 +1,7 @@
 import { getSiteUrlPrefix } from '$lib/helpers/siteUrlPrefix';
 import type { Episode } from '$lib/models/episode';
 import { serverGraphQLRequest } from '$lib/serverGrqphQLRequest';
+import { siteConfigS } from '$lib/stores/siteConfigStore';
 
 export async function load({ params }) {
 
@@ -31,16 +32,17 @@ export async function load({ params }) {
             hasPreviousPage
           },
           },
-            siteConfig{
-              siteName,
-              siteUrl,
-              siteDescription,
-            }
-          }`
+          siteConfig{
+            siteName,
+            siteUrl,
+            siteDescription,
+            siteIconFile,
+            defaultThumbnail
+          }
+        }`
   );
 
   let json_resp = await result.json();
-  episodes = json_resp.data.episodeList.items;
 
   hasPreviousPage = json_resp.data.episodeList.pageInfo.hasPreviousPage ?? false;
   hasNextPage = json_resp.data.episodeList.pageInfo.hasNextPage ?? false;
@@ -50,13 +52,19 @@ export async function load({ params }) {
   siteDescription = json_resp.data.siteConfig.siteDescription;
   let siteUrl = json_resp.data.siteConfig.siteUrl;
 
+  siteConfigS.set({
+    ...json_resp.data.siteConfig
+  });
+
+  episodes = json_resp.data.episodeList.items;
   episodes?.forEach((e) => {
     if (e.thumbnailFileName != null) {
       e.thumbnailFileName = getSiteUrlPrefix() + '/api/imageFile/' + e.thumbnailFileName;
     } else {
-      e.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
+      e.thumbnailFileName = json_resp.data.siteConfig.defaultThumbnail.length > 0 ? `/api/imageFile/${json_resp.data.siteConfig.defaultThumbnail}` : '/EpisodeDefaultThumbnailSquare.png';
     }
   })
+
   return {
     episodes,
     siteName,

@@ -13,6 +13,7 @@ export async function load({ params }) {
           siteName,
           siteUrl,
           siteDescription,
+          defaultThumbnail,
         }}`
   );
 

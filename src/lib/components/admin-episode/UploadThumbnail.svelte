@@ -4,6 +4,9 @@
 	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import { graphqlRequest } from '$lib/graphqlRequest';
+	import { siteConfigS } from '$lib/stores/siteConfigStore';
+	import { onMount } from 'svelte';
+	import type { SiteConfig } from '$lib/models/siteConfig';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
@@ -24,6 +27,13 @@
 	}
 
 	$: episodeData && checkCanClickNext();
+
+	let siteConfig: SiteConfig;
+
+	onMount(async () => {
+		await siteConfigS.init();
+		siteConfig = get(siteConfigS);
+	});
 
 	async function startUpload() {
 		uploading = true;
@@ -97,7 +107,11 @@
 					class="w-80 h-80"
 					src={episodeData.thumbnailFileName
 						? siteUrl + '/api/imageFile/' + episodeData.thumbnailFileName
-						: '/EpisodeDefaultThumbnailSquare.png'}
+						: siteConfig != null &&
+							  siteConfig.defaultThumbnail != null &&
+							  siteConfig.defaultThumbnail.length > 0
+							? `/api/imageFile/${siteConfig.defaultThumbnail}`
+							: '/EpisodeDefaultThumbnailSquare.png'}
 					alt={episodeData.title}
 				/>
 

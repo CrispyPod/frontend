@@ -36,11 +36,14 @@ export async function load({ }) {
               siteName,
               siteUrl,
               siteDescription,
+              siteIconFile,
+              defaultThumbnail
             }
           }`
   );
 
   let json_resp = await result.json();
+  // console.log(json_resp.data.episodeList.items);
 
   hasPreviousPage = json_resp.data.episodeList.pageInfo.hasPreviousPage ?? false;
   hasNextPage = json_resp.data.episodeList.pageInfo.hasNextPage ?? false;
@@ -51,11 +54,7 @@ export async function load({ }) {
   let siteUrl = json_resp.data.siteConfig.siteUrl;
 
   siteConfigS.set({
-    siteDescription,
-    siteName,
-    siteUrl,
-    siteIconFile: '',
-    defaultThumbnail: ''
+    ...json_resp.data.siteConfig
   });
 
   episodes = json_resp.data.episodeList.items;
@@ -63,7 +62,7 @@ export async function load({ }) {
     if (e.thumbnailFileName != null) {
       e.thumbnailFileName = getSiteUrlPrefix() + '/api/imageFile/' + e.thumbnailFileName;
     } else {
-      e.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
+      e.thumbnailFileName = json_resp.data.siteConfig.defaultThumbnail.length > 0 ? `/api/imageFile/${json_resp.data.siteConfig.defaultThumbnail}` : '/EpisodeDefaultThumbnailSquare.png';
     }
   })
 
