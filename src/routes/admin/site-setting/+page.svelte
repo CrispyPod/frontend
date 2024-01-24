@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '../../../lib/components/AdminLayout.svelte';
+	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
 	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { token } from '$lib/stores/tokenStore';
 	import { goto } from '$app/navigation';
+	import AdminUpload from '$lib/components/AdminUpload.svelte';
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
 
 	onMount(async () => {
-		await siteConfigS.init();
+		await siteConfigS.refresh();
 		siteConfig = get(siteConfigS);
 	});
 
@@ -29,10 +30,12 @@
 				formData.get('SiteDescription') +
 				`",siteUrl:"` +
 				formData.get('SiteUrl') +
-				`"}){
+				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"}){
     siteUrl
     siteName
     siteDescription
+	siteIconFile
+	defaultThumbnail
   }
 }`
 		);
@@ -63,9 +66,7 @@
 			/>
 
 			<label class="label" for="SiteUrl">
-				<span class="label-text text-sm font-medium leading-6 text-gray-900"
-					>Podcast Url</span
-				>
+				<span class="label-text text-sm font-medium leading-6 text-gray-900">Podcast Url</span>
 			</label>
 			<input
 				id="SiteUrl"
@@ -78,8 +79,7 @@
 		</div>
 
 		<label class="label" for="SiteDescription">
-			<span class="label-text text-sm font-medium leading-6 text-gray-900"
-				>Podcast description</span
+			<span class="label-text text-sm font-medium leading-6 text-gray-900">Podcast description</span
 			>
 		</label>
 		<textarea
@@ -88,6 +88,38 @@
 			value={siteConfig == null ? '' : siteConfig.siteDescription}
 			class="textarea textarea-bordered w-full"
 			placeholder="Type here"
+		/>
+
+		<label class="label" for="siteIcon">
+			<span class="label-text text-sm font-medium leading-6 text-gray-900"> Website icon</span>
+		</label>
+		{#if siteConfig != undefined && siteConfig.siteIconFile != null && siteConfig.siteIconFile.length > 0}
+			<!-- {siteConfig.siteIconFile} -->
+			<img class="w-6 h-6" src={`/api/imageFile/` + siteConfig.siteIconFile} alt="website icon" />
+		{/if}
+		<AdminUpload
+			accept=".png,.jpeg,.jpg,.ico"
+			uploadFinish={(v) => {
+				siteConfig.siteIconFile = v;
+				// console.log(v);
+			}}
+		/>
+
+		<label class="label" for="DeafultThumbnail">
+			<span class="label-text text-sm font-medium leading-6 text-gray-900">Default thumbnail</span>
+		</label>
+		{#if siteConfig != undefined && siteConfig.defaultThumbnail != null && siteConfig.defaultThumbnail.length > 0}
+			<!-- {siteConfig.defaultThumbnail} -->
+			<img
+				class="w-80 h-80"
+				src={`/api/imageFile/` + siteConfig.defaultThumbnail}
+				alt="default episode thumbnail"
+			/>
+		{/if}
+		<AdminUpload
+			uploadFinish={(v) => {
+				siteConfig.defaultThumbnail = v;
+			}}
 		/>
 
 		<div class="mt-6 flex items-center justify-end gap-x-6">
@@ -101,13 +133,8 @@
 					</div>
 				</div>
 			{/if}
-			<a href="/admin" type="button" class="btn">Cancel</a
-			>
-			<button
-				type="submit"
-				class="btn btn-primary"
-				>Save</button
-			>
+			<a href="/admin" type="button" class="btn">Cancel</a>
+			<button type="submit" class="btn btn-primary">Save</button>
 		</div>
 	</form>
 </AdminLayout>

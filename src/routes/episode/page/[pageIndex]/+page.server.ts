@@ -53,7 +53,7 @@ export async function load({ params }) {
   episodes = json_resp.data.episodeList.items;
   episodes?.forEach((e) => {
     if (e.thumbnailFileName != null) {
-      e.thumbnailFileName = getSiteUrlPrefix() + '/api/thumbnail/' + e.thumbnailFileName;
+      e.thumbnailFileName = getSiteUrlPrefix() + '/api/imageFile/' + e.thumbnailFileName;
     } else {
       e.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
     }

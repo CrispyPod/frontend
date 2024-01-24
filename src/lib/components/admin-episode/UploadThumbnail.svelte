@@ -34,7 +34,7 @@
 		let data = new FormData();
 		data.append('file', file!);
 		data.append('episodeId', episodeData!.id);
-		let resp = await fetch('/api/thumbnail', {
+		let resp = await fetch('/api/imageFile', {
 			method: 'POST',
 			headers: [['Authorization', 'Bearer ' + tokenS]],
 			body: data
@@ -96,7 +96,7 @@
 				<img
 					class="w-80 h-80"
 					src={episodeData.thumbnailFileName
-						? siteUrl + '/api/thumbnail/' + episodeData.thumbnailFileName
+						? siteUrl + '/api/imageFile/' + episodeData.thumbnailFileName
 						: '/EpisodeDefaultThumbnailSquare.png'}
 					alt={episodeData.title}
 				/>

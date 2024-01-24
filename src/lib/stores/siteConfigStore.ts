@@ -8,24 +8,31 @@ function siteConfigStore() {
 	async function init() {
 		const v = get(siteConfigS);
 		if (v == null) {
-			const result = await graphqlRequest(
-				null,
-				`{
-	  siteConfig{
-		siteUrl
-		siteName
-		siteDescription
-	  }
-	}`
-			);
-			const jsonResp = await result.json();
-			if (jsonResp.data != null) {
-				siteConfigS.set(jsonResp.data.siteConfig);
-			}
+			await refresh();
+		}
+	}
+
+	async function refresh() {
+		const result = await graphqlRequest(
+			null,
+			`{
+				siteConfig{
+				  siteUrl
+				  siteName
+				  siteDescription
+				siteIconFile
+				defaultThumbnail
+				}
+			  }`
+		);
+		const jsonResp = await result.json();
+		if (jsonResp.data != null) {
+			siteConfigS.set(jsonResp.data.siteConfig);
 		}
 	}
 
 	return {
+		refresh,
 		subscribe,
 		set,
 		init

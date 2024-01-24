@@ -24,7 +24,7 @@ export async function load({ params }) {
   }
 
   if (data.episode.thumbnailFileName != null) {
-    data.episode.thumbnailFileName = getSiteUrlPrefix() + '/api/thumbnail/' + data.episode.thumbnailFileName;
+    data.episode.thumbnailFileName = getSiteUrlPrefix() + '/api/imageFile/' + data.episode.thumbnailFileName;
   } else {
     data.episode.thumbnailFileName = '/EpisodeDefaultThumbnailSquare.png';
   }

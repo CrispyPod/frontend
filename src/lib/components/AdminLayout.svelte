@@ -42,9 +42,6 @@
 		let result = await graphqlRequest(
 			tokenS,
 			`{siteConfig{
-          siteName,
-          siteUrl,
-          siteDescription,
           setupComplete,
         }
 }`
