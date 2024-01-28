@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>Episodes - {data.siteConfig == null ? '' : data.siteConfig.siteName}</title>
+	<title>Episodes - {data.siteName == null ? '' : data.siteName}</title>
 </svelte:head>
 
 <SiteLayout>

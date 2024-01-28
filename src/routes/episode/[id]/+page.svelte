@@ -30,9 +30,9 @@
 
 <svelte:head>
 	<title
-		>{episodeData == null ? '' : episodeData.title} - {siteConfig == null
+		>{episodeData == null ? '' : episodeData.title} - {data.siteConfig == null
 			? ''
-			: siteConfig.siteName}</title
+			: data.siteConfig.siteName}</title
 	>
 </svelte:head>
 
