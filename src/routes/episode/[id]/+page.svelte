@@ -3,13 +3,11 @@
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import type { Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import type { SiteConfig } from '$lib/models/siteConfig';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import { browser } from '$app/environment';
 
 	let episodeData: Episode;
-	let siteConfig: SiteConfig;
 	export let data: any;
 	let cherryInstance: Cherry;
 

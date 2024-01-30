@@ -76,7 +76,7 @@
 		const toeknS = get(token);
 
 		let audioFileField = '';
-		if (episodeData.audioFileName!.length > 0) {
+		if (episodeData.audioFileName != null && episodeData.audioFileName.length > 0) {
 			// console.log(episodeData);
 			audioFileField +=
 				',audioFileName:"' +
