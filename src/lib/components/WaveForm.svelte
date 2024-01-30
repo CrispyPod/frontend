@@ -1,6 +1,12 @@
 <script lang="ts">
+	import { guidGenerator, randomStringGenerator } from '$lib/helpers/randomGenerator';
 	import { tick } from 'svelte';
 	import WaveSurfer from 'wavesurfer.js';
+
+	let waveID = randomStringGenerator();
+	let timeID = randomStringGenerator();
+	let durationID = randomStringGenerator();
+	let hoverID = randomStringGenerator();
 
 	export let fileUrl: string;
 	let playing: boolean = false;
@@ -32,7 +38,7 @@
 		// console.log(fileUrl);
 		// Create the waveform
 		wavesurfer = WaveSurfer.create({
-			container: '#waveform',
+			container: `#${waveID}`,
 			waveColor: gradient,
 			progressColor: progressGradient,
 			barWidth: 2,
@@ -54,8 +60,8 @@
 
 		// Hover effect
 		{
-			const hover = document.querySelector('#hover') as HTMLElement;
-			const waveform = document.querySelector('#waveform');
+			const hover = document.querySelector(`#${hoverID}`) as HTMLElement;
+			const waveform = document.querySelector(`#${waveID}`);
 			waveform!.addEventListener(
 				'pointermove',
 				(e) => (hover!.style.width = `${(e as PointerEvent).offsetX}px`)
@@ -71,8 +77,8 @@
 				return `${minutes}:${paddedSeconds}`;
 			};
 
-			const timeEl = document.querySelector('#time');
-			const durationEl = document.querySelector('#duration');
+			const timeEl = document.querySelector(`#${timeID}`);
+			const durationEl = document.querySelector(`#${durationID}`);
 			wavesurfer.on('decode', (duration) => (durationEl!.textContent = formatTime(duration)));
 			wavesurfer.on('timeupdate', (currentTime) => (timeEl!.textContent = formatTime(currentTime)));
 		}
@@ -124,19 +130,19 @@
 		</button>
 	{/if}
 
-	<div id="waveform">
-		<div id="time">0:00</div>
-		<div id="duration">0:00</div>
-		<div id="hover" />
+	<div id={waveID} class="waveform">
+		<div id={timeID} class="time">0:00</div>
+		<div id={durationID} class="duration">0:00</div>
+		<div id={hoverID} class="hovering" />
 	</div>
 </div>
 
 <style>
-	#waveform {
+	.waveform {
 		cursor: pointer;
 		position: relative;
 	}
-	#hover {
+	.hovering {
 		position: absolute;
 		left: 0;
 		top: 0;
@@ -149,11 +155,11 @@
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
-	#waveform:hover #hover {
+	.waveform:hover .hovering {
 		opacity: 1;
 	}
-	#time,
-	#duration {
+	.time,
+	.duration {
 		position: absolute;
 		z-index: 11;
 		top: 50%;
@@ -164,10 +170,10 @@
 		padding: 2px;
 		color: #ddd;
 	}
-	#time {
+	.time {
 		left: 0;
 	}
-	#duration {
+	.duration {
 		right: 0;
 	}
 </style>
