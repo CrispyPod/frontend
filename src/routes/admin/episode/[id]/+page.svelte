@@ -12,6 +12,7 @@
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import AdminUpload from '$lib/components/AdminUpload.svelte';
 	import EpisodeListItem from '$lib/components/EpisodeListItem.svelte';
+	import EpisodeDetailAudio from '$lib/components/EpisodeDetailAudio.svelte';
 
 	export let siteUrl: string = '';
 
@@ -80,29 +81,29 @@
 				episodeData.audioFileName +
 				'",audioFileUploadName:"' +
 				episodeData.audioFileUploadName +
-				'",';
+				'"';
 		}
 
 		let thumbnailFileField = '';
 		if (episodeData.thumbnailFileName != null && episodeData.thumbnailFileName.length > 0) {
-			thumbnailFileField += ',thumbnailFileName:"' + episodeData.thumbnailFileName + '",';
+			thumbnailFileField += ',thumbnailFileName:"' + episodeData.thumbnailFileName + '"';
 		}
 
 		let stat = parseInt(formData.get('status')!.toString());
-		const result = await graphqlRequest(
-			toeknS,
+		let reqStr =
 			`mutation{  modifyEpisode(id:"` +
-				episodeData.id +
-				`",input: {title:"` +
-				encodeURIComponent(formData.get('title')!.toString()) +
-				`",description:"` +
-				encodeURIComponent(cherryInstance.getValue()) +
-				`",episodeStatus:` +
-				stat +
-				audioFileField +
-				thumbnailFileField +
-				`}){title,description,episodeStatus}}`
-		);
+			episodeData.id +
+			`",input: {title:"` +
+			encodeURIComponent(formData.get('title')!.toString()) +
+			`",description:"` +
+			encodeURIComponent(cherryInstance.getValue()) +
+			`",episodeStatus:` +
+			stat +
+			audioFileField +
+			thumbnailFileField +
+			`}){title,description,episodeStatus}}`;
+		console.log(reqStr);
+		const result = await graphqlRequest(toeknS, reqStr);
 		var resultJson = await result.json();
 
 		if (resultJson.data != null) {
@@ -224,6 +225,7 @@
 				accept=".png,.jpeg,.jpg"
 				uploadFinish={(v) => {
 					fetchedEpisode.thumbnailFileName = v;
+					console.log(fetchedEpisode);
 				}}
 			/>
 
@@ -271,6 +273,7 @@
 					thumbnailFileName: '/api/imageFile/' + fetchedEpisode.thumbnailFileName
 				}}
 			/>
+			<EpisodeDetailAudio episodeData={fetchedEpisode} />
 		{/if}
 
 		<div class="divider" />
