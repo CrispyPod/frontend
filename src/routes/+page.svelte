@@ -34,7 +34,7 @@
 				sum={data.sum}
 			/>
 		</div>
+	{:else}
+		<a href="/episode/abc"></a>
 	{/if}
-
-	<a href="/episode/abc"></a>
 </SiteLayout>

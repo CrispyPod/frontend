@@ -10,6 +10,8 @@
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+	import AdminUpload from '$lib/components/AdminUpload.svelte';
+	import EpisodeListItem from '$lib/components/EpisodeListItem.svelte';
 
 	export let siteUrl: string = '';
 
@@ -60,11 +62,6 @@
 		}
 	});
 
-	let showPopup: boolean = false;
-	let popUpTitle: string | null = null;
-	let popUpContent: string | null = null;
-	let handlePopupConfirm: () => void = () => {};
-
 	async function handleSubmit(e: SubmitEvent, episodeData: Episode) {
 		if (cherryInstance.getValue().length == 0) {
 			errMessage = 'Please type in description of this episode.';
@@ -86,6 +83,11 @@
 				'",';
 		}
 
+		let thumbnailFileField = '';
+		if (episodeData.thumbnailFileName != null && episodeData.thumbnailFileName.length > 0) {
+			thumbnailFileField += ',thumbnailFileName:"' + episodeData.thumbnailFileName + '",';
+		}
+
 		let stat = parseInt(formData.get('status')!.toString());
 		const result = await graphqlRequest(
 			toeknS,
@@ -98,6 +100,7 @@
 				`",episodeStatus:` +
 				stat +
 				audioFileField +
+				thumbnailFileField +
 				`}){title,description,episodeStatus}}`
 		);
 		var resultJson = await result.json();
@@ -213,6 +216,27 @@
 			</div>
 		</div>
 
+		<div class="divider" />
+
+		<div>
+			<p>Upload thumbnail</p>
+			<AdminUpload
+				accept=".png,.jpeg,.jpg"
+				uploadFinish={(v) => {
+					fetchedEpisode.thumbnailFileName = v;
+				}}
+			/>
+
+			{#if fetchedEpisode != undefined && fetchedEpisode.thumbnailFileName != null && fetchedEpisode.thumbnailFileName.length > 0}
+				<!-- {siteConfig.siteIconFile} -->
+				<img
+					class="w-64 h-64"
+					src={`/api/imageFile/` + fetchedEpisode.thumbnailFileName}
+					alt="website icon"
+				/>
+			{/if}
+		</div>
+
 		<div class="form-control mt-5">
 			{#if fetchedEpisode == null || fetchedEpisode.audioFileName == null || fetchedEpisode.audioFileName.length == 0}
 				<div>
@@ -238,6 +262,16 @@
 				</div>
 			{/if}
 		</div>
+
+		{#if fetchedEpisode != undefined && fetchedEpisode.thumbnailFileName != null && fetchedEpisode.thumbnailFileName.length > 0 && fetchedEpisode.audioFileName != null && fetchedEpisode.audioFileName.length != 0}
+			<div class="divider">front end element</div>
+			<EpisodeListItem
+				episode={{
+					...fetchedEpisode,
+					thumbnailFileName: '/api/imageFile/' + fetchedEpisode.thumbnailFileName
+				}}
+			/>
+		{/if}
 
 		<div class="divider" />
 
