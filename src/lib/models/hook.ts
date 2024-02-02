@@ -33,7 +33,8 @@ export class Hook {
 
     static TriggerNames: Map<number, string> = new Map([
         [0, "Site Config Changed"],
-        [1, "Episode Visibility Changed"]
+        [1, "Episode Visibility Changed"],
+        [2, "Published Episode Changed"]
     ]);
 
 }

@@ -2,7 +2,7 @@
 	import { Hook } from '$lib/models/hook';
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { onMount } from 'svelte';
-	import { HeaderObject, guidGenerator } from '$lib/models/headerObject';
+	import { HeaderObject } from '$lib/models/headerObject';
 	import MessageToast from '$lib/components/MessageToast.svelte';
 	import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
