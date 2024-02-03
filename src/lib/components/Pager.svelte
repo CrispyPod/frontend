@@ -30,7 +30,7 @@
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasPreviousPage}
-			href={hasPreviousPage ? pagePrefix + (curPage - 1) : 'javascript:void(0)'}
+			href={hasPreviousPage ? pagePrefix + (curPage - 1) : 'javascript:;'}
 		>
 			«
 		</a>
@@ -42,7 +42,7 @@
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasNextPage}
-			href={hasNextPage ? pagePrefix + (curPage + 1) : 'javascript:void(0)'}>»</a
+			href={hasNextPage ? pagePrefix + (curPage + 1) : 'javascript:;'}>»</a
 		>
 	</div>
 </div>
