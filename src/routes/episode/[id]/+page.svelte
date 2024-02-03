@@ -32,6 +32,9 @@
 			? ''
 			: data.siteConfig.siteName}</title
 	>
+	<meta name="description" content={`${data.siteConfig.siteDescription}`} />
+	<meta name="keywords" content={`${data.siteConfig.siteName}, ${data.episode.title}`} />
+	<meta name="author" content={`${data.episode.authorName}`} />
 </svelte:head>
 
 <SiteLayout>

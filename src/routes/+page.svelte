@@ -8,6 +8,8 @@
 
 <svelte:head>
 	<title>{data.siteName}</title>
+	<meta name="description" content={`${data.siteDescription}`} />
+	<meta name="keywords" content={data.siteName} />
 </svelte:head>
 
 <SiteLayout showHeader={false}>

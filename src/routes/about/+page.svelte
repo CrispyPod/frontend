@@ -1,21 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import SiteLayout from '../../lib/components/SiteLayout.svelte';
-	import type { SiteConfig } from '$lib/models/siteConfig';
 
 	export let data: any;
-
-	let siteConfig: SiteConfig;
-
-	onMount(async () => {
-		siteConfig = data;
-	});
 </script>
 
 <svelte:head>
 	<title>
-		About - {siteConfig == null ? '' : siteConfig.siteName}
+		About - {data == null ? '' : data.siteName}
 	</title>
+	<meta name="description" content={`${data.siteDescription}`} />
+	<meta name="keywords" content={data.siteName} />
 </svelte:head>
 
 <SiteLayout>
@@ -24,7 +18,7 @@
 			<div class="max-w-md">
 				<!-- <h1 class="text-5xl font-bold">{siteConfig == null ? '' : siteConfig.siteName}</h1> -->
 				<!-- <h2 class="text-6xl">About</h2> -->
-				<p class="py-6">{siteConfig == null ? '' : siteConfig.siteDescription}</p>
+				<p class="py-6">{data == null ? '' : data.siteDescription}</p>
 				<!-- <button class="btn btn-primary">Get Started</button> -->
 			</div>
 		</div>

@@ -33,40 +33,40 @@
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-// 		const form = document.querySelector('#ProfileForm');
-// 		const formData = new FormData(form as HTMLFormElement);
-// 		const tokenS = get(token);
-// 		var passwordField = '';
-// 		if (formData.get('Password')!.length > 0) {
-// 			passwordField += ',password:"' + formData.get('Password') + '"';
-// 		}
-// 		const result = await graphqlRequest(
-// 			tokenS,
-// 			`mutation{
-//   modifyMe(input:{email:"` +
-// 				formData.get('Email') +
-// 				`",displayName:"` +
-// 				formData.get('DisplayName') +
-// 				`",userName:"` +
-// 				formData.get('UserName') +
-// 				`"` +
-// 				passwordField +
-// 				`}){
-//     email
-//     userName
-//     id
-//     displayName
-//   }
-// }`
-// 		);
+		const form = document.querySelector('#ProfileForm');
+		const formData = new FormData(form as HTMLFormElement);
+		const tokenS = get(token);
+		var passwordField = '';
+		if ((formData.get('Password') as string).length > 0) {
+			passwordField += ',password:"' + formData.get('Password') + '"';
+		}
+		const result = await graphqlRequest(
+			tokenS,
+			`mutation{
+		  modifyMe(input:{email:"` +
+				formData.get('Email') +
+				`",displayName:"` +
+				formData.get('DisplayName') +
+				`",userName:"` +
+				formData.get('UserName') +
+				`"` +
+				passwordField +
+				`}){
+		    email
+		    userName
+		    id
+		    displayName
+		  }
+		}`
+		);
 
-// 		const resultJson = await result.json();
-// 		if (resultJson.data != null) {
-// 			userS.set(resultJson.data.modifyMe);
-// 			goto('/admin');
-// 		} else {
-// 			errMessage = resultJson.errors[0].message;
-// 		}
+		const resultJson = await result.json();
+		if (resultJson.data != null) {
+			userS.set(resultJson.data.modifyMe);
+			goto('/admin');
+		} else {
+			errMessage = resultJson.errors[0].message;
+		}
 	}
 </script>
 
@@ -86,7 +86,9 @@
 			/>
 
 			<label class="label" for="DisplayName">
-				<span class="label-text text-sm font-medium leading-6 text-gray-900">Display name</span>
+				<span class="label-text text-sm font-medium leading-6 text-gray-900"
+					>Display name(author)</span
+				>
 			</label>
 			<input
 				id="DisplayName"
@@ -131,13 +133,8 @@
 					</div>
 				</div>
 			{/if}
-			<a href="/admin" type="button" class="btn">Cancel</a
-			>
-			<button
-				type="submit"
-				class="btn btn-primary"
-				>Save</button
-			>
+			<a href="/admin" type="button" class="btn">Cancel</a>
+			<button type="submit" class="btn btn-primary">Save</button>
 		</div>
 	</form>
 </AdminLayout>

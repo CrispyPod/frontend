@@ -8,7 +8,7 @@ export async function load({ params }) {
     null,
     `{episode(namedLink:"` +
     episodeId +
-    `"){id,title,createTime,description,audioFileName,audioFileDuration,thumbnailFileName},
+    `"){id,title,createTime,description,audioFileName,audioFileDuration,thumbnailFileName,authorName},
         siteConfig{
           siteName,
           siteUrl,
