@@ -1,6 +1,5 @@
 import { FetchPagedEpisodes } from "$lib/serverFetch";
 
-export const prerender = true;
 export async function GET() {
 
     let isLastPage: boolean = false;
@@ -44,7 +43,7 @@ export async function GET() {
 			xmlns:video="https://www.google.com/schemas/sitemap-video/1.1"
 		>
 ${mapNodes}
-		</urlset>`.trim(),
+		</urlset></xml>`.trim(),
         {
             headers: {
                 'Content-Type': 'application/xml',
