@@ -4,6 +4,7 @@
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { get } from 'svelte/store';
+	import { page } from '$app/stores';
 
 	let siteConfig: SiteConfig;
 	onMount(async () => {
@@ -18,6 +19,14 @@
 	{:else}
 		<link rel="icon" href="/favicon.png" />
 	{/if}
+
+	{#if $page.data.headAnalytics != null}
+		{@html $page.data.headAnalytics}
+	{/if}
 </svelte:head>
 
 <slot />
+
+{#if $page.data.footerAnalytics != null}
+	{@html $page.data.footerAnalytics}
+{/if}

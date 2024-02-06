@@ -5,8 +5,6 @@ import { siteConfigS } from "./stores/siteConfigStore";
 
 export async function FetchPagedEpisodes(pageIndex: number) {
   let episodes: Array<Episode> | null = null;
-  let siteName: string = '';
-  let siteDescription: string = '';
 
   let sum = 0;
   let hasNextPage = false;
@@ -36,7 +34,9 @@ export async function FetchPagedEpisodes(pageIndex: number) {
                 siteUrl,
                 siteDescription,
                 siteIconFile,
-                defaultThumbnail
+                defaultThumbnail,
+                headAnalytics,
+                footerAnalytics
               }
             }`
   );
@@ -46,10 +46,6 @@ export async function FetchPagedEpisodes(pageIndex: number) {
   hasPreviousPage = json_resp.data.episodeList.pageInfo.hasPreviousPage ?? false;
   hasNextPage = json_resp.data.episodeList.pageInfo.hasNextPage ?? false;
   sum = json_resp.data.episodeList.totalCount ?? 0;
-
-  siteName = json_resp.data.siteConfig.siteName;
-  siteDescription = json_resp.data.siteConfig.siteDescription;
-  let siteUrl = json_resp.data.siteConfig.siteUrl;
 
   siteConfigS.set({
     ...json_resp.data.siteConfig
@@ -66,9 +62,7 @@ export async function FetchPagedEpisodes(pageIndex: number) {
 
   return {
     episodes,
-    siteName,
-    siteDescription,
-    siteUrl,
+    ...json_resp.data.siteConfig,
     sum,
     hasNextPage,
     hasPreviousPage,

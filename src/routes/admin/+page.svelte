@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AdminLayout from '../../lib/components/AdminLayout.svelte';
+	import AdminLayout from '$lib/components/AdminLayout.svelte';
 </script>
 
 <AdminLayout pageTitle="Admin Dashboard">

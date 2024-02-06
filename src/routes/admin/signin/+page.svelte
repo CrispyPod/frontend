@@ -66,9 +66,7 @@
 		<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 			<form class="space-y-6 flex flex-col items-center" on:submit|preventDefault={handleSubmit}>
 				<div class="w-full">
-					<label for="email" class="label-text"
-						>Email address or user name</label
-					>
+					<label for="email" class="label-text">Email address or user name</label>
 					<div class="mt-2">
 						<input
 							on:focus={clearErrMessage}
@@ -83,9 +81,7 @@
 
 				<div class="w-full">
 					<div class="flex items-center justify-between">
-						<label for="password" class="label-text"
-							>Password</label
-						>
+						<label for="password" class="label-text">Password</label>
 					</div>
 					<div class="mt-2">
 						<input
@@ -99,7 +95,7 @@
 						/>
 					</div>
 				</div>
-				<span class="mt-2"/>
+				<span class="mt-2" />
 				{#if errMessage != null}
 					<div class=" text-red-500">
 						<p>{errMessage}</p>

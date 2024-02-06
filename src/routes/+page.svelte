@@ -2,6 +2,7 @@
 	import PagedEpisodes from '$lib/components/PagedEpisodes.svelte';
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import { page } from '$app/stores';
 
 	export let data: any;
 </script>
