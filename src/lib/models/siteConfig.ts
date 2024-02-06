@@ -4,6 +4,8 @@ export class SiteConfig {
 	siteUrl: string;
 	siteIconFile: string | null = "";
 	defaultThumbnail: string | null = "";
+	headAnalytics: string | null = "";
+	footerAnalytics: string | null = "";
 
 	constructor(
 		siteName: string,

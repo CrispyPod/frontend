@@ -21,12 +21,12 @@
 	{/if}
 
 	{#if $page.data.headAnalytics != null}
-		{@html $page.data.headAnalytics}
+		{@html decodeURI($page.data.headAnalytics)}
 	{/if}
 </svelte:head>
 
 <slot />
 
 {#if $page.data.footerAnalytics != null}
-	{@html $page.data.footerAnalytics}
+	{@html decodeURI($page.data.footerAnalytics)}
 {/if}

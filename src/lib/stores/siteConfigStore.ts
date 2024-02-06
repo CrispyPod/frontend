@@ -22,6 +22,8 @@ function siteConfigStore() {
 				  siteDescription
 				siteIconFile
 				defaultThumbnail
+				headAnalytics
+				footerAnalytics
 				}
 			  }`
 		);

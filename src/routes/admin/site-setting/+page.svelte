@@ -12,14 +12,38 @@
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
 
+	let headAnalytics = '';
+	let footerAnalytics = '';
+
 	onMount(async () => {
 		await siteConfigS.refresh();
 		siteConfig = get(siteConfigS);
+		headAnalytics = siteConfig.headAnalytics!;
+		footerAnalytics = siteConfig.footerAnalytics!;
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
 		const form = document.querySelector('#siteConfigForm');
 		const formData = new FormData(form as HTMLFormElement);
+		console.log(formData.get('headAnalytics'));
+		console.log(formData.get('footerAnalytics'));
+
+		let headAnalyticInput: string = '';
+		if (
+			formData.get('headAnalytics') != null &&
+			formData.get('headAnalytics')!.toString().length > 0
+		) {
+			headAnalyticInput += `,headAnalytics:"${encodeURI(formData.get('headAnalytics')!.toString())}"`;
+		}
+
+		let footerAnalyticInput: string = '';
+		if (
+			formData.get('footerAnalytics') != null &&
+			formData.get('footerAnalytics')!.toString().length > 0
+		) {
+			footerAnalyticInput += `,footerAnalytics:"${encodeURI(formData.get('footerAnalytics')!.toString())}"`;
+		}
+
 		const tokenS = get(token);
 		const result = await graphqlRequest(
 			tokenS,
@@ -30,12 +54,14 @@
 				formData.get('SiteDescription') +
 				`",siteUrl:"` +
 				formData.get('SiteUrl') +
-				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"}){
+				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"${headAnalyticInput}${footerAnalyticInput}}){
     siteUrl
     siteName
     siteDescription
 	siteIconFile
 	defaultThumbnail
+	headAnalytics
+	footerAnalytics
   }
 }`
 		);
@@ -90,6 +116,7 @@
 			placeholder="Type here"
 		/>
 
+		<div class="divider">Icons an Images</div>
 		<label class="label" for="siteIcon">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900"> Website icon</span>
 		</label>
@@ -121,6 +148,30 @@
 				siteConfig.defaultThumbnail = v;
 			}}
 		/>
+
+		<div class="divider">Analytics</div>
+
+		<label class="label" for="siteIcon">
+			<span class="label-text text-sm font-medium leading-6 text-gray-900">Head Analytics</span>
+		</label>
+		<textarea
+			class="textarea textarea-bordered w-full"
+			value={siteConfig == null ? null : decodeURI(headAnalytics)}
+			id="headAnalytics"
+			name="headAnalytics"
+			placeholder="<scirpt ...></script>"
+		></textarea>
+
+		<label class="label" for="siteIcon">
+			<span class="label-text text-sm font-medium leading-6 text-gray-900">Footer Analytics</span>
+		</label>
+		<textarea
+			class="textarea textarea-bordered w-full"
+			value={siteConfig == null ? null : decodeURI(footerAnalytics)}
+			id="footerAnalytics"
+			name="footerAnalytics"
+			placeholder="<scirpt ...></script>"
+		></textarea>
 
 		<div class="mt-6 flex items-center justify-end gap-x-6">
 			{#if errMessage != null}
