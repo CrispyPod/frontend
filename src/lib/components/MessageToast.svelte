@@ -16,7 +16,7 @@
 </script>
 
 {#if visible}
-	<div class="alert alert-info" transition:fade>
+	<div class="alert alert-info" transition:fade|global>
 		<span>{message}</span>
 	</div>
 {/if}

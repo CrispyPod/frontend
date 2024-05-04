@@ -1,4 +1,4 @@
-import { graphqlRequest } from '$lib/graphqlRequest';
+// import { graphqlRequest } from '$lib/graphqlRequest';
 import type { SiteConfig } from '$lib/models/siteConfig';
 import { get, writable } from 'svelte/store';
 
@@ -13,24 +13,24 @@ function siteConfigStore() {
 	}
 
 	async function refresh() {
-		const result = await graphqlRequest(
-			null,
-			`{
-				siteConfig{
-				  siteUrl
-				  siteName
-				  siteDescription
-				siteIconFile
-				defaultThumbnail
-				headAnalytics
-				footerAnalytics
-				}
-			  }`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data != null) {
-			siteConfigS.set(jsonResp.data.siteConfig);
-		}
+		// const result = await graphqlRequest(
+		// 	null,
+		// 	`{
+		// 		siteConfig{
+		// 		  siteUrl
+		// 		  siteName
+		// 		  siteDescription
+		// 		siteIconFile
+		// 		defaultThumbnail
+		// 		headAnalytics
+		// 		footerAnalytics
+		// 		}
+		// 	  }`
+		// );
+		// const jsonResp = await result.json();
+		// if (jsonResp.data != null) {
+		// 	siteConfigS.set(jsonResp.data.siteConfig);
+		// }
 	}
 
 	return {

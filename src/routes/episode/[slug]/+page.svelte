@@ -1,26 +1,23 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
-	import type { Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import { browser } from '$app/environment';
 
-	let episodeData: Episode;
 	export let data: any;
 	let cherryInstance: Cherry;
 
 	onMount(async () => {
-		// console.log(data);
+		console.log(data);
 		if (browser && data != null) {
-			episodeData = data.episode;
 			// trigger update hook since episodeData updated
 			await tick();
 			cherryInstance = new Cherry({
 				id: 'markdown-preview',
 				isPreviewOnly: true,
-				value: episodeData.description
+				value: data.description ?? ''
 			});
 		}
 	});
@@ -28,37 +25,35 @@
 
 <svelte:head>
 	<title
-		>{episodeData == null ? '' : episodeData.title} - {data.siteConfig == null
-			? ''
-			: data.siteConfig.siteName}</title
+		>{data == null ? '' : data.title}</title
 	>
-	<meta name="description" content={`${data.siteConfig.siteDescription}`} />
+	<!-- <meta name="description" content={`${data.siteConfig.siteDescription}`} />
 	<meta name="keywords" content={`${data.siteConfig.siteName}, ${data.episode.title}`} />
-	<meta name="author" content={`${data.episode.authorName}`} />
+	<meta name="author" content={`${data.episode.authorName}`} /> -->
 </svelte:head>
 
 <SiteLayout>
 	<div class="w-full flex justify-center items-center mt-10 mx-2">
 		<div class="container">
-			{#if episodeData != null}
+			{#if data != null}
 				<h1 class="text-3xl text-center">
-					{episodeData.title}
+					{data.title}
 				</h1>
-				{#if episodeData.audioFileName != null && episodeData.audioFileName.length > 0}
+				{#if data.audioFileName != null && data.audioFileName.length > 0}
 					<div class="card lg:card-side bg-base-100 shadow-xl my-10 mr-6">
 						<figure>
 							<img
 								class="w-80 h-80"
-								src={episodeData.thumbnailFileName != null &&
-								episodeData.thumbnailFileName.length > 0
-									? episodeData.thumbnailFileName
+								src={data.thumbnailFileName != null &&
+								data.thumbnailFileName.length > 0
+									? data.thumbnailFileName
 									: `/api/imageFile/${data.siteConfig.defaultThumbnail}`}
-								alt={episodeData.title}
+								alt={data.title}
 							/>
 						</figure>
 
 						<div class="card-body">
-							<WaveForm fileUrl={episodeData.audioFileName} />
+							<WaveForm fileUrl={data.audioFileName} />
 						</div>
 					</div>
 				{/if}
