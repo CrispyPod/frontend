@@ -6,17 +6,15 @@
 </script>
 
 <svelte:head>
-	<title>Episodes - {data.siteName == null ? '' : data.siteName}</title>
-	<meta name="description" content={`${data.siteDescription}`} />
-	<meta name="keywords" content={data.siteName} />
+	<title>Episodes - {data.siteConfig.site_name}</title>
+	<meta name="description" content={`${data.siteConfig.site_description}`} />
 </svelte:head>
 
 <SiteLayout>
 	<PagedEpisodes
-		episodes={data.episodes}
-		curPage={data.curPage}
-		sum={data.sum}
-		hasNextPage={data.hasNextPage}
-		hasPreviousPage={data.hasPreviousPage}
+		episodes={data.episodes.items}
+		hasNextPage={data.episodes.page >= data.episodes.totalPage}
+		hasPreviousPage={data.episodes.page >= 1}
+		sum={data.episodes.totalItems}
 	/>
 </SiteLayout>

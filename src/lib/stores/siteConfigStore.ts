@@ -1,5 +1,6 @@
 // import { graphqlRequest } from '$lib/graphqlRequest';
 import type { SiteConfig } from '$lib/models/siteConfig';
+import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 import { get, writable } from 'svelte/store';
 
 function siteConfigStore() {
@@ -13,24 +14,9 @@ function siteConfigStore() {
 	}
 
 	async function refresh() {
-		// const result = await graphqlRequest(
-		// 	null,
-		// 	`{
-		// 		siteConfig{
-		// 		  siteUrl
-		// 		  siteName
-		// 		  siteDescription
-		// 		siteIconFile
-		// 		defaultThumbnail
-		// 		headAnalytics
-		// 		footerAnalytics
-		// 		}
-		// 	  }`
-		// );
-		// const jsonResp = await result.json();
-		// if (jsonResp.data != null) {
-		// 	siteConfigS.set(jsonResp.data.siteConfig);
-		// }
+		const config = await pb.collection(COLLECTION_SITE_CONFIG).getFirstListItem("");
+		siteConfigS.set(config as unknown as SiteConfig)
+		// console.log(config);
 	}
 
 	return {

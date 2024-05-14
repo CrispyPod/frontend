@@ -8,7 +8,6 @@
 	export let sum = 0;
 	export let hasNextPage = false;
 	export let hasPreviousPage = false;
-	console.log(episodes);
 </script>
 
 <div class="grid lg:grid-cols-2">
@@ -17,4 +16,4 @@
 	{/each}
 </div>
 
-<!-- <Pager {sum} {hasNextPage} {hasPreviousPage} {curPage} /> -->
+<Pager {sum} {hasNextPage} {hasPreviousPage} {curPage} />

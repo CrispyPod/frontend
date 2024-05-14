@@ -2,7 +2,7 @@
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import Pager from '$lib/components/Pager.svelte';
 	import HookItem from '$lib/components/admin-hooks/HookItem.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { Hook } from '$lib/models/hook';
 	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
@@ -16,31 +16,31 @@
 	let curPage = 1;
 
 	onMount(async () => {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`{
-  hookList(pagination:{perPage:25,pageIndex:${curPage}}){
-    items{
-      id,
-      name,
-      enabled,
-      method,
-    },
-    totalCount,
-    pageInfo{
-      hasNextPage,
-      hasPreviousPage,
-    }
-  }
-}`
-		);
+// 		const tokenS = get(token);
+// 		const result = await graphqlRequest(
+// 			tokenS,
+// 			`{
+//   hookList(pagination:{perPage:25,pageIndex:${curPage}}){
+//     items{
+//       id,
+//       name,
+//       enabled,
+//       method,
+//     },
+//     totalCount,
+//     pageInfo{
+//       hasNextPage,
+//       hasPreviousPage,
+//     }
+//   }
+// }`
+// 		);
 
-		const resultJson = await result.json();
-		hooks = resultJson.data.hookList.items ?? [];
-		hasPreviousPage = resultJson.data.hookList.pageInfo.hasPreviousPage ?? false;
-		hasNextPage = resultJson.data.hookList.pageInfo.hasNextPage ?? false;
-		sum = resultJson.data.hookList.totalCount ?? 0;
+// 		const resultJson = await result.json();
+// 		hooks = resultJson.data.hookList.items ?? [];
+// 		hasPreviousPage = resultJson.data.hookList.pageInfo.hasPreviousPage ?? false;
+// 		hasNextPage = resultJson.data.hookList.pageInfo.hasNextPage ?? false;
+// 		sum = resultJson.data.hookList.totalCount ?? 0;
 	});
 </script>
 

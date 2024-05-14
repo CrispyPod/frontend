@@ -6,10 +6,9 @@
 
 <svelte:head>
 	<title>
-		About - {data == null ? '' : data.siteName}
+		About - {data.siteConfig.site_name}
 	</title>
-	<meta name="description" content={`${data.siteDescription}`} />
-	<meta name="keywords" content={data.siteName} />
+	<meta name="description" content={`${data.siteConfig.site_description}`} />
 </svelte:head>
 
 <SiteLayout>
@@ -18,7 +17,7 @@
 			<div class="max-w-md">
 				<!-- <h1 class="text-5xl font-bold">{siteConfig == null ? '' : siteConfig.siteName}</h1> -->
 				<!-- <h2 class="text-6xl">About</h2> -->
-				<p class="py-6">{data == null ? '' : data.siteDescription}</p>
+				<p class="py-6">{data.siteConfig.site_description}</p>
 				<!-- <button class="btn btn-primary">Get Started</button> -->
 			</div>
 		</div>

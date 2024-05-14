@@ -1,18 +1,15 @@
 <script lang="ts">
-	// import { page } from '$app/stores';
-	// let siteName: string;
-	// if ($page.data.siteConfig == null) {
-	// 	siteName = $page.data.siteName;
-	// } else {
-	// 	siteName = $page.data.siteConfig.siteName;
-	// }
+	import { page } from '$app/stores';
+	let siteName: string;
+	siteName = $page.data.siteConfig.site_name;
+
 </script>
 
 <div class="w-full flex justify-center items-center">
 	<div class="container">
 		<div class="navbar">
 			<div class="flex-1">
-				<a class="btn btn-ghost normal-case text-xl" href="/">{"Site"}</a>
+				<a class="btn btn-ghost normal-case text-xl" href="/">{siteName}</a>
 			</div>
 			<div class="flex-none">
 				<ul class="menu menu-horizontal">

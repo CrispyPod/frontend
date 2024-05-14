@@ -1,19 +1,19 @@
 export class SiteConfig {
-	siteName: string;
-	siteDescription: string;
-	siteUrl: string;
-	siteIconFile: string | null = "";
-	defaultThumbnail: string | null = "";
-	headAnalytics: string | null = "";
-	footerAnalytics: string | null = "";
+	site_name: string;
+	site_description: string;
+	site_url: string;
+	site_icon: string | null = "";
+	default_thumbnail: string | null = "";
+	head_analytics: string | null = "";
+	footer_analytics: string | null = "";
 
 	constructor(
-		siteName: string,
-		siteDescription: string,
-		siteUrl: string,
+		site_name: string,
+		site_description: string,
+		site_url: string,
 	) {
-		this.siteName = siteName;
-		this.siteDescription = siteDescription;
-		this.siteUrl = siteUrl;
+		this.site_name = site_name;
+		this.site_description = site_description;
+		this.site_url = site_url;
 	}
 }
