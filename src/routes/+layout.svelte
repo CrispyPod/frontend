@@ -17,7 +17,7 @@
 	{#if siteConfig != null && siteConfig.siteIconFile != null}
 		<link rel="icon" href={'/api/imageFile/' + siteConfig.siteIconFile} />
 	{:else}
-		<link rel="icon" href="/favicon.png" />
+		<link rel="icon" href="/favicon.ico" />
 	{/if}
 
 	{#if $page.data.headAnalytics != null}
