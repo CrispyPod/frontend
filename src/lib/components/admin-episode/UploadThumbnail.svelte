@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onMount } from 'svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
@@ -36,49 +36,49 @@
 	});
 
 	async function startUpload() {
-		uploading = true;
-		let file = fileList.item(0);
-		const tokenS = get(token);
-		// console.log(tokenS);
+		// uploading = true;
+		// let file = fileList.item(0);
+		// const tokenS = get(token);
+		// // console.log(tokenS);
 
-		let data = new FormData();
-		data.append('file', file!);
-		data.append('episodeId', episodeData!.id);
-		let resp = await fetch('/api/imageFile', {
-			method: 'POST',
-			headers: [['Authorization', 'Bearer ' + tokenS]],
-			body: data
-		});
+		// let data = new FormData();
+		// data.append('file', file!);
+		// data.append('episodeId', episodeData!.id);
+		// let resp = await fetch('/api/imageFile', {
+		// 	method: 'POST',
+		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
+		// 	body: data
+		// });
 
-		if (resp.status != 200) {
-			// TODO: show popup
-		}
+		// if (resp.status != 200) {
+		// 	// TODO: show popup
+		// }
 
-		let audioFile = await resp.json();
+		// let audioFile = await resp.json();
 
-		episodeData!.thumbnailFileName = audioFile.thumbnailFileName;
-		episodeData!.thumbnailUploadName = file?.name!;
-		uploading = false;
+		// episodeData!.thumbnailFileName = audioFile.thumbnailFileName;
+		// episodeData!.thumbnailUploadName = file?.name!;
+		// uploading = false;
 	}
 
 	async function onNext() {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{modifyEpisode(id:"` +
-				episodeData?.id +
-				`",input:{thumbnailFileName:"` +
-				episodeData?.thumbnailFileName +
-				`",thumbnailFileUploadName:"` +
-				episodeData?.thumbnailUploadName +
-				`"}){title}}`
-		);
-		const resultJson = await result.json();
-		if (resultJson.data != null) {
-			handleNext(episodeData!);
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// const tokenS = get(token);
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`mutation{modifyEpisode(id:"` +
+		// 		episodeData?.id +
+		// 		`",input:{thumbnailFileName:"` +
+		// 		episodeData?.thumbnailFileName +
+		// 		`",thumbnailFileUploadName:"` +
+		// 		episodeData?.thumbnailUploadName +
+		// 		`"}){title}}`
+		// );
+		// const resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	handleNext(episodeData!);
+		// } else {
+		// 	errMessage = resultJson.errors[0].message;
+		// }
 	}
 
 	function handleReupload() {
@@ -108,9 +108,9 @@
 					src={episodeData.thumbnailFileName
 						? siteUrl + '/api/imageFile/' + episodeData.thumbnailFileName
 						: siteConfig != null &&
-							  siteConfig.defaultThumbnail != null &&
-							  siteConfig.defaultThumbnail.length > 0
-							? `/api/imageFile/${siteConfig.defaultThumbnail}`
+							  siteConfig.default_thumbnail != null &&
+							  siteConfig.default_thumbnail.length > 0
+							? `/api/imageFile/${siteConfig.default_thumbnail}`
 							: '/EpisodeDefaultThumbnailSquare.png'}
 					alt={episodeData.title}
 				/>

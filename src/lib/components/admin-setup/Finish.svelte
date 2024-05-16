@@ -1,27 +1,26 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { token } from '$lib/stores/tokenStore';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 
 	let errMessage: string | null = null;
 	export let handleNext: () => any;
 
 	async function handleFinish() {
-		const tokenS = get(token);
-
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-  modifySiteConfig(input:{setupComplete:true}){
-    setupComplete
-  }
-}`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data.modifySiteConfig.setupComplete) {
-			handleNext();
-		}
+		// 		const tokenS = get(token);
+		// 		const result = await graphqlRequest(
+		// 			tokenS,
+		// 			`mutation{
+		//   modifySiteConfig(input:{setupComplete:true}){
+		//     setupComplete
+		//   }
+		// }`
+		// 		);
+		// 		const jsonResp = await result.json();
+		// 		if (jsonResp.data.modifySiteConfig.setupComplete) {
+		// 			handleNext();
+		// 		}
 	}
 </script>
 

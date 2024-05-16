@@ -3,6 +3,7 @@ export class SiteConfig {
 	site_description: string;
 	site_url: string;
 	site_icon: string | null = "";
+	setup_complete: boolean = false;
 	default_thumbnail: string | null = "";
 	head_analytics: string | null = "";
 	footer_analytics: string | null = "";

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { get } from 'svelte/store';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import { EpisodeState, type Episode } from '$lib/models/episode';
 	import { goto } from '$app/navigation';
 	import type { AudioFile } from '$lib/models/audioFile';
@@ -46,108 +46,101 @@
 	$: fileList && fileListChanged();
 
 	export let data: any;
-	onMount(async () => {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`{episode(id:"` +
-				data.id +
-				`"){id,title,description,episodeStatus,audioFileName,audioFileUploadName,audioFileDuration}}`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data != null) {
-			fetchedEpisode = jsonResp.data.episode;
-			cherryInstance.setValue(fetchedEpisode.description);
-		} else {
-			goto('/admin/episode');
-		}
+	onMount(() => {
+		// const tokenS = get(token);
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`{episode(id:"` +
+		// 		data.id +
+		// 		`"){id,title,description,episodeStatus,audioFileName,audioFileUploadName,audioFileDuration}}`
+		// );
+		// const jsonResp = await result.json();
+		// if (jsonResp.data != null) {
+		// 	fetchedEpisode = jsonResp.data.episode;
+		// 	cherryInstance.setValue(fetchedEpisode.description);
+		// } else {
+		// 	goto('/admin/episode');
+		// }
 	});
 
 	async function handleSubmit(e: SubmitEvent, episodeData: Episode) {
-		if (cherryInstance.getValue().length == 0) {
-			errMessage = 'Please type in description of this episode.';
-			return;
-		}
-
-		const form: HTMLFormElement | null = document.querySelector('#modifyEpisodeForm');
-		const formData = new FormData(form!);
-		const toeknS = get(token);
-
-		let audioFileField = '';
-		if (episodeData.audioFileName != null && episodeData.audioFileName.length > 0) {
-			// console.log(episodeData);
-			audioFileField +=
-				',audioFileName:"' +
-				episodeData.audioFileName +
-				'",audioFileUploadName:"' +
-				episodeData.audioFileUploadName +
-				'"';
-		}
-
-		let thumbnailFileField = '';
-		if (episodeData.thumbnailFileName != null && episodeData.thumbnailFileName.length > 0) {
-			thumbnailFileField += ',thumbnailFileName:"' + episodeData.thumbnailFileName + '"';
-		}
-
-		let stat = parseInt(formData.get('status')!.toString());
-		let reqStr =
-			`mutation{  modifyEpisode(id:"` +
-			episodeData.id +
-			`",input: {title:"` +
-			encodeURIComponent(formData.get('title')!.toString()) +
-			`",description:"` +
-			encodeURIComponent(cherryInstance.getValue()) +
-			`",episodeStatus:` +
-			stat +
-			audioFileField +
-			thumbnailFileField +
-			`}){title,description,episodeStatus}}`;
-		console.log(reqStr);
-		const result = await graphqlRequest(toeknS, reqStr);
-		var resultJson = await result.json();
-
-		if (resultJson.data != null) {
-			goto('/admin/episode');
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// if (cherryInstance.getValue().length == 0) {
+		// 	errMessage = 'Please type in description of this episode.';
+		// 	return;
+		// }
+		// const form: HTMLFormElement | null = document.querySelector('#modifyEpisodeForm');
+		// const formData = new FormData(form!);
+		// const toeknS = get(token);
+		// let audioFileField = '';
+		// if (episodeData.audioFileName != null && episodeData.audioFileName.length > 0) {
+		// 	// console.log(episodeData);
+		// 	audioFileField +=
+		// 		',audioFileName:"' +
+		// 		episodeData.audioFileName +
+		// 		'",audioFileUploadName:"' +
+		// 		episodeData.audioFileUploadName +
+		// 		'"';
+		// }
+		// let thumbnailFileField = '';
+		// if (episodeData.thumbnailFileName != null && episodeData.thumbnailFileName.length > 0) {
+		// 	thumbnailFileField += ',thumbnailFileName:"' + episodeData.thumbnailFileName + '"';
+		// }
+		// let stat = parseInt(formData.get('status')!.toString());
+		// let reqStr =
+		// 	`mutation{  modifyEpisode(id:"` +
+		// 	episodeData.id +
+		// 	`",input: {title:"` +
+		// 	encodeURIComponent(formData.get('title')!.toString()) +
+		// 	`",description:"` +
+		// 	encodeURIComponent(cherryInstance.getValue()) +
+		// 	`",episodeStatus:` +
+		// 	stat +
+		// 	audioFileField +
+		// 	thumbnailFileField +
+		// 	`}){title,description,episodeStatus}}`;
+		// console.log(reqStr);
+		// const result = await graphqlRequest(toeknS, reqStr);
+		// var resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	goto('/admin/episode');
+		// } else {
+		// 	errMessage = resultJson.errors[0].message;
+		// }
 	}
 
 	function handleDelete() {
-		if (fetchedEpisode.id.length == 0) {
-			return;
-		}
-		let a: any = document.getElementById('confirmDeleteModal');
-		a.showModal();
+		// if (fetchedEpisode.id.length == 0) {
+		// 	return;
+		// }
+		// let a: any = document.getElementById('confirmDeleteModal');
+		// a.showModal();
 	}
 
 	async function confirmDelete() {
-		if (fetchedEpisode.id.length == 0) {
-			return;
-		}
-
-		const tokenS = get(token);
-		let result = await graphqlRequest(
-			tokenS,
-			`mutation{
-  deleteEpisode(id:"` +
-				fetchedEpisode.id +
-				`"){
-    result
-  }
-}`
-		);
-
-		const resultJson = await result.json();
-		if (resultJson.data != null && resultJson.data.deleteEpisode.result) {
-			goto('/admin/episode');
-		} else {
-			try {
-				errMessage = resultJson.errors[0].message;
-			} catch (e) {
-				errMessage = 'failed to delete episode';
-			}
-		}
+		// 		if (fetchedEpisode.id.length == 0) {
+		// 			return;
+		// 		}
+		// 		const tokenS = get(token);
+		// 		let result = await graphqlRequest(
+		// 			tokenS,
+		// 			`mutation{
+		//   deleteEpisode(id:"` +
+		// 				fetchedEpisode.id +
+		// 				`"){
+		//     result
+		//   }
+		// }`
+		// 		);
+		// 		const resultJson = await result.json();
+		// 		if (resultJson.data != null && resultJson.data.deleteEpisode.result) {
+		// 			goto('/admin/episode');
+		// 		} else {
+		// 			try {
+		// 				errMessage = resultJson.errors[0].message;
+		// 			} catch (e) {
+		// 				errMessage = 'failed to delete episode';
+		// 			}
+		// 		}
 	}
 
 	function handleForm(e: SubmitEvent) {
@@ -160,29 +153,25 @@
 	}
 
 	async function startUpload() {
-		let file = fileList.item(0);
-		const tokenS = get(token);
-		// console.log(tokenS);
-
-		let data = new FormData();
-		data.append('file', file!);
-		data.append('episodeId', fetchedEpisode.id);
-		let resp = await fetch('/api/audioFile', {
-			method: 'POST',
-			headers: [['Authorization', 'Bearer ' + tokenS]],
-			body: data
-		});
-
-		if (resp.status != 200) {
-			// TODO: show popup
-		}
-
-		let audioFile: AudioFile = await resp.json();
-
-		fetchedEpisode!.audioFileName = audioFile.audioFileName;
-		fetchedEpisode!.audioFileUploadName = file?.name!;
-		// fetchedEpisode!.audioFileDuration = audioFile.audioFileDuration;
-		fileUploadedAndNotSaved = true;
+		// let file = fileList.item(0);
+		// const tokenS = get(token);
+		// // console.log(tokenS);
+		// let data = new FormData();
+		// data.append('file', file!);
+		// data.append('episodeId', fetchedEpisode.id);
+		// let resp = await fetch('/api/audioFile', {
+		// 	method: 'POST',
+		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
+		// 	body: data
+		// });
+		// if (resp.status != 200) {
+		// 	// TODO: show popup
+		// }
+		// let audioFile: AudioFile = await resp.json();
+		// fetchedEpisode!.audioFileName = audioFile.audioFileName;
+		// fetchedEpisode!.audioFileUploadName = file?.name!;
+		// // fetchedEpisode!.audioFileDuration = audioFile.audioFileDuration;
+		// fileUploadedAndNotSaved = true;
 	}
 </script>
 

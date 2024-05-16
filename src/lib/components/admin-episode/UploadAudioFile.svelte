@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { AudioFile } from '$lib/models/audioFile';
 	import type { Episode } from '$lib/models/episode';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
@@ -27,49 +27,49 @@
 	$: episodeData && checkCanClickNext();
 
 	async function startUpload() {
-		uploading = true;
-		let file = fileList.item(0);
-		const tokenS = get(token);
-		// console.log(tokenS);
+		// uploading = true;
+		// let file = fileList.item(0);
+		// const tokenS = get(token);
+		// // console.log(tokenS);
 
-		let data = new FormData();
-		data.append('file', file!);
-		data.append('episodeId', episodeData!.id);
-		let resp = await fetch('/api/audioFile', {
-			method: 'POST',
-			headers: [['Authorization', 'Bearer ' + tokenS]],
-			body: data
-		});
+		// let data = new FormData();
+		// data.append('file', file!);
+		// data.append('episodeId', episodeData!.id);
+		// let resp = await fetch('/api/audioFile', {
+		// 	method: 'POST',
+		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
+		// 	body: data
+		// });
 
-		if (resp.status != 200) {
-			// TODO: show popup
-		}
+		// if (resp.status != 200) {
+		// 	// TODO: show popup
+		// }
 
-		let audioFile: AudioFile = await resp.json();
+		// let audioFile: AudioFile = await resp.json();
 
-		episodeData!.audioFileName = audioFile.audioFileName;
-		episodeData!.audioFileUploadName = file?.name!;
-		uploading = false;
+		// episodeData!.audioFileName = audioFile.audioFileName;
+		// episodeData!.audioFileUploadName = file?.name!;
+		// uploading = false;
 	}
 
 	async function onNext() {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{modifyEpisode(id:"` +
-				episodeData?.id +
-				`",input:{audioFileName:"` +
-				episodeData?.audioFileName +
-				`",audioFileUploadName:"` +
-				episodeData?.audioFileUploadName +
-				`"}){title}}`
-		);
-		const resultJson = await result.json();
-		if (resultJson.data != null) {
-			handleNext(episodeData!);
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// const tokenS = get(token);
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`mutation{modifyEpisode(id:"` +
+		// 		episodeData?.id +
+		// 		`",input:{audioFileName:"` +
+		// 		episodeData?.audioFileName +
+		// 		`",audioFileUploadName:"` +
+		// 		episodeData?.audioFileUploadName +
+		// 		`"}){title}}`
+		// );
+		// const resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	handleNext(episodeData!);
+		// } else {
+		// 	errMessage = resultJson.errors[0].message;
+		// }
 	}
 
 	function handleReupload() {

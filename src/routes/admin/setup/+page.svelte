@@ -5,8 +5,6 @@
 	import ChangeSiteSetting from '$lib/components/admin-setup/ChangeSiteSetting.svelte';
 	import Finish from '$lib/components/admin-setup/Finish.svelte';
 	import Welcome from '$lib/components/admin-setup/Welcome.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	/*
@@ -43,22 +41,22 @@ TODO:
 		}
 	}
 
-	onMount(async () => {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`{siteConfig{
-          siteName,
-          siteUrl,
-          siteDescription,
-          setupComplete,
-        }
-}`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data.setupComplete) {
-			goto('/admin');
-		}
+	onMount(() => {
+// 		const tokenS = get(token);
+// 		const result = await graphqlRequest(
+// 			tokenS,
+// 			`{siteConfig{
+//           siteName,
+//           siteUrl,
+//           siteDescription,
+//           setupComplete,
+//         }
+// }`
+// 		);
+// 		const jsonResp = await result.json();
+// 		if (jsonResp.data.setupComplete) {
+// 			goto('/admin');
+// 		}
 	});
 </script>
 

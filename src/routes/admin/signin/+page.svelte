@@ -1,48 +1,48 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import SiteLayout from '../../../lib/components/SiteLayout.svelte';
-	import { token } from '$lib/stores/tokenStore';
+	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { token } from '$lib/stores/tokenStore';
 
 	let errMessage: string | null = null;
 
 	async function handleSubmit() {
-		const email = document.getElementById('email') as HTMLInputElement;
-		const password = document.getElementById('password') as HTMLInputElement;
+// 		const email = document.getElementById('email') as HTMLInputElement;
+// 		const password = document.getElementById('password') as HTMLInputElement;
 
-		const result = await graphqlRequest(
-			null,
-			`{
-  login(credential: {userName: "` +
-				email.value +
-				`", password: "` +
-				password.value +
-				`"}) {
-    token
-  }
-}`
-		);
+// 		const result = await graphqlRequest(
+// 			null,
+// 			`{
+//   login(credential: {userName: "` +
+// 				email.value +
+// 				`", password: "` +
+// 				password.value +
+// 				`"}) {
+//     token
+//   }
+// }`
+// 		);
 
-		const jsonResult = await result.json();
-		if (jsonResult.errors == null) {
-			token.set(jsonResult.data.login.token);
-			goto('/admin');
-		} else {
-			if (jsonResult.errors.length == 0) {
-				errMessage = 'Sign in failed';
-			} else {
-				errMessage = jsonResult.errors[0].message;
-			}
-		}
+// 		const jsonResult = await result.json();
+// 		if (jsonResult.errors == null) {
+// 			token.set(jsonResult.data.login.token);
+// 			goto('/admin');
+// 		} else {
+// 			if (jsonResult.errors.length == 0) {
+// 				errMessage = 'Sign in failed';
+// 			} else {
+// 				errMessage = jsonResult.errors[0].message;
+// 			}
+// 		}
 	}
 
 	onMount(() => {
-		const curToken = get(token);
-		if (curToken != null) {
-			goto('/admin');
-		}
+		// const curToken = get(token);
+		// if (curToken != null) {
+		// 	goto('/admin');
+		// }
 	});
 
 	function clearErrMessage() {

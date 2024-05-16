@@ -1,55 +1,32 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
-	import { graphqlRequest } from '$lib/graphqlRequest';
-
-	// let siteConfig: SiteConfig;
+	import { pb } from '$lib/pb-integrate/pb_client';
+	import { siteConfigS } from '$lib/stores/siteConfigStore';
 
 	let showAvatarOption = false;
 	function handleSignOut() {
-		token.set(null);
+		pb.authStore.clear();
+		goto('/admin/signin');
 	}
 
 	let breadCombItems: Array<BreadCombItem> = [];
 
-	onMount(async () => {
-		// await siteConfigS.init();
-		// siteConfig = get(siteConfigS);
-		const tokenS = get(token);
-
-		if ($page.url.pathname != '/admin/signin' && tokenS != null) {
-			let result = await graphqlRequest(tokenS, `query{me{id,userName}}`);
-			let jsonResp = await result.json();
-			if (jsonResp.data == null || jsonResp.data.me == null) {
-				token.set(null);
-			}
+	onMount(() => {
+		if ($page.url.pathname == '/admin/signin' && pb.authStore.isValid) {
+			goto('/admin');
+			return;
 		}
 
-		if ($page.url.pathname == '/admin/signin') {
-			if (tokenS != null) {
-				goto('/admin');
+		siteConfigS.init().then(() => {
+			const siteConfig = get(siteConfigS);
+			if (!siteConfig.setup_complete) {
+				goto('/admin/setup');
 			}
-		} else {
-			if (tokenS == null) {
-				goto('/admin/signin');
-			}
-		}
-
-		let result = await graphqlRequest(
-			tokenS,
-			`{siteConfig{
-          setupComplete,
-        }
-}`
-		);
-		let jsonResp = await result.json();
-		if (!jsonResp.data.siteConfig.setupComplete) {
-			goto('/admin/setup');
-		}
+		});
 
 		if ($page.url.pathname.replace('/admin', '').length > 0) {
 			let builtLink = '';
@@ -65,8 +42,7 @@
 	});
 
 	export function loginCheck() {
-		const tokenStore = get(token);
-		if (tokenStore == null) {
+		if (pb.authStore.isValid) {
 			goto('/admin/signin');
 		}
 	}

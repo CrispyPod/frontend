@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -18,33 +18,32 @@
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		const form = document.querySelector('#siteConfigForm');
-		const formData = new FormData(form as HTMLFormElement);
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-  modifySiteConfig(input:{siteName:"` +
-				formData.get('SiteName') +
-				`",siteDescription:"` +
-				formData.get('SiteDescription') +
-				`",siteUrl:"` +
-				formData.get('SiteUrl') +
-				`"}){
-    siteUrl
-    siteName
-    siteDescription
-  }
-}`
-		);
-
-		var resultJson = await result.json();
-		if (resultJson.data != null) {
-			siteConfigS.set(resultJson.data.modifySiteConfig);
-			handleNext();
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// 		const form = document.querySelector('#siteConfigForm');
+		// 		const formData = new FormData(form as HTMLFormElement);
+		// 		const tokenS = get(token);
+		// 		const result = await graphqlRequest(
+		// 			tokenS,
+		// 			`mutation{
+		//   modifySiteConfig(input:{siteName:"` +
+		// 				formData.get('SiteName') +
+		// 				`",siteDescription:"` +
+		// 				formData.get('SiteDescription') +
+		// 				`",siteUrl:"` +
+		// 				formData.get('SiteUrl') +
+		// 				`"}){
+		//     siteUrl
+		//     siteName
+		//     siteDescription
+		//   }
+		// }`
+		// 		);
+		// 		var resultJson = await result.json();
+		// 		if (resultJson.data != null) {
+		// 			siteConfigS.set(resultJson.data.modifySiteConfig);
+		// 			handleNext();
+		// 		} else {
+		// 			errMessage = resultJson.errors[0].message;
+		// 		}
 	}
 </script>
 
@@ -60,7 +59,7 @@ Next, change site settings.
 			name="SiteName"
 			type="text"
 			placeholder="Type here"
-			value={siteConfig == null ? '' : siteConfig.siteName}
+			value={siteConfig == null ? '' : siteConfig.site_name}
 			class="input input-bordered w-full max-w-xs"
 		/>
 
@@ -72,7 +71,7 @@ Next, change site settings.
 			name="SiteUrl"
 			type="url"
 			placeholder="Type here"
-			value={siteConfig == null ? '' : siteConfig.siteUrl}
+			value={siteConfig == null ? '' : siteConfig.site_url}
 			class="input input-bordered w-full max-w-xs"
 		/>
 	</div>
@@ -83,7 +82,7 @@ Next, change site settings.
 	<textarea
 		id="SiteDescription"
 		name="SiteDescription"
-		value={siteConfig == null ? '' : siteConfig.siteDescription}
+		value={siteConfig == null ? '' : siteConfig.site_description}
 		class="textarea textarea-bordered w-full"
 		placeholder="Type here"
 	/>

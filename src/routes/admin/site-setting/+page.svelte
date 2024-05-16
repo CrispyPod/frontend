@@ -4,8 +4,8 @@
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
-	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { token } from '$lib/stores/tokenStore';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { token } from '$lib/stores/tokenStore';
 	import { goto } from '$app/navigation';
 	import AdminUpload from '$lib/components/AdminUpload.svelte';
 
@@ -15,64 +15,60 @@
 	let headAnalytics = '';
 	let footerAnalytics = '';
 
-	onMount(async () => {
-		await siteConfigS.refresh();
-		siteConfig = get(siteConfigS);
-		headAnalytics = siteConfig.headAnalytics!;
-		footerAnalytics = siteConfig.footerAnalytics!;
+	onMount(() => {
+		// await siteConfigS.refresh();
+		// siteConfig = get(siteConfigS);
+		// headAnalytics = siteConfig.headAnalytics!;
+		// footerAnalytics = siteConfig.footerAnalytics!;
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		const form = document.querySelector('#siteConfigForm');
-		const formData = new FormData(form as HTMLFormElement);
-		console.log(formData.get('headAnalytics'));
-		console.log(formData.get('footerAnalytics'));
-
-		let headAnalyticInput: string = '';
-		if (
-			formData.get('headAnalytics') != null &&
-			formData.get('headAnalytics')!.toString().length > 0
-		) {
-			headAnalyticInput += `,headAnalytics:"${encodeURI(formData.get('headAnalytics')!.toString())}"`;
-		}
-
-		let footerAnalyticInput: string = '';
-		if (
-			formData.get('footerAnalytics') != null &&
-			formData.get('footerAnalytics')!.toString().length > 0
-		) {
-			footerAnalyticInput += `,footerAnalytics:"${encodeURI(formData.get('footerAnalytics')!.toString())}"`;
-		}
-
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-  modifySiteConfig(input:{siteName:"` +
-				formData.get('SiteName') +
-				`",siteDescription:"` +
-				formData.get('SiteDescription') +
-				`",siteUrl:"` +
-				formData.get('SiteUrl') +
-				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"${headAnalyticInput}${footerAnalyticInput}}){
-    siteUrl
-    siteName
-    siteDescription
-	siteIconFile
-	defaultThumbnail
-	headAnalytics
-	footerAnalytics
-  }
-}`
-		);
-
-		var resultJson = await result.json();
-		if (resultJson.data != null) {
-			siteConfigS.set(resultJson.data.modifySiteConfig);
-			goto('/admin');
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// 		const form = document.querySelector('#siteConfigForm');
+		// 		const formData = new FormData(form as HTMLFormElement);
+		// 		console.log(formData.get('headAnalytics'));
+		// 		console.log(formData.get('footerAnalytics'));
+		// 		let headAnalyticInput: string = '';
+		// 		if (
+		// 			formData.get('headAnalytics') != null &&
+		// 			formData.get('headAnalytics')!.toString().length > 0
+		// 		) {
+		// 			headAnalyticInput += `,headAnalytics:"${encodeURI(formData.get('headAnalytics')!.toString())}"`;
+		// 		}
+		// 		let footerAnalyticInput: string = '';
+		// 		if (
+		// 			formData.get('footerAnalytics') != null &&
+		// 			formData.get('footerAnalytics')!.toString().length > 0
+		// 		) {
+		// 			footerAnalyticInput += `,footerAnalytics:"${encodeURI(formData.get('footerAnalytics')!.toString())}"`;
+		// 		}
+		// 		const tokenS = get(token);
+		// 		const result = await graphqlRequest(
+		// 			tokenS,
+		// 			`mutation{
+		//   modifySiteConfig(input:{siteName:"` +
+		// 				formData.get('SiteName') +
+		// 				`",siteDescription:"` +
+		// 				formData.get('SiteDescription') +
+		// 				`",siteUrl:"` +
+		// 				formData.get('SiteUrl') +
+		// 				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"${headAnalyticInput}${footerAnalyticInput}}){
+		//     siteUrl
+		//     siteName
+		//     siteDescription
+		// 	siteIconFile
+		// 	defaultThumbnail
+		// 	headAnalytics
+		// 	footerAnalytics
+		//   }
+		// }`
+		// 		);
+		// 		var resultJson = await result.json();
+		// 		if (resultJson.data != null) {
+		// 			siteConfigS.set(resultJson.data.modifySiteConfig);
+		// 			goto('/admin');
+		// 		} else {
+		// 			errMessage = resultJson.errors[0].message;
+		// 		}
 	}
 </script>
 
@@ -87,7 +83,7 @@
 				name="SiteName"
 				type="text"
 				placeholder="Type here"
-				value={siteConfig == null ? '' : siteConfig.siteName}
+				value={siteConfig == null ? '' : siteConfig.site_name}
 				class="input input-bordered w-full max-w-xs"
 			/>
 
@@ -99,7 +95,7 @@
 				name="SiteUrl"
 				type="url"
 				placeholder="Type here"
-				value={siteConfig == null ? '' : siteConfig.siteUrl}
+				value={siteConfig == null ? '' : siteConfig.site_url}
 				class="input input-bordered w-full max-w-xs"
 			/>
 		</div>
@@ -111,7 +107,7 @@
 		<textarea
 			id="SiteDescription"
 			name="SiteDescription"
-			value={siteConfig == null ? '' : siteConfig.siteDescription}
+			value={siteConfig == null ? '' : siteConfig.site_description}
 			class="textarea textarea-bordered w-full"
 			placeholder="Type here"
 		/>
@@ -120,14 +116,14 @@
 		<label class="label" for="siteIcon">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900"> Website icon</span>
 		</label>
-		{#if siteConfig != undefined && siteConfig.siteIconFile != null && siteConfig.siteIconFile.length > 0}
+		{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
 			<!-- {siteConfig.siteIconFile} -->
-			<img class="w-6 h-6" src={`/api/imageFile/` + siteConfig.siteIconFile} alt="website icon" />
+			<img class="w-6 h-6" src={`/api/imageFile/` + siteConfig.site_icon} alt="website icon" />
 		{/if}
 		<AdminUpload
 			accept=".png,.jpeg,.jpg,.ico"
 			uploadFinish={(v) => {
-				siteConfig.siteIconFile = v;
+				siteConfig.site_icon = v;
 				// console.log(v);
 			}}
 		/>
@@ -135,17 +131,17 @@
 		<label class="label" for="DeafultThumbnail">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900">Default thumbnail</span>
 		</label>
-		{#if siteConfig != undefined && siteConfig.defaultThumbnail != null && siteConfig.defaultThumbnail.length > 0}
+		{#if siteConfig != undefined && siteConfig.default_thumbnail != null && siteConfig.default_thumbnail.length > 0}
 			<!-- {siteConfig.defaultThumbnail} -->
 			<img
 				class="w-80 h-80"
-				src={`/api/imageFile/` + siteConfig.defaultThumbnail}
+				src={`/api/imageFile/` + siteConfig.default_thumbnail}
 				alt="default episode thumbnail"
 			/>
 		{/if}
 		<AdminUpload
 			uploadFinish={(v) => {
-				siteConfig.defaultThumbnail = v;
+				siteConfig.default_thumbnail = v;
 			}}
 		/>
 

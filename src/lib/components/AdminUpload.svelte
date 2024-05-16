@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 
 	export let uploadFinish: (e: string) => any;
@@ -11,24 +11,24 @@
 	$: fileList && startUpload();
 
 	async function startUpload() {
-		uploading = true;
-		let file = fileList.item(0);
-		const tokenS = get(token);
+		// uploading = true;
+		// let file = fileList.item(0);
+		// const tokenS = get(token);
 
-		let data = new FormData();
-		data.append('file', file!);
-		let resp = await fetch('/api/imageFile/upload', {
-			method: 'POST',
-			headers: [['Authorization', 'Bearer ' + tokenS]],
-			body: data
-		});
+		// let data = new FormData();
+		// data.append('file', file!);
+		// let resp = await fetch('/api/imageFile/upload', {
+		// 	method: 'POST',
+		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
+		// 	body: data
+		// });
 
-		let jsonResp = await resp.json();
-		// console.log(jsonResp);
+		// let jsonResp = await resp.json();
+		// // console.log(jsonResp);
 
-		uploading = false;
+		// uploading = false;
 
-		uploadFinish(jsonResp.fileName);
+		// uploadFinish(jsonResp.fileName);
 	}
 </script>
 

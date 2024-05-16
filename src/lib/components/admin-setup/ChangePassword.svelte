@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import PasswordInput from '../PasswordInput.svelte';
-	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
 	import { userS } from '$lib/stores/userStore';
 
 	let user: User;
@@ -24,56 +22,56 @@
 		}
 	}
 
-	onMount(async () => {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`{
-  me{
-    email
-    userName
-    displayName
-  }
-}`
-		);
-		const jsonResp = await result.json();
-		if (jsonResp.data != null) {
-			userS.set(jsonResp.data.me);
-			user = jsonResp.data.me;
-		}
+	onMount(() => {
+// 		const tokenS = get(token);
+// 		const result = await graphqlRequest(
+// 			tokenS,
+// 			`{
+//   me{
+//     email
+//     userName
+//     displayName
+//   }
+// }`
+// 		);
+// 		const jsonResp = await result.json();
+// 		if (jsonResp.data != null) {
+// 			userS.set(jsonResp.data.me);
+// 			user = jsonResp.data.me;
+// 		}
 	});
 
 	async function handleForm() {
-		form = document.querySelector('#ProfileForm') as HTMLFormElement;
-		formData = new FormData(form);
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-		  modifyMe(input:{email:"` +
-				formData.get('Email') +
-				`",displayName:"` +
-				formData.get('DisplayName') +
-				`",userName:"` +
-				formData.get('UserName') +
-				`",password:"` +
-				formData.get('password') +
-				`"}){
-		    email
-		    userName
-		    id
-		    displayName
-		  }
-		}`
-		);
+		// form = document.querySelector('#ProfileForm') as HTMLFormElement;
+		// formData = new FormData(form);
+		// const tokenS = get(token);
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`mutation{
+		//   modifyMe(input:{email:"` +
+		// 		formData.get('Email') +
+		// 		`",displayName:"` +
+		// 		formData.get('DisplayName') +
+		// 		`",userName:"` +
+		// 		formData.get('UserName') +
+		// 		`",password:"` +
+		// 		formData.get('password') +
+		// 		`"}){
+		//     email
+		//     userName
+		//     id
+		//     displayName
+		//   }
+		// }`
+		// );
 
-		const resultJson = await result.json();
-		if (resultJson.data != null) {
-			userS.set(resultJson.data.modifyMe);
-			handleNext();
-		} else {
-			errMessage = resultJson.erros[0].message;
-		}
+		// const resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	userS.set(resultJson.data.modifyMe);
+		// 	handleNext();
+		// } else {
+		// 	errMessage = resultJson.erros[0].message;
+		// }
 	}
 </script>
 

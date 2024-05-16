@@ -2,9 +2,9 @@
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import EpisodeItem from '$lib/components/EpisodeItem.svelte';
 	import Pager from '$lib/components/Pager.svelte';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { token } from '$lib/stores/tokenStore';
 	import type { Episode } from '$lib/models/episode';
-	import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -16,39 +16,36 @@
 
 	let curPage = 1;
 
-	onMount(async () => {
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`{
-			episodeList(pagination: {pageIndex:` +
-				curPage +
-				`, perPage: 25}){
-items{
-  id
-  title
-  description
-  createTime
-  episodeStatus
-  thumbnailFileName
-}
-totalCount
-pageInfo{
-  hasNextPage
-  hasPreviousPage
-}
-} 
-}`
-		);
-		// console.log(tokenS);
-
-		const resultJson = await result.json();
-
-		episodes = resultJson.data.episodeList.items ?? [];
-		hasPreviousPage = resultJson.data.episodeList.pageInfo.hasPreviousPage ?? false;
-		hasNextPage = resultJson.data.episodeList.pageInfo.hasNextPage ?? false;
-		sum = resultJson.data.episodeList.totalCount ?? 0;
-
+	onMount(() => {
+		// 		const tokenS = get(token);
+		// 		const result = await graphqlRequest(
+		// 			tokenS,
+		// 			`{
+		// 			episodeList(pagination: {pageIndex:` +
+		// 				curPage +
+		// 				`, perPage: 25}){
+		// items{
+		//   id
+		//   title
+		//   description
+		//   createTime
+		//   episodeStatus
+		//   thumbnailFileName
+		// }
+		// totalCount
+		// pageInfo{
+		//   hasNextPage
+		//   hasPreviousPage
+		// }
+		// }
+		// }`
+		// 		);
+		// 		// console.log(tokenS);
+		// 		const resultJson = await result.json();
+		// 		episodes = resultJson.data.episodeList.items ?? [];
+		// 		hasPreviousPage = resultJson.data.episodeList.pageInfo.hasPreviousPage ?? false;
+		// 		hasNextPage = resultJson.data.episodeList.pageInfo.hasNextPage ?? false;
+		// 		sum = resultJson.data.episodeList.totalCount ?? 0;
 	});
 </script>
 

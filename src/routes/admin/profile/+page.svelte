@@ -3,70 +3,68 @@
 	import AdminLayout from '../../../lib/components/AdminLayout.svelte';
 	import { get } from 'svelte/store';
 	import { userS } from '$lib/stores/userStore';
-	import { graphqlRequest } from '$lib/graphqlRequest';
-	import { token } from '$lib/stores/tokenStore';
 	import { goto } from '$app/navigation';
 
 	let user: User;
 	let errMessage: string | null = null;
 
-	onMount(async () => {
-		user = get(userS);
-		if (user == null) {
-			const tokenS = get(token);
-			const result = await graphqlRequest(
-				tokenS,
-				`{
-  me{
-    email
-    userName
-    displayName
-  }
-}`
-			);
-			const jsonResp = await result.json();
-			if (jsonResp.data != null) {
-				userS.set(jsonResp.data.me);
-				user = jsonResp.data.me;
-			}
-		}
+	onMount(() => {
+// 		user = get(userS);
+// 		if (user == null) {
+// 			const tokenS = get(token);
+// 			const result = await graphqlRequest(
+// 				tokenS,
+// 				`{
+//   me{
+//     email
+//     userName
+//     displayName
+//   }
+// }`
+// 			);
+// 			const jsonResp = await result.json();
+// 			if (jsonResp.data != null) {
+// 				userS.set(jsonResp.data.me);
+// 				user = jsonResp.data.me;
+// 			}
+// 		}
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		const form = document.querySelector('#ProfileForm');
-		const formData = new FormData(form as HTMLFormElement);
-		const tokenS = get(token);
-		var passwordField = '';
-		if ((formData.get('Password') as string).length > 0) {
-			passwordField += ',password:"' + formData.get('Password') + '"';
-		}
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{
-		  modifyMe(input:{email:"` +
-				formData.get('Email') +
-				`",displayName:"` +
-				formData.get('DisplayName') +
-				`",userName:"` +
-				formData.get('UserName') +
-				`"` +
-				passwordField +
-				`}){
-		    email
-		    userName
-		    id
-		    displayName
-		  }
-		}`
-		);
+		// const form = document.querySelector('#ProfileForm');
+		// const formData = new FormData(form as HTMLFormElement);
+		// const tokenS = get(token);
+		// var passwordField = '';
+		// if ((formData.get('Password') as string).length > 0) {
+		// 	passwordField += ',password:"' + formData.get('Password') + '"';
+		// }
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`mutation{
+		//   modifyMe(input:{email:"` +
+		// 		formData.get('Email') +
+		// 		`",displayName:"` +
+		// 		formData.get('DisplayName') +
+		// 		`",userName:"` +
+		// 		formData.get('UserName') +
+		// 		`"` +
+		// 		passwordField +
+		// 		`}){
+		//     email
+		//     userName
+		//     id
+		//     displayName
+		//   }
+		// }`
+		// );
 
-		const resultJson = await result.json();
-		if (resultJson.data != null) {
-			userS.set(resultJson.data.modifyMe);
-			goto('/admin');
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// const resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	userS.set(resultJson.data.modifyMe);
+		// 	goto('/admin');
+		// } else {
+		// 	errMessage = resultJson.errors[0].message;
+		// }
 	}
 </script>
 

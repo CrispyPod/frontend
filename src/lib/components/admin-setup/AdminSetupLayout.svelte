@@ -1,74 +1,70 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 
 	// let siteConfig: SiteConfig;
 
 	let showAvatarOption = false;
 	function handleSignOut() {
-		token.set(null);
+		// token.set(null);
 	}
 
 	let breadCombItems: Array<BreadCombItem> = [];
 
-	onMount(async () => {
-		const tokenS = get(token);
-
-		if (tokenS != null) {
-			let result = await graphqlRequest(tokenS, `query{me{id,userName}}`);
-			let jsonResp = await result.json();
-			if (jsonResp.data == null || jsonResp.data.me == null) {
-				token.set(null);
-			}
-		}
-
-		if (tokenS == null) {
-			goto('/admin/signin');
-			// return;
-		}
-
-		let result = await graphqlRequest(
-			tokenS,
-			`{siteConfig{
-          siteName,
-          siteUrl,
-          siteDescription,
-          setupComplete,
-        }
-}`
-		);
-		let jsonResp = await result.json();
-		if (jsonResp.data.siteConfig.setupComplete) {
-			// 	goto('/admin/setup');
-			// 	// return;
-			// } else {
-			goto('/admin');
-			// return;
-		}
-
-		if ($page.url.pathname.replace('/admin', '').length > 0) {
-			let builtLink = '';
-			breadCombItems = $page.url.pathname
-				.split('/')
-				.filter((x) => x.length > 0)
-				.map((x) => {
-					builtLink += '/' + x;
-					const comb = new BreadCombItem(builtLink, x.slice(0, 1).toUpperCase() + x.slice(1));
-					return comb;
-				});
-		}
+	onMount(() => {
+		// 		const tokenS = get(token);
+		// 		if (tokenS != null) {
+		// 			let result = await graphqlRequest(tokenS, `query{me{id,userName}}`);
+		// 			let jsonResp = await result.json();
+		// 			if (jsonResp.data == null || jsonResp.data.me == null) {
+		// 				token.set(null);
+		// 			}
+		// 		}
+		// 		if (tokenS == null) {
+		// 			goto('/admin/signin');
+		// 			// return;
+		// 		}
+		// 		let result = await graphqlRequest(
+		// 			tokenS,
+		// 			`{siteConfig{
+		//           siteName,
+		//           siteUrl,
+		//           siteDescription,
+		//           setupComplete,
+		//         }
+		// }`
+		// 		);
+		// 		let jsonResp = await result.json();
+		// 		if (jsonResp.data.siteConfig.setupComplete) {
+		// 			// 	goto('/admin/setup');
+		// 			// 	// return;
+		// 			// } else {
+		// 			goto('/admin');
+		// 			// return;
+		// 		}
+		// 		if ($page.url.pathname.replace('/admin', '').length > 0) {
+		// 			let builtLink = '';
+		// 			breadCombItems = $page.url.pathname
+		// 				.split('/')
+		// 				.filter((x) => x.length > 0)
+		// 				.map((x) => {
+		// 					builtLink += '/' + x;
+		// 					const comb = new BreadCombItem(builtLink, x.slice(0, 1).toUpperCase() + x.slice(1));
+		// 					return comb;
+		// 				});
+		// 		}
 	});
 
 	export function loginCheck() {
-		const tokenStore = get(token);
-		if (tokenStore == null) {
-			goto('/admin/signin');
-		}
+		// const tokenStore = get(token);
+		// if (tokenStore == null) {
+		// 	goto('/admin/signin');
+		// }
 	}
 
 	export let pageTitle: String;

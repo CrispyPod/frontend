@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { graphqlRequest } from '$lib/graphqlRequest';
+	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { Episode } from '$lib/models/episode';
-	import { token } from '$lib/stores/tokenStore';
+	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
 
 	export let episodeData: Episode | null;
@@ -9,25 +9,24 @@
 	let errMessage: string | null = null;
 
 	async function onNext() {
-		const statStr = (document.querySelector('input[name="radio-10"]:checked')! as HTMLInputElement)
-			.value;
-		const stat = parseInt(statStr);
-
-		const tokenS = get(token);
-		const result = await graphqlRequest(
-			tokenS,
-			`mutation{  modifyEpisode(id:"` +
-				episodeData!.id +
-				`",input: {episodeStatus:` +
-				stat +
-				`}){id}}`
-		);
-		var resultJson = await result.json();
-		if (resultJson.data != null) {
-			handleNext(episodeData!);
-		} else {
-			errMessage = resultJson.errors[0].message;
-		}
+		// const statStr = (document.querySelector('input[name="radio-10"]:checked')! as HTMLInputElement)
+		// 	.value;
+		// const stat = parseInt(statStr);
+		// const tokenS = get(token);
+		// const result = await graphqlRequest(
+		// 	tokenS,
+		// 	`mutation{  modifyEpisode(id:"` +
+		// 		episodeData!.id +
+		// 		`",input: {episodeStatus:` +
+		// 		stat +
+		// 		`}){id}}`
+		// );
+		// var resultJson = await result.json();
+		// if (resultJson.data != null) {
+		// 	handleNext(episodeData!);
+		// } else {
+		// 	errMessage = resultJson.errors[0].message;
+		// }
 	}
 </script>
 
