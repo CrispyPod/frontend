@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import AdminLayout from '../../../lib/components/AdminLayout.svelte';
 	import { get } from 'svelte/store';
-	import { userS } from '$lib/stores/userStore';
 	import { goto } from '$app/navigation';
 
 	let user: User;

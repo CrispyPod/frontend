@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
+	import { pb } from '$lib/pb-integrate/pb_client';
 	// import { graphqlRequest } from '$lib/graphqlRequest';
 
 	// let siteConfig: SiteConfig;
@@ -17,6 +18,15 @@
 	let breadCombItems: Array<BreadCombItem> = [];
 
 	onMount(() => {
+		if ($page.url.pathname == '/admin/signin' && pb.authStore.isValid) {
+			goto('/admin');
+			return;
+		}
+
+		if(!pb.authStore.isValid){
+			goto('/admin/signin');
+			return;
+		}
 		// 		const tokenS = get(token);
 		// 		if (tokenS != null) {
 		// 			let result = await graphqlRequest(tokenS, `query{me{id,userName}}`);

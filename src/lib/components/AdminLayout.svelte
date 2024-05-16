@@ -21,9 +21,14 @@
 			return;
 		}
 
+		if (!pb.authStore.isValid) {
+			goto('/admin/signin');
+			return;
+		}
+
 		siteConfigS.init().then(() => {
 			const siteConfig = get(siteConfigS);
-			if (!siteConfig.setup_complete) {
+			if (siteConfig.setup_step != "done") {
 				goto('/admin/setup');
 			}
 		});

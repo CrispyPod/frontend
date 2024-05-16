@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import type { SiteConfig } from '$lib/models/siteConfig';
+	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	// import { token } from '$lib/stores/tokenStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -18,32 +18,23 @@
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		// 		const form = document.querySelector('#siteConfigForm');
-		// 		const formData = new FormData(form as HTMLFormElement);
-		// 		const tokenS = get(token);
-		// 		const result = await graphqlRequest(
-		// 			tokenS,
-		// 			`mutation{
-		//   modifySiteConfig(input:{siteName:"` +
-		// 				formData.get('SiteName') +
-		// 				`",siteDescription:"` +
-		// 				formData.get('SiteDescription') +
-		// 				`",siteUrl:"` +
-		// 				formData.get('SiteUrl') +
-		// 				`"}){
-		//     siteUrl
-		//     siteName
-		//     siteDescription
-		//   }
-		// }`
-		// 		);
-		// 		var resultJson = await result.json();
-		// 		if (resultJson.data != null) {
-		// 			siteConfigS.set(resultJson.data.modifySiteConfig);
-		// 			handleNext();
-		// 		} else {
-		// 			errMessage = resultJson.errors[0].message;
-		// 		}
+		const form = document.querySelector('#siteConfigForm');
+		const formData = new FormData(form as HTMLFormElement);
+
+		const data = {
+			site_name: formData.get('SiteName'),
+			site_url: formData.get('SiteUrl'),
+			site_description: formData.get('SiteDescription')
+		};
+		pb.collection(COLLECTION_SITE_CONFIG)
+			.update(siteConfig.id, data)
+			.then((v) => {
+				siteConfigS.set(v as unknown as SiteConfig);
+				handleNext();
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 </script>
 

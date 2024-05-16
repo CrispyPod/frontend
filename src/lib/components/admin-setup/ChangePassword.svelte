@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
 	import PasswordInput from '../PasswordInput.svelte';
 	import { onMount } from 'svelte';
-	import { userS } from '$lib/stores/userStore';
+	import { COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
+	import { goto } from '$app/navigation';
+	import type { AuthModel } from 'pocketbase';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
-	let user: User;
+	let handling: boolean = false;
+	let user: AuthModel;
 	let errMessage: string | null = null;
 	export let handleNext: () => any;
 	let confirmPasswordMessage: string = '';
@@ -23,55 +26,43 @@
 	}
 
 	onMount(() => {
-// 		const tokenS = get(token);
-// 		const result = await graphqlRequest(
-// 			tokenS,
-// 			`{
-//   me{
-//     email
-//     userName
-//     displayName
-//   }
-// }`
-// 		);
-// 		const jsonResp = await result.json();
-// 		if (jsonResp.data != null) {
-// 			userS.set(jsonResp.data.me);
-// 			user = jsonResp.data.me;
-// 		}
+		if (!pb.authStore.isValid) {
+			goto('/admin/signin');
+			return;
+		}
+
+		user = pb.authStore.model;
 	});
 
-	async function handleForm() {
-		// form = document.querySelector('#ProfileForm') as HTMLFormElement;
-		// formData = new FormData(form);
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`mutation{
-		//   modifyMe(input:{email:"` +
-		// 		formData.get('Email') +
-		// 		`",displayName:"` +
-		// 		formData.get('DisplayName') +
-		// 		`",userName:"` +
-		// 		formData.get('UserName') +
-		// 		`",password:"` +
-		// 		formData.get('password') +
-		// 		`"}){
-		//     email
-		//     userName
-		//     id
-		//     displayName
-		//   }
-		// }`
-		// );
-
-		// const resultJson = await result.json();
-		// if (resultJson.data != null) {
-		// 	userS.set(resultJson.data.modifyMe);
-		// 	handleNext();
-		// } else {
-		// 	errMessage = resultJson.erros[0].message;
-		// }
+	function handleForm() {
+		handling = true;
+		form = document.querySelector('#ProfileForm') as HTMLFormElement;
+		formData = new FormData(form);
+		const data = {
+			username: formData.get('UserName'),
+			name: formData.get('DisplayName'),
+			email: formData.get('Email'),
+			password: formData.get('password'),
+			passwordConfirm: formData.get('passwordConfirm'),
+			oldPassword: 'password'
+		};
+		console.log(pb.authStore.model);
+		pb.collection(COLLECTION_USER)
+			.update(pb.authStore.model!.id, data)
+			.then((v) => {
+				console.log(v);
+				pb.collection(COLLECTION_USER)
+					.authWithPassword(v.email, data.password!.toString())
+					.then((v) => {
+						handleNext();
+					});
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			})
+			.finally(() => {
+				handling = false;
+			});
 	}
 </script>
 
@@ -88,7 +79,7 @@ First, let's change profile for admin.
 			id="UserName"
 			name="UserName"
 			type="text"
-			value={user == null ? '' : user.userName}
+			value={user == null ? '' : user.username}
 			placeholder="Type here"
 			class="input input-bordered w-full max-w-xs"
 			required
@@ -103,7 +94,7 @@ First, let's change profile for admin.
 			id="DisplayName"
 			name="DisplayName"
 			type="text"
-			value={user == null ? '' : user.displayName}
+			value={user == null ? '' : user.name}
 			placeholder="Type here"
 			class="input input-bordered w-full max-w-xs"
 			required
@@ -169,7 +160,9 @@ First, let's change profile for admin.
 		<button
 			type="submit"
 			class:btn-active={passwordValue.length > 0 && passwordConfirmValue == passwordValue}
-			class:btn-disabled={passwordValue.length == 0 || passwordConfirmValue != passwordValue}
+			class:btn-disabled={handling ||
+				passwordValue.length == 0 ||
+				passwordConfirmValue != passwordValue}
 			class="btn btn-primary">Next</button
 		>
 	</div>
