@@ -1,7 +1,7 @@
 <script lang="ts">
-	import EpisodeStatBadge from './episodeStatBadge.svelte';
 	import type { Episode } from '$lib/models/episode';
 	export let episode: Episode;
+	console.log(episode);
 </script>
 
 <li class="flex justify-between gap-x-6 py-5">
@@ -24,11 +24,16 @@
 
 		<div class="min-w-0 flex-auto">
 			<p class="text-sm font-semibold leading-6 text-gray-900">{episode.title}</p>
-			<EpisodeStatBadge episodeStatus={episode.episodeStatus} />
+			<!-- <EpisodeStatBadge episodeStatus={episode.status} /> -->
+			{#if episode.status == 'draft'}
+				<div class="badge badge-neutral">Draft</div>
+			{:else}
+				<div class="badge badge-accent">Published</div>
+			{/if}
 		</div>
 	</div>
 	<div class="sm:flex sm:flex-col sm:items-end">
-		<a class="sm:ml-3" href="/admin/episode/{episode.id}">
+		<a class="sm:ml-3" href="/admin/episode/edit?e={episode.id}">
 			<button class="btn btn-active">
 				<!-- <Icon src={Pencil} size="16" /> -->
 				<svg

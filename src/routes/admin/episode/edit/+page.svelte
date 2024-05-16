@@ -2,31 +2,21 @@
 	import { onMount } from 'svelte';
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { get } from 'svelte/store';
-	// import { token } from '$lib/stores/tokenStore';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
-	import { EpisodeState, type Episode } from '$lib/models/episode';
+	import { type Episode } from '$lib/models/episode';
 	import { goto } from '$app/navigation';
 	import type { AudioFile } from '$lib/models/audioFile';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import 'cherry-markdown/dist/cherry-markdown.css';
-	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import AdminUpload from '$lib/components/AdminUpload.svelte';
 	import EpisodeListItem from '$lib/components/EpisodeListItem.svelte';
 	import EpisodeDetailAudio from '$lib/components/EpisodeDetailAudio.svelte';
-
-	export let siteUrl: string = '';
+	import Quill from 'quill';
+	import 'quill/dist/quill.snow.css';
+	import { page } from '$app/stores';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 
 	let fetchedEpisode: Episode;
 	let errMessage: string | null = null;
-	let cherryInstance: Cherry;
-
-	onMount(() => {
-		(document!.getElementById('afUpload') as HTMLInputElement)!.value = '';
-		cherryInstance = new Cherry({
-			id: 'markdown-container',
-			value: '# type down description for your awesome podcast here!'
-		});
-	});
 
 	$: if (fetchedEpisode) {
 		if (fetchedEpisode == null) {
@@ -45,31 +35,47 @@
 
 	$: fileList && fileListChanged();
 
-	export let data: any;
+	let editor: HTMLElement;
+	let quill: Quill;
+
 	onMount(() => {
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`{episode(id:"` +
-		// 		data.id +
-		// 		`"){id,title,description,episodeStatus,audioFileName,audioFileUploadName,audioFileDuration}}`
-		// );
-		// const jsonResp = await result.json();
-		// if (jsonResp.data != null) {
-		// 	fetchedEpisode = jsonResp.data.episode;
-		// 	cherryInstance.setValue(fetchedEpisode.description);
-		// } else {
-		// 	goto('/admin/episode');
-		// }
+		const params = $page.url.searchParams;
+		if (!params.has('e')) {
+			return;
+		}
+
+		quill = new Quill(editor, {
+			debug: 'error',
+			modules: {
+				toolbar: true
+			},
+			placeholder: 'Compose an epic...',
+			theme: 'snow'
+		});
+
+		const episodeId = params.get('e');
+		console.log(episodeId);
+
+		pb.collection(COLLECTION_EPISODE)
+			.getFirstListItem(`id="${episodeId}"`)
+			.then((v) => {
+				console.log(v);
+				fetchedEpisode = v as unknown as Episode;
+				quill.root.innerHTML = fetchedEpisode.description;
+			})
+			.catch((e) => {
+				//TODO: Handle not found
+			});
 	});
 
 	async function handleSubmit(e: SubmitEvent, episodeData: Episode) {
-		// if (cherryInstance.getValue().length == 0) {
-		// 	errMessage = 'Please type in description of this episode.';
-		// 	return;
-		// }
-		// const form: HTMLFormElement | null = document.querySelector('#modifyEpisodeForm');
-		// const formData = new FormData(form!);
+		if (quill.root.innerHTML.length == 0) {
+			errMessage = 'Please type in description of this episode.';
+			return;
+		}
+		const form: HTMLFormElement | null = document.querySelector('#modifyEpisodeForm');
+		const formData = new FormData(form!);
+
 		// const toeknS = get(token);
 		// let audioFileField = '';
 		// if (episodeData.audioFileName != null && episodeData.audioFileName.length > 0) {
@@ -148,8 +154,7 @@
 	}
 
 	function handleReupload() {
-		fetchedEpisode!.audioFileName = null;
-		fetchedEpisode!.audioFileUploadName = null;
+		fetchedEpisode!.audio_file = null;
 	}
 
 	async function startUpload() {
@@ -200,9 +205,10 @@
 				<span class="label-text">Description</span>
 			</label>
 
-			<div class="w-full">
-				<div id="markdown-container" class=" border-4 border-gray-500 min-h-96"></div>
-				<!-- <Editor {value} {plugins} on:change={handleChange} /> -->
+			<div class="mt-2 h-fit">
+				<div class="w-full h-40 mb-10">
+					<div bind:this={editor} />
+				</div>
 			</div>
 		</div>
 
@@ -213,23 +219,23 @@
 			<AdminUpload
 				accept=".png,.jpeg,.jpg"
 				uploadFinish={(v) => {
-					fetchedEpisode.thumbnailFileName = v;
+					fetchedEpisode.thumbnail = v;
 					console.log(fetchedEpisode);
 				}}
 			/>
 
-			{#if fetchedEpisode != undefined && fetchedEpisode.thumbnailFileName != null && fetchedEpisode.thumbnailFileName.length > 0}
+			{#if fetchedEpisode != undefined && fetchedEpisode.thumbnail != null && fetchedEpisode.thumbnail.length > 0}
 				<!-- {siteConfig.siteIconFile} -->
 				<img
 					class="w-64 h-64"
-					src={`/api/imageFile/` + fetchedEpisode.thumbnailFileName}
+					src={`${PUBLIC_PB_ENDPOINT}/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`}
 					alt="website icon"
 				/>
 			{/if}
 		</div>
 
 		<div class="form-control mt-5">
-			{#if fetchedEpisode == null || fetchedEpisode.audioFileName == null || fetchedEpisode.audioFileName.length == 0}
+			{#if fetchedEpisode == null || fetchedEpisode.audio_file == null || fetchedEpisode.audio_file.length == 0}
 				<div>
 					<p>Upload audio file</p>
 					<input
@@ -243,7 +249,9 @@
 				{#if fileUploadedAndNotSaved}
 					Please hit save so that changes are committed.
 				{/if}
-				<WaveForm fileUrl="{siteUrl}/api/audioFile/{fetchedEpisode.audioFileName}" />
+				<WaveForm
+					fileUrl={`${PUBLIC_PB_ENDPOINT}/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.audio_file}`}
+				/>
 
 				<div class="w-full flex mt-2">
 					<button
@@ -254,12 +262,12 @@
 			{/if}
 		</div>
 
-		{#if fetchedEpisode != undefined && fetchedEpisode.thumbnailFileName != null && fetchedEpisode.thumbnailFileName.length > 0 && fetchedEpisode.audioFileName != null && fetchedEpisode.audioFileName.length != 0}
+		{#if fetchedEpisode != undefined && fetchedEpisode.thumbnail != null && fetchedEpisode.thumbnail.length > 0 && fetchedEpisode.audio_file != null && fetchedEpisode.audio_file.length != 0}
 			<div class="divider">front end element</div>
 			<EpisodeListItem
 				episode={{
 					...fetchedEpisode,
-					thumbnailFileName: '/api/imageFile/' + fetchedEpisode.thumbnailFileName
+					thumbnailFileName: `${PUBLIC_PB_ENDPOINT}/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`
 				}}
 			/>
 			<EpisodeDetailAudio episodeData={fetchedEpisode} />
@@ -276,7 +284,7 @@
 					name="status"
 					type="radio"
 					value="0"
-					checked={fetchedEpisode != null && fetchedEpisode.episodeStatus == EpisodeState.draft}
+					checked={fetchedEpisode != null && fetchedEpisode.status == 'draft'}
 					class="radio checked:bg-neutral"
 				/>
 			</label>
@@ -288,7 +296,7 @@
 					name="status"
 					type="radio"
 					value="1"
-					checked={fetchedEpisode != null && fetchedEpisode.episodeStatus == EpisodeState.published}
+					checked={fetchedEpisode != null && fetchedEpisode.status == 'published'}
 					class="radio checked:bg-accent"
 				/>
 			</label>

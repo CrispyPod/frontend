@@ -1,20 +1,24 @@
 <script lang="ts">
-	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import type { Episode } from '$lib/models/episode';
-	// import { token } from '$lib/stores/tokenStore';
-	import { get } from 'svelte/store';
 
 	import 'cherry-markdown/dist/cherry-markdown.css';
-	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 	import { onMount } from 'svelte';
+	import Quill from 'quill';
+	import 'quill/dist/quill.snow.css';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
-	export let siteUrl: string = '';
+	let editor: HTMLElement;
+	let quill: Quill;
 
-	let cherryInstance: Cherry;
 	onMount(() => {
-		cherryInstance = new Cherry({
-			id: 'markdown-container',
-			value: '# type down description for your awesome podcast here!'
+		quill = new Quill(editor, {
+			debug: 'error',
+			modules: {
+				toolbar: true
+			},
+			placeholder: 'Compose an epic...',
+			theme: 'snow'
 		});
 	});
 
@@ -22,32 +26,28 @@
 	export let handleNext: (e: Episode) => any;
 
 	let errMessage: string | null = null;
-	async function onFormSubmit(e: SubmitEvent) {
-		// if (cherryInstance.getValue().length == 0) {
-		// 	errMessage = 'Please type in description of this episode.';
-		// 	return;
-		// }
+	function onFormSubmit(e: SubmitEvent) {
+		if (quill.root.innerHTML.length == 0) {
+			errMessage = 'Please type in description of this episode.';
+			return;
+		}
+		const form: HTMLFormElement | null = document.querySelector('#newEpisodeForm');
+		const formData = new FormData(form!);
+		const data = {
+			title: formData.get('title'),
+			description: quill.root.innerHTML,
+			status: 'draft'
+		};
 
-		// const form: HTMLFormElement | null = document.querySelector('#newEpisodeForm');
-		// const formData = new FormData(form!);
-
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`mutation{createEpisode(input: {title:"` +
-		// 		encodeURIComponent(formData.get('title')!.toString()) +
-		// 		`",description:"` +
-		// 		encodeURIComponent(cherryInstance.getValue()) +
-		// 		`"}){id,title,description}}`
-		// );
-		// const resultJson = await result.json();
-
-		// if (resultJson.data != null) {
-		// 	episodeData = resultJson.data.createEpisode;
-		// 	handleNext(episodeData!);
-		// } else {
-		// 	errMessage = resultJson.errors[0].message;
-		// }
+		pb.collection(COLLECTION_EPISODE)
+			.create(data)
+			.then((v) => {
+				episodeData = v as unknown as Episode;
+				handleNext(episodeData);
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 </script>
 
@@ -66,19 +66,10 @@
 		/>
 
 		<label for="description" class="label-text mt-4">Description</label>
-		<div class="mt-2">
-			<div class="w-full">
-				<!-- <svelte:component this={cherryInstance}/> -->
-				<div id="markdown-container" class=" border-4 border-gray-500 min-h-96"></div>
-				<!-- <Editor {value} {plugins} on:change={handleChange} /> -->
+		<div class="mt-2 h-fit">
+			<div class="w-full h-40 mb-10">
+				<div bind:this={editor} />
 			</div>
-			<!-- <textarea
-				required
-				id="description"
-				name="description"
-				rows="3"
-				class="textarea textarea-bordered w-full"
-			/> -->
 		</div>
 	</div>
 

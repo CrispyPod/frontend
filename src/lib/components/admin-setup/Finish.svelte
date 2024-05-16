@@ -15,7 +15,7 @@
 </script>
 
 <div class="">
-	Finish, Please hit the next button to enter admin console.
+	Set up finished! Please hit the next button to enter admin console.
 
 	<div class="mt-6 flex items-center justify-end gap-x-6">
 		{#if errMessage != null}

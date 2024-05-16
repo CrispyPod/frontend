@@ -1,12 +1,11 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
+	import AdminPagination from '$lib/components/AdminPagination.svelte';
 	import EpisodeItem from '$lib/components/EpisodeItem.svelte';
-	import Pager from '$lib/components/Pager.svelte';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
-	// import { token } from '$lib/stores/tokenStore';
 	import type { Episode } from '$lib/models/episode';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 
 	let sum = 0;
 	let hasNextPage = false;
@@ -14,38 +13,28 @@
 
 	let episodes: Array<Episode> = [];
 
-	let curPage = 1;
+	let curPage = 0;
+
+	async function getAllEpisodes(pageIndex: number) {
+		if (curPage == pageIndex) return;
+		curPage = pageIndex;
+		pb.collection(COLLECTION_EPISODE)
+			.getList(pageIndex, 25, {
+				sort: '-created'
+			})
+			.then((v) => {
+				hasNextPage = curPage >= v.totalPages;
+				hasPreviousPage = curPage <= 1;
+				episodes = v.items as unknown as Array<Episode>;
+			});
+	}
 
 	onMount(() => {
-		// 		const tokenS = get(token);
-		// 		const result = await graphqlRequest(
-		// 			tokenS,
-		// 			`{
-		// 			episodeList(pagination: {pageIndex:` +
-		// 				curPage +
-		// 				`, perPage: 25}){
-		// items{
-		//   id
-		//   title
-		//   description
-		//   createTime
-		//   episodeStatus
-		//   thumbnailFileName
-		// }
-		// totalCount
-		// pageInfo{
-		//   hasNextPage
-		//   hasPreviousPage
-		// }
-		// }
-		// }`
-		// 		);
-		// 		// console.log(tokenS);
-		// 		const resultJson = await result.json();
-		// 		episodes = resultJson.data.episodeList.items ?? [];
-		// 		hasPreviousPage = resultJson.data.episodeList.pageInfo.hasPreviousPage ?? false;
-		// 		hasNextPage = resultJson.data.episodeList.pageInfo.hasNextPage ?? false;
-		// 		sum = resultJson.data.episodeList.totalCount ?? 0;
+		if (!pb.authStore.isValid) {
+			goto('/admin/signin');
+			return;
+		}
+		getAllEpisodes(1);
 	});
 </script>
 
@@ -76,5 +65,13 @@
 			<EpisodeItem episode={p} />
 		{/each}
 	</ul>
-	<Pager {sum} {hasNextPage} {hasPreviousPage} pagePrefix="/admin/episode/page/" />
+	<!-- <Pager {sum} {hasNextPage} {hasPreviousPage} pagePrefix="/admin/episode/page/" /> -->
+	<AdminPagination
+		{sum}
+		hasNextPage={false}
+		hasPreviousPage={false}
+		handlePageClick={(pageIndex) => {
+			getAllEpisodes(pageIndex);
+		}}
+	/>
 </AdminLayout>

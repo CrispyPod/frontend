@@ -11,10 +11,12 @@
 	$: fileList && startUpload();
 
 	async function startUpload() {
+		// TODO: limit file size
+		////
+		////
 		// uploading = true;
 		// let file = fileList.item(0);
 		// const tokenS = get(token);
-
 		// let data = new FormData();
 		// data.append('file', file!);
 		// let resp = await fetch('/api/imageFile/upload', {
@@ -22,12 +24,9 @@
 		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
 		// 	body: data
 		// });
-
 		// let jsonResp = await resp.json();
 		// // console.log(jsonResp);
-
 		// uploading = false;
-
 		// uploadFinish(jsonResp.fileName);
 	}
 </script>

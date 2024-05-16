@@ -21,7 +21,7 @@
 	$: fileList && startUpload();
 
 	function checkCanClickNext() {
-		canClickNext = episodeData?.audioFileName != null && episodeData?.audioFileName?.length > 0;
+		canClickNext = episodeData?.audio_file != null && episodeData?.audio_file?.length > 0;
 	}
 
 	$: episodeData && checkCanClickNext();
