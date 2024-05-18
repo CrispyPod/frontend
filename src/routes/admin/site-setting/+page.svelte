@@ -7,7 +7,6 @@
 	// import { graphqlRequest } from '$lib/graphqlRequest';
 	// import { token } from '$lib/stores/tokenStore';
 	import { goto } from '$app/navigation';
-	import AdminUpload from '$lib/components/AdminUpload.svelte';
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
@@ -120,13 +119,13 @@
 			<!-- {siteConfig.siteIconFile} -->
 			<img class="w-6 h-6" src={`/api/imageFile/` + siteConfig.site_icon} alt="website icon" />
 		{/if}
-		<AdminUpload
+		<!-- <AdminUpload
 			accept=".png,.jpeg,.jpg,.ico"
 			uploadFinish={(v) => {
 				siteConfig.site_icon = v;
 				// console.log(v);
 			}}
-		/>
+		/> -->
 
 		<label class="label" for="DeafultThumbnail">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900">Default thumbnail</span>
@@ -139,11 +138,11 @@
 				alt="default episode thumbnail"
 			/>
 		{/if}
-		<AdminUpload
+		<!-- <AdminUpload
 			uploadFinish={(v) => {
 				siteConfig.default_thumbnail = v;
 			}}
-		/>
+		/> -->
 
 		<div class="divider">Analytics</div>
 
