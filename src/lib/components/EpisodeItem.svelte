@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
 	export let episode: Episode;
-	console.log(episode);
 </script>
 
 <li class="flex justify-between gap-x-6 py-5">

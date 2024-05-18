@@ -7,7 +7,6 @@
 	import { pb } from '$lib/pb-integrate/pb_client';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 
-	let showAvatarOption = false;
 	function handleSignOut() {
 		pb.authStore.clear();
 		goto('/admin/signin');
@@ -147,10 +146,8 @@
 				<li>
 					<a class="justify-between" href="/admin/profile">
 						Profile
-						<!-- <span class="badge">New</span> -->
 					</a>
 				</li>
-				<!-- <li><a href="/admin/site-setting">Settings</a></li> -->
 				<li><button on:click={handleSignOut}>Logout</button></li>
 			</ul>
 		</div>

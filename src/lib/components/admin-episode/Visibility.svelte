@@ -1,49 +1,46 @@
 <script lang="ts">
-	// import { graphqlRequest } from '$lib/graphqlRequest';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import type { Episode } from '$lib/models/episode';
-	// import { token } from '$lib/stores/tokenStore';
-	import { get } from 'svelte/store';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
 	let errMessage: string | null = null;
 
 	async function onNext() {
-		// const statStr = (document.querySelector('input[name="radio-10"]:checked')! as HTMLInputElement)
-		// 	.value;
-		// const stat = parseInt(statStr);
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`mutation{  modifyEpisode(id:"` +
-		// 		episodeData!.id +
-		// 		`",input: {episodeStatus:` +
-		// 		stat +
-		// 		`}){id}}`
-		// );
-		// var resultJson = await result.json();
-		// if (resultJson.data != null) {
-		// 	handleNext(episodeData!);
-		// } else {
-		// 	errMessage = resultJson.errors[0].message;
-		// }
+		const form: HTMLFormElement | null = document.querySelector('#visibilityForm');
+		const formData = new FormData(form!);
+		const data = {
+			status: formData.get('status')!.toString()
+		};
+
+		pb.collection(COLLECTION_EPISODE)
+			.update(episodeData!.id, data)
+			.then((v) => {
+				handleNext(episodeData!);
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 </script>
 
 <div class="w-full flex flex-col justify-center items-center">
 	<div class="w-32">
-		<div class="form-control">
-			<label class="label cursor-pointer">
-				<div class="badge badge-neutral">Draft</div>
-				<input type="radio" name="radio-10" class="radio" value="0" checked />
-			</label>
-		</div>
-		<div class="form-control">
-			<label class="label cursor-pointer">
-				<div class="badge badge-accent">Published</div>
-				<input type="radio" name="radio-10" class="radio" value="1" />
-			</label>
-		</div>
+		<form id="visibilityForm">
+			<div class="form-control">
+				<label class="label cursor-pointer">
+					<div class="badge badge-neutral">Draft</div>
+					<input type="radio" name="status" class="radio" value="draft" checked />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="label cursor-pointer">
+					<div class="badge badge-accent">Published</div>
+					<input type="radio" name="status" class="radio" value="published" />
+				</label>
+			</div>
+		</form>
 	</div>
 </div>
 

@@ -1,24 +1,22 @@
 <script lang="ts">
-	import type { AudioFile } from '$lib/models/audioFile';
 	import type { Episode } from '$lib/models/episode';
-	// import { token } from '$lib/stores/tokenStore';
-	import { get } from 'svelte/store';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
-	export let siteUrl: string = '';
 
 	let canClickNext: boolean = false;
 	let errMessage: string | null = null;
 	let uploading: boolean = false;
 
-	let fileList: FileList;
+	let audioFileList: FileList;
 	// Note that `fileList` is of type `FileList`, not an Array:
 	// https://developer.mozilla.org/en-US/docs/Web/API/FileList
 
-	$: fileList && startUpload();
+	$: audioFileList && uploadAudioFile();
 
 	function checkCanClickNext() {
 		canClickNext = episodeData?.audio_file != null && episodeData?.audio_file?.length > 0;
@@ -26,75 +24,47 @@
 
 	$: episodeData && checkCanClickNext();
 
-	async function startUpload() {
-		// uploading = true;
-		// let file = fileList.item(0);
-		// const tokenS = get(token);
-		// // console.log(tokenS);
-
-		// let data = new FormData();
-		// data.append('file', file!);
-		// data.append('episodeId', episodeData!.id);
-		// let resp = await fetch('/api/audioFile', {
-		// 	method: 'POST',
-		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
-		// 	body: data
-		// });
-
-		// if (resp.status != 200) {
-		// 	// TODO: show popup
-		// }
-
-		// let audioFile: AudioFile = await resp.json();
-
-		// episodeData!.audioFileName = audioFile.audioFileName;
-		// episodeData!.audioFileUploadName = file?.name!;
-		// uploading = false;
+	async function uploadAudioFile() {
+		const formData = new FormData();
+		let file = audioFileList.item(0);
+		formData.append('audio_file', file!);
+		pb.collection(COLLECTION_EPISODE)
+			.update(episodeData!.id, formData)
+			.then((v) => {
+				episodeData = v as unknown as Episode;
+				canClickNext = true;
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 
 	async function onNext() {
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`mutation{modifyEpisode(id:"` +
-		// 		episodeData?.id +
-		// 		`",input:{audioFileName:"` +
-		// 		episodeData?.audioFileName +
-		// 		`",audioFileUploadName:"` +
-		// 		episodeData?.audioFileUploadName +
-		// 		`"}){title}}`
-		// );
-		// const resultJson = await result.json();
-		// if (resultJson.data != null) {
-		// 	handleNext(episodeData!);
-		// } else {
-		// 	errMessage = resultJson.errors[0].message;
-		// }
+		handleNext(episodeData!);
 	}
 
 	function handleReupload() {
-		episodeData!.audioFileName = null;
-		episodeData!.audioFileUploadName = null;
+		episodeData!.audio_file = null;
 	}
 </script>
 
 <div class="flex flex-col justify-center items-center">
-	{#if episodeData == null || episodeData.audioFileName == null || episodeData.audioFileName.length == 0}
+	{#if episodeData == null || episodeData.audio_file == null || episodeData.audio_file.length == 0}
 		<div>
 			<p>Upload audio file</p>
 			<input
 				id="afUpload"
 				type="file"
 				accept=".mp3,.wav,.aac"
-				bind:files={fileList}
+				bind:files={audioFileList}
 				class="file-input file-input-bordered w-full max-w-xs"
 			/>
 		</div>
 	{:else}
 		<div class="w-full">
-			<WaveForm fileUrl="{siteUrl}/api/audioFile/{episodeData.audioFileName}" />
+			<WaveForm fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.audio_file}`} />
 
-			<div class="w-full flex">
+			<div class="w-full flex mt-2">
 				<button
 					class="btn btn-outline btn-secondary ml-auto"
 					on:click|preventDefault={handleReupload}>Reuplaod</button

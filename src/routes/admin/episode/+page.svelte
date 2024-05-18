@@ -65,7 +65,6 @@
 			<EpisodeItem episode={p} />
 		{/each}
 	</ul>
-	<!-- <Pager {sum} {hasNextPage} {hasPreviousPage} pagePrefix="/admin/episode/page/" /> -->
 	<AdminPagination
 		{sum}
 		hasNextPage={false}

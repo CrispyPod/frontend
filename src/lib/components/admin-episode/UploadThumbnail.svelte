@@ -1,29 +1,30 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
-	// import { token } from '$lib/stores/tokenStore';
 	import { get } from 'svelte/store';
-	import WaveForm from '$lib/components/WaveForm.svelte';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onMount } from 'svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
+	import EpisodeListItem from '../EpisodeListItem.svelte';
+	import EpisodeDetailAudio from '../EpisodeDetailAudio.svelte';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
-	export let siteUrl: string = '';
 
 	let canClickNext: boolean = false;
 	let errMessage: string | null = null;
 	let uploading: boolean = false;
 
-	let fileList: FileList;
+	let thumbnailFileList: FileList;
 	// Note that `fileList` is of type `FileList`, not an Array:
 	// https://developer.mozilla.org/en-US/docs/Web/API/FileList
 
-	$: fileList && startUpload();
+	$: thumbnailFileList && uploadThumbnail();
 
 	function checkCanClickNext() {
-		canClickNext = episodeData?.audioFileName != null && episodeData?.audioFileName?.length > 0;
+		canClickNext = episodeData?.thumbnail != null && episodeData?.thumbnail?.length > 0;
 	}
 
 	$: episodeData && checkCanClickNext();
@@ -35,90 +36,52 @@
 		siteConfig = get(siteConfigS);
 	});
 
-	async function startUpload() {
-		// uploading = true;
-		// let file = fileList.item(0);
-		// const tokenS = get(token);
-		// // console.log(tokenS);
-
-		// let data = new FormData();
-		// data.append('file', file!);
-		// data.append('episodeId', episodeData!.id);
-		// let resp = await fetch('/api/imageFile', {
-		// 	method: 'POST',
-		// 	headers: [['Authorization', 'Bearer ' + tokenS]],
-		// 	body: data
-		// });
-
-		// if (resp.status != 200) {
-		// 	// TODO: show popup
-		// }
-
-		// let audioFile = await resp.json();
-
-		// episodeData!.thumbnailFileName = audioFile.thumbnailFileName;
-		// episodeData!.thumbnailUploadName = file?.name!;
-		// uploading = false;
+	async function uploadThumbnail() {
+		const formData = new FormData();
+		let file = thumbnailFileList.item(0);
+		formData.append('thumbnail', file!);
+		pb.collection(COLLECTION_EPISODE)
+			.update(episodeData!.id, formData)
+			.then((v) => {
+				episodeData = v as unknown as Episode;
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 
 	async function onNext() {
-		// const tokenS = get(token);
-		// const result = await graphqlRequest(
-		// 	tokenS,
-		// 	`mutation{modifyEpisode(id:"` +
-		// 		episodeData?.id +
-		// 		`",input:{thumbnailFileName:"` +
-		// 		episodeData?.thumbnailFileName +
-		// 		`",thumbnailFileUploadName:"` +
-		// 		episodeData?.thumbnailUploadName +
-		// 		`"}){title}}`
-		// );
-		// const resultJson = await result.json();
-		// if (resultJson.data != null) {
-		// 	handleNext(episodeData!);
-		// } else {
-		// 	errMessage = resultJson.errors[0].message;
-		// }
+		handleNext(episodeData!);
 	}
 
 	function handleReupload() {
-		episodeData!.thumbnailFileName = null;
-		episodeData!.thumbnailUploadName = null;
+		episodeData!.thumbnail = null;
 	}
 </script>
 
 <div class="flex flex-col justify-center items-center">
-	{#if episodeData == null || episodeData.thumbnailFileName == null || episodeData.thumbnailFileName.length == 0}
+	{#if episodeData == null || episodeData.thumbnail == null || episodeData.thumbnail.length == 0}
 		<div>
 			<p>Upload audio file</p>
 			<input
 				id="afUpload"
 				type="file"
 				accept=".png,.jpeg,.jpg"
-				bind:files={fileList}
+				bind:files={thumbnailFileList}
 				class="file-input file-input-bordered w-full max-w-xs"
 			/>
 		</div>
 	{:else}
 		<div class="w-full">
 			<p class="text-center">This is what will display in episode page.</p>
-			<div class="card lg:card-side bg-base-100 shadow-xl m-10">
-				<img
-					class="w-80 h-80"
-					src={episodeData.thumbnailFileName
-						? siteUrl + '/api/imageFile/' + episodeData.thumbnailFileName
-						: siteConfig != null &&
-							  siteConfig.default_thumbnail != null &&
-							  siteConfig.default_thumbnail.length > 0
-							? `/api/imageFile/${siteConfig.default_thumbnail}`
-							: '/EpisodeDefaultThumbnailSquare.png'}
-					alt={episodeData.title}
-				/>
-
-				<div class="card-body">
-					<WaveForm fileUrl="{siteUrl}/api/audioFile/{episodeData.audioFileName}" />
-				</div>
-			</div>
+			<EpisodeListItem
+				linked={false}
+				episode={{
+					...episodeData,
+					thumbnailFileName: `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.thumbnail}`
+				}}
+			/>
+			<EpisodeDetailAudio {episodeData} />
 
 			<div class="w-full flex">
 				<button
