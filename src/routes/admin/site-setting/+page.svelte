@@ -4,9 +4,9 @@
 	import type { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
-	// import { graphqlRequest } from '$lib/graphqlRequest';
-	// import { token } from '$lib/stores/tokenStore';
-	import { goto } from '$app/navigation';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
+	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
+	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
@@ -15,59 +15,66 @@
 	let footerAnalytics = '';
 
 	onMount(() => {
-		// await siteConfigS.refresh();
-		// siteConfig = get(siteConfigS);
-		// headAnalytics = siteConfig.headAnalytics!;
-		// footerAnalytics = siteConfig.footerAnalytics!;
+		siteConfig = get(siteConfigS);
+		siteConfigS.refresh().then(() => {
+			siteConfig = get(siteConfigS);
+		});
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {
-		// 		const form = document.querySelector('#siteConfigForm');
-		// 		const formData = new FormData(form as HTMLFormElement);
-		// 		console.log(formData.get('headAnalytics'));
-		// 		console.log(formData.get('footerAnalytics'));
-		// 		let headAnalyticInput: string = '';
-		// 		if (
-		// 			formData.get('headAnalytics') != null &&
-		// 			formData.get('headAnalytics')!.toString().length > 0
-		// 		) {
-		// 			headAnalyticInput += `,headAnalytics:"${encodeURI(formData.get('headAnalytics')!.toString())}"`;
-		// 		}
-		// 		let footerAnalyticInput: string = '';
-		// 		if (
-		// 			formData.get('footerAnalytics') != null &&
-		// 			formData.get('footerAnalytics')!.toString().length > 0
-		// 		) {
-		// 			footerAnalyticInput += `,footerAnalytics:"${encodeURI(formData.get('footerAnalytics')!.toString())}"`;
-		// 		}
-		// 		const tokenS = get(token);
-		// 		const result = await graphqlRequest(
-		// 			tokenS,
-		// 			`mutation{
-		//   modifySiteConfig(input:{siteName:"` +
-		// 				formData.get('SiteName') +
-		// 				`",siteDescription:"` +
-		// 				formData.get('SiteDescription') +
-		// 				`",siteUrl:"` +
-		// 				formData.get('SiteUrl') +
-		// 				`",siteIconFile:"${siteConfig.siteIconFile}",defaultThumbnail:"${siteConfig.defaultThumbnail}"${headAnalyticInput}${footerAnalyticInput}}){
-		//     siteUrl
-		//     siteName
-		//     siteDescription
-		// 	siteIconFile
-		// 	defaultThumbnail
-		// 	headAnalytics
-		// 	footerAnalytics
-		//   }
-		// }`
-		// 		);
-		// 		var resultJson = await result.json();
-		// 		if (resultJson.data != null) {
-		// 			siteConfigS.set(resultJson.data.modifySiteConfig);
-		// 			goto('/admin');
-		// 		} else {
-		// 			errMessage = resultJson.errors[0].message;
-		// 		}
+		const form = document.querySelector('#siteConfigForm');
+		const formData = new FormData(form as HTMLFormElement);
+
+		const data = {
+			site_name: formData.get('SiteName'),
+			site_description: formData.get('SiteDescription'),
+			site_url: formData.get('SiteUrl'),
+			head_analytics: formData.get('headAnalytics'),
+			foot_analytics: formData.get('headAnalytics')
+		};
+
+		pb.collection(COLLECTION_SITE_CONFIG)
+			.update(siteConfig.id, data)
+			.then((v) => {
+				siteConfigS.set(v as unknown as SiteConfig);
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
+	}
+
+	let defaultThumbnailFileList: FileList;
+	let websiteIconFileList: FileList;
+
+	$: defaultThumbnailFileList && uploadDefaultThumbnail();
+	$: websiteIconFileList && uploadSiteIcon();
+
+	function uploadDefaultThumbnail() {
+		const formData = new FormData();
+		let file = defaultThumbnailFileList.item(0);
+		formData.append('default_thumbnail', file!);
+		pb.collection(COLLECTION_SITE_CONFIG)
+			.update(siteConfig.id, formData)
+			.then((v) => {
+				siteConfig = v as unknown as SiteConfig;
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
+	}
+
+	function uploadSiteIcon() {
+		const formData = new FormData();
+		let file = websiteIconFileList.item(0);
+		formData.append('site_icon', file!);
+		pb.collection(COLLECTION_SITE_CONFIG)
+			.update(siteConfig.id, formData)
+			.then((v) => {
+				siteConfig = v as unknown as SiteConfig;
+			})
+			.catch((e) => {
+				errMessage = assembleErrorMessage(e);
+			});
 	}
 </script>
 
@@ -117,15 +124,19 @@
 		</label>
 		{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
 			<!-- {siteConfig.siteIconFile} -->
-			<img class="w-6 h-6" src={`/api/imageFile/` + siteConfig.site_icon} alt="website icon" />
+			<img
+				class="w-6 h-6"
+				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
+				alt="website icon"
+			/>
 		{/if}
-		<!-- <AdminUpload
-			accept=".png,.jpeg,.jpg,.ico"
-			uploadFinish={(v) => {
-				siteConfig.site_icon = v;
-				// console.log(v);
-			}}
-		/> -->
+		<input
+			id="afUpload"
+			type="file"
+			accept=".ico"
+			bind:files={websiteIconFileList}
+			class="file-input file-input-bordered w-full max-w-xs"
+		/>
 
 		<label class="label" for="DeafultThumbnail">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900">Default thumbnail</span>
@@ -134,15 +145,18 @@
 			<!-- {siteConfig.defaultThumbnail} -->
 			<img
 				class="w-80 h-80"
-				src={`/api/imageFile/` + siteConfig.default_thumbnail}
+				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
 				alt="default episode thumbnail"
 			/>
 		{/if}
-		<!-- <AdminUpload
-			uploadFinish={(v) => {
-				siteConfig.default_thumbnail = v;
-			}}
-		/> -->
+
+		<input
+			id="afUpload"
+			type="file"
+			accept=".png,.jpeg,.jpg"
+			bind:files={defaultThumbnailFileList}
+			class="file-input file-input-bordered w-full max-w-xs"
+		/>
 
 		<div class="divider">Analytics</div>
 
@@ -154,7 +168,7 @@
 			value={siteConfig == null ? null : decodeURI(headAnalytics)}
 			id="headAnalytics"
 			name="headAnalytics"
-			placeholder="<scirpt ...></script>"
+			placeholder="<scirpt>...</script>"
 		></textarea>
 
 		<label class="label" for="siteIcon">
@@ -165,7 +179,7 @@
 			value={siteConfig == null ? null : decodeURI(footerAnalytics)}
 			id="footerAnalytics"
 			name="footerAnalytics"
-			placeholder="<scirpt ...></script>"
+			placeholder="<scirpt>...</script>"
 		></textarea>
 
 		<div class="mt-6 flex items-center justify-end gap-x-6">

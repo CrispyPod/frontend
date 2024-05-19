@@ -1,24 +1,21 @@
-<script lang="ts">
-	import { onMount } from 'svelte';
+<script>
 	import '../app.css';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
+	import { COLLECTION_SITE_CONFIG } from '$lib/pb-integrate/pb_client';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 
-	// let siteConfig: SiteConfig;
-	// onMount(async () => {
-	// 	await siteConfigS.init();
-	// 	siteConfig = get(siteConfigS);
-	// });
+	let siteConfig = $page.data.siteConfig;
 </script>
 
 <svelte:head>
-	<!-- {#if siteConfig != null && siteConfig.site_icon.length > 0}
-		<link rel="icon" href={'/api/imageFile/' + siteConfig.site_icon} />
+	{#if siteConfig != null && siteConfig.site_icon.length > 0}
+		<link
+			rel="icon"
+			href={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
+		/>
 	{:else}
 		<link rel="icon" href="/favicon.ico" />
-	{/if} -->
+	{/if}
 
 	{#if $page.data.headAnalytics != null}
 		{@html decodeURI($page.data.headAnalytics)}
