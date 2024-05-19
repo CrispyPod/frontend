@@ -29,7 +29,7 @@
 			<PagedEpisodes
 				episodes={data.episodes.items}
 				hasNextPage={data.episodes.page >= data.episodes.totalPage}
-				hasPreviousPage={data.episodes.page >= 1}
+				hasPreviousPage={data.episodes.page > 1}
 				sum={data.episodes.totalItems}
 			/>
 		</div>
