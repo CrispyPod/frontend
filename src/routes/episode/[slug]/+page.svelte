@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import 'cherry-markdown/dist/cherry-markdown.css';
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_EPISODE, COLLECTION_SITE_CONFIG } from '$lib/pb-integrate/pb_client';
 
 	export let data: any;
@@ -28,16 +27,24 @@
 							<img
 								class="w-80 h-80"
 								src={data.episode.thumbnail != null && data.episode.thumbnail.length > 0
-									? `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.thumbnail}`
-									: `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${data.siteConfig.id}/${data.siteConfig.default_thumbnail}`}
+									? `/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.thumbnail}`
+									: `/files/${COLLECTION_SITE_CONFIG}/${data.siteConfig.id}/${data.siteConfig.default_thumbnail}`}
 								alt={data.title}
 							/>
 						</figure>
 
 						<div class="card-body">
-							<WaveForm
-								fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.audio_file}`}
-							/>
+							{#if browser}
+								<WaveForm
+									fileUrl={`/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.audio_file}`}
+								/>
+							{/if}
+							<a
+								class="ml-auto"
+								href={`/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.audio_file}`}
+							>
+								<button class="btn btn-accent">Download</button>
+							</a>
 						</div>
 					</div>
 				{/if}

@@ -1,6 +1,5 @@
 #!/bin/sh
 echo "build for static"
-cd $SRC_FOLDER
 echo "export const prerender = true;" > src/routes/+layout.ts
 cp svelte-configs/static-adapter.js svelte.config.js
 npm run build

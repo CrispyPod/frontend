@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
-
-	import 'cherry-markdown/dist/cherry-markdown.css';
 	import { onMount } from 'svelte';
 	import Quill from 'quill';
 	import 'quill/dist/quill.snow.css';

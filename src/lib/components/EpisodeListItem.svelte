@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_EPISODE } from '$lib/pb-integrate/pb_client';
 
 	export let episode: any;
@@ -11,7 +10,7 @@
 		<div class="card w-64 md:w-96 shadow-xl m-10 bg-base-200">
 			<figure>
 				<img
-					src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episode.id}/${episode.thumbnail}`}
+					src={`/files/${COLLECTION_EPISODE}/${episode.id}/${episode.thumbnail}`}
 					alt={episode.title}
 				/>
 			</figure>
