@@ -1,9 +1,15 @@
 import { getSingleEpisode } from "$lib/pb-integrate/episode.js";
+import { siteConfigS } from "$lib/stores/siteConfigStore";
+import { get } from "svelte/store";
 
 export async function load({ params }) {
   const episodeSlug = params.slug;
+  const siteConfig = get(siteConfigS);
 
-  const result = await getSingleEpisode(episodeSlug);
+  const episode = await getSingleEpisode(episodeSlug);
 
-  return result;
+  return {
+    siteConfig,
+    episode
+  };
 }

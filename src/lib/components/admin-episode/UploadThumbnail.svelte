@@ -62,7 +62,7 @@
 <div class="flex flex-col justify-center items-center">
 	{#if episodeData == null || episodeData.thumbnail == null || episodeData.thumbnail.length == 0}
 		<div>
-			<p>Upload audio file</p>
+			<p>Upload thumbnail</p>
 			<input
 				id="afUpload"
 				type="file"

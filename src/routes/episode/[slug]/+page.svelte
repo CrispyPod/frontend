@@ -1,32 +1,15 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
 	import SiteLayout from '$lib/components/SiteLayout.svelte';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import 'cherry-markdown/dist/cherry-markdown.css';
-	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
-	import { browser } from '$app/environment';
+	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
+	import { COLLECTION_EPISODE, COLLECTION_SITE_CONFIG } from '$lib/pb-integrate/pb_client';
 
 	export let data: any;
-	let cherryInstance: Cherry;
-
-	onMount(async () => {
-		console.log(data);
-		if (browser && data != null) {
-			// trigger update hook since episodeData updated
-			await tick();
-			cherryInstance = new Cherry({
-				id: 'markdown-preview',
-				isPreviewOnly: true,
-				value: data.description ?? ''
-			});
-		}
-	});
 </script>
 
 <svelte:head>
-	<title
-		>{data == null ? '' : data.title}</title
-	>
+	<title>{data.episode == null ? '' : data.episode.title}</title>
 	<!-- <meta name="description" content={`${data.siteConfig.siteDescription}`} />
 	<meta name="keywords" content={`${data.siteConfig.siteName}, ${data.episode.title}`} />
 	<meta name="author" content={`${data.episode.authorName}`} /> -->
@@ -37,29 +20,30 @@
 		<div class="container">
 			{#if data != null}
 				<h1 class="text-3xl text-center">
-					{data.title}
+					{data.episode.title}
 				</h1>
-				{#if data.audioFileName != null && data.audioFileName.length > 0}
+				{#if data.episode.audio_file != null && data.episode.audio_file.length > 0}
 					<div class="card lg:card-side bg-base-100 shadow-xl my-10 mr-6">
 						<figure>
 							<img
 								class="w-80 h-80"
-								src={data.thumbnailFileName != null &&
-								data.thumbnailFileName.length > 0
-									? data.thumbnailFileName
-									: `/api/imageFile/${data.siteConfig.defaultThumbnail}`}
+								src={data.episode.thumbnail != null && data.episode.thumbnail.length > 0
+									? `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.thumbnail}`
+									: `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${data.siteConfig.id}/${data.siteConfig.default_thumbnail}`}
 								alt={data.title}
 							/>
 						</figure>
 
 						<div class="card-body">
-							<WaveForm fileUrl={data.audioFileName} />
+							<WaveForm
+								fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${data.episode.id}/${data.episode.audio_file}`}
+							/>
 						</div>
 					</div>
 				{/if}
 
-				<div class="mr-6">
-					<div id="markdown-preview"></div>
+				<div class="mr-6 prose">
+					{@html data.episode.description}
 				</div>
 			{/if}
 		</div>

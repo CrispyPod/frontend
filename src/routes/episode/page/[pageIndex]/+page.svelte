@@ -11,10 +11,12 @@
 </svelte:head>
 
 <SiteLayout>
-	<PagedEpisodes
-		episodes={data.episodes.items}
-		hasNextPage={data.episodes.page >= data.episodes.totalPage}
-		hasPreviousPage={data.episodes.page >= 1}
-		sum={data.episodes.totalItems}
-	/>
+	<div class="w-full container">
+		<PagedEpisodes
+			episodes={data.episodes.items}
+			hasNextPage={data.episodes.page >= data.episodes.totalPage}
+			hasPreviousPage={data.episodes.page > 1}
+			sum={data.episodes.totalItems}
+		/>
+	</div>
 </SiteLayout>
