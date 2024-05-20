@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SiteLayout from '../../lib/components/SiteLayout.svelte';
+	import SiteLayout from '$lib/components/SiteLayout.svelte';
 
 	export let data: any;
 </script>
