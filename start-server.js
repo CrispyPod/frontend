@@ -17,8 +17,6 @@ let proxyFunc = proxy(`${process.env.BACK_END_URL}`, {
     }
 });
 
-app.use("/api/*", proxyFunc);
-app.use("/graphql*", proxyFunc);
 
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
 app.use(handler);

@@ -1,7 +1,8 @@
 FROM node:18-alpine
 
-ENV BACK_END_URL="http://backend:8080"
+ENV PUBLIC_PB_ENDPOINT="http://backend:8080"
 ENV SRC_FOLDER="/src"
+ENV PUBLIC_BUILD_STATIC=0
 
 WORKDIR /src
 COPY *.json ./
