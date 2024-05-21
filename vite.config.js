@@ -13,13 +13,8 @@ export default defineConfig({
 	},
 	server: {
 		proxy: {
-			'/graphql': {
-				target: `${env.BACK_END_URL}/graphql`,
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/graphql/, '')
-			},
 			'/api': {
-				target: `${env.BACK_END_URL}/api`,
+				target: `${env.PUBLIC_PB_ENDPOINT}/api`,
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, '')
 			},

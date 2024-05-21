@@ -9,14 +9,15 @@ app.get('/healthcheck', (req, res) => {
     res.end('ok');
 });
 
-let proxyFunc = proxy(`${process.env.BACK_END_URL}`, {
+let proxyFunc = proxy(`${process.env.PUBLIC_PB_ENDPOINT}`, {
     limit: '50mb',
     proxyReqPathResolver: function (req) {
-        var newUrl = `${process.env.BACK_END_URL}${req.baseUrl}`;
+        var newUrl = `${process.env.PUBLIC_PB_ENDPOINT}${req.baseUrl}`;
         return newUrl;
     }
 });
 
+app.use('/api/*', proxyFunc);
 
 // let SvelteKit handle everything else, including serving prerendered pages and static assets
 app.use(handler);
