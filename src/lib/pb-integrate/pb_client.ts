@@ -1,8 +1,9 @@
-import { dev } from "$app/environment";
-import { PUBLIC_BUILD_STATIC, PUBLIC_PB_ENDPOINT } from "$env/static/public";
+import { browser } from "$app/environment";
+import { PUBLIC_PB_ENDPOINT } from "$env/static/public";
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase(dev || PUBLIC_BUILD_STATIC == "1" ? PUBLIC_PB_ENDPOINT : "http://127.0.0.1:3000/");
+// on /admin/*, we will all use front end rendering, and for the rest will use ssr
+export const pb = new PocketBase(browser ? "/" : PUBLIC_PB_ENDPOINT);
 
 export const COLLECTION_USER = "users"
 export const COLLECTION_EPISODE = "episodes"
