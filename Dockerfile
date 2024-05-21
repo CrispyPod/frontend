@@ -12,7 +12,7 @@ COPY *.sh ./
 COPY src ./src
 COPY static ./static
 COPY *.js ./
-RUN npm run build;
+RUN npm run build
 WORKDIR /crispypod
-RUN cp -r /src/build-node /src/package.json /src/node_modules /src/start-server.js /crispypod
+RUN cp -r /src/build-node /src/start-server.js /src/package.json /src/node_modules /crispypod
 CMD [ "node","start-server.js" ]
