@@ -1,6 +1,9 @@
+import { PUBLIC_BUILD_STATIC } from "$env/static/public";
 import { COLLECTION_EPISODE, pb } from "$lib/pb-integrate/pb_client";
 import { siteConfigS } from "$lib/stores/siteConfigStore";
 import { get } from "svelte/store";
+
+export const prerender = PUBLIC_BUILD_STATIC == "1";
 
 export async function GET() {
     await siteConfigS.refresh();
