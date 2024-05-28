@@ -10,7 +10,7 @@ export async function GET() {
     const siteConfig = get(siteConfigS);
 
     let mapNodes: string = '';
-    const publishedEpisodes = await pb.collection(COLLECTION_EPISODE).getFullList({ filter: 'published=true' });
+    const publishedEpisodes = await pb.collection(COLLECTION_EPISODE).getFullList({ filter: 'status="published"' });
 
     publishedEpisodes.forEach((e) => {
         mapNodes += `<url><loc>${siteConfig.site_url}/episode/${e.slug}</loc><lastmod>${e.updated.split(' ')[0]}</lastmod></url>`
