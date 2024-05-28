@@ -3,7 +3,7 @@
 	export let episode: Episode;
 </script>
 
-<li class="flex justify-between gap-x-6 py-5">
+<li class="flex justify-between gap-x-6">
 	<div class="flex gap-x-4">
 		<!-- <Icon src={Radio} size="48" /> -->
 		<svg

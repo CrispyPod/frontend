@@ -1,19 +1,22 @@
 <script lang="ts">
+	import type { ListResult, RecordModel } from 'pocketbase';
 	import EpisodeListItem from './EpisodeListItem.svelte';
 	import Pager from './Pager.svelte';
 
-	export let episodes: Array<any> = [];
-	export let curPage: number = 1;
-
-	export let sum = 0;
-	export let hasNextPage = false;
-	export let hasPreviousPage = false;
+	export let data: ListResult<RecordModel>;
 </script>
 
 <div class="grid lg:grid-cols-2">
-	{#each episodes as e}
+	{#each data.items as e}
 		<EpisodeListItem episode={e} />
 	{/each}
 </div>
 
-<Pager {sum} {hasNextPage} {hasPreviousPage} {curPage} />
+{#if data.totalPages != 1}
+	<Pager
+		sum={data.totalItems}
+		hasNextPage={data.page >= data.totalPages}
+		hasPreviousPage={data.page > 1}
+		curPage={data.page}
+	/>
+{/if}

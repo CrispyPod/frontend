@@ -1,6 +1,6 @@
 #!/bin/sh
-echo "build for static"
 export PUBLIC_BUILD_STATIC=1
+rm -rf build-static
 cp svelte-configs/static-adapter.js svelte.config.js
 npm run build
 npx wrangler pages deploy build-static --project-name $CLOUDFLARE_PAGES_PROJECT_NAME

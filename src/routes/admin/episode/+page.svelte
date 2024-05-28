@@ -53,14 +53,13 @@
 					>
 						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 					</svg>
-
-					New</button
-				>
+					New
+				</button>
 			</a>
 		</div>
 	</span>
 
-	<ul role="list" class="divide-y divide-gray-100">
+	<ul role="list" class="divide-y divide-gray-100 space-x-10 mb-5">
 		{#each episodes as p, i}
 			<EpisodeItem episode={p} />
 		{/each}

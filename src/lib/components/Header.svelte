@@ -13,10 +13,10 @@
 			</div>
 			<div class="flex-none">
 				<ul class="menu menu-horizontal">
-					<li><a href="/episode">Episodes</a></li>
+					<li><a href="/episode/page/1">Episodes</a></li>
 
 					<li><a href="/about">About</a></li>
-					<li><a href="/rss">RSS</a></li>
+					<li><a href="/rss.xml">RSS</a></li>
 				</ul>
 			</div>
 		</div>

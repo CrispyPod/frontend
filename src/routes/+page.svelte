@@ -27,10 +27,7 @@
 	{#if data.episodes != null}
 		<div class="w-full container mt-5">
 			<PagedEpisodes
-				episodes={data.episodes.items}
-				hasNextPage={data.episodes.page >= data.episodes.totalPage}
-				hasPreviousPage={data.episodes.page > 1}
-				sum={data.episodes.totalItems}
+				data={data.episodes}
 			/>
 		</div>
 	{:else}
