@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import AdminPagination from '$lib/components/AdminPagination.svelte';
 	import EpisodeItem from '$lib/components/EpisodeItem.svelte';
@@ -23,17 +22,14 @@
 				sort: '-created'
 			})
 			.then((v) => {
-				hasNextPage = curPage >= v.totalPages;
-				hasPreviousPage = curPage <= 1;
+				sum = v.totalItems;
+				hasNextPage = curPage > v.totalPages;
+				hasPreviousPage = curPage < 1;
 				episodes = v.items as unknown as Array<Episode>;
 			});
 	}
 
 	onMount(() => {
-		if (!pb.authStore.isValid) {
-			goto('/admin/signin');
-			return;
-		}
 		getAllEpisodes(1);
 	});
 </script>
@@ -66,8 +62,8 @@
 	</ul>
 	<AdminPagination
 		{sum}
-		hasNextPage={false}
-		hasPreviousPage={false}
+		{hasNextPage}
+		{hasPreviousPage}
 		handlePageClick={(pageIndex) => {
 			getAllEpisodes(pageIndex);
 		}}

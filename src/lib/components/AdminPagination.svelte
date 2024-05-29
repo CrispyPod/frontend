@@ -28,6 +28,7 @@
 
 <div class="flex">
 	<div class="join mb-10 ml-auto">
+		<!-- svelte-ignore a11y-invalid-attribute -->
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasPreviousPage}
@@ -37,6 +38,7 @@
 			«
 		</a>
 		{#each pageIndecies as pageIndex}
+			<!-- svelte-ignore a11y-invalid-attribute -->
 			<a
 				class="join-item btn"
 				class:btn-active={pageIndex == curPage}
@@ -44,6 +46,7 @@
 				on:click={handlePageClick(pageIndex)}>{pageIndex}</a
 			>
 		{/each}
+		<!-- svelte-ignore a11y-invalid-attribute -->
 		<a
 			class="join-item btn"
 			class:btn-disabled={!hasNextPage}
