@@ -18,14 +18,11 @@
 			<span class="text-sm font-medium">Flowbite is out! See what's new</span>
 		</News> -->
 	<HeroHeader>
-		<svelte:fragment slot="h1">We invest in the world’s potential</svelte:fragment>
-		<svelte:fragment slot="paragraph"
-			>Here at Flowbite we focus on markets where technology, innovation, and capital can unlock
-			long-term value and drive economic growth.
-		</svelte:fragment>
+		<svelte:fragment slot="h1">Welcome to {data.siteConfig.site_name}</svelte:fragment>
+		<svelte:fragment slot="paragraph">{data.siteConfig.site_description}</svelte:fragment>
 	</HeroHeader>
 
-	<div
+	<!-- <div
 		class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4"
 	>
 		<a href="/">
@@ -39,7 +36,7 @@
 				Watch video
 			</Button>
 		</a>
-	</div>
+	</div> -->
 
 	<!-- <HeroBody>
 			<svelte:fragment slot="head">FEATURED IN</svelte:fragment>
@@ -69,8 +66,10 @@
 		</div>
 	</div> -->
 
-{#if data.episodes != null}
-	<PagedEpisodes data={data.episodes} />
-{:else}
-	<!-- <a href="/episode/abc"></a> -->
-{/if}
+<Section>
+	{#if data.episodes != null}
+		<PagedEpisodes data={data.episodes} />
+	{:else}
+		<!-- <a href="/episode/abc"></a> -->
+	{/if}
+</Section>
