@@ -7,6 +7,7 @@
 	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
+	import { Button } from 'flowbite-svelte';
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
@@ -191,7 +192,9 @@
 				</div>
 			</div>
 		{/if}
-		<a href="/admin" type="button" class="btn">Cancel</a>
-		<button type="submit" class="btn btn-primary">Save</button>
+		<Button href="/admin" color="alternative" size="xl">Cancel</Button>
+		<!-- <a href="/admin" type="button" class="btn">Cancel</a> -->
+		<!-- <button type="submit" class="btn btn-primary">Save</button> -->
+		<Button color="purple" type="submit" size="xl">Save</Button>
 	</div>
 </form>
