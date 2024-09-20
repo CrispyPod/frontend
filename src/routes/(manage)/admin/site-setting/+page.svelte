@@ -1,24 +1,30 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
 	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
-	import { Button, Label, Input, Checkbox, A, Textarea, Hr, Fileupload } from 'flowbite-svelte';
+	import { Button, Label, Input, Textarea, Hr } from 'flowbite-svelte';
+	import type { Unsubscriber } from 'svelte/motion';
+
+	let siteConfigSub: Unsubscriber | null = null;
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
 
-	let headAnalytics = '';
-	let footerAnalytics = '';
-
 	onMount(() => {
-		// siteConfig = get(siteConfigS);
-		siteConfigS.refresh().then(() => {
-			siteConfig = get(siteConfigS);
+		siteConfig = get(siteConfigS);
+		siteConfigSub = siteConfigS.subscribe((v) => {
+			siteConfig = v;
 		});
+	});
+
+	onDestroy(() => {
+		if (siteConfigSub != null) {
+			siteConfigSub();
+		}
 	});
 
 	async function handleFormSubmit(e: SubmitEvent) {

@@ -12,17 +12,12 @@
 		Dropdown,
 		DropdownDivider,
 		DropdownItem,
-		Footer,
-		FooterCopyright,
-		FooterLink,
-		FooterLinkGroup,
 		Navbar,
 		NavBrand,
 		NavHamburger,
 		NavLi,
-		NavUl,
+		NavUl
 	} from 'flowbite-svelte';
-	import { Section } from 'flowbite-svelte-blocks';
 
 	function handleSignOut() {
 		pb.authStore.clear();
@@ -144,19 +139,3 @@
 		<slot />
 	</div>
 </main>
-
-<!-- <Section>
-	<Footer>
-		<div class="sm:flex sm:items-center sm:justify-between">
-			<FooterCopyright href="/" by="Flowbite™" year={2022} />
-			<FooterLinkGroup
-				ulClass="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0"
-			>
-				<FooterLink href="/">About</FooterLink>
-				<FooterLink href="/">Privacy Policy</FooterLink>
-				<FooterLink href="/">Licensing</FooterLink>
-				<FooterLink href="/">Contact</FooterLink>
-			</FooterLinkGroup>
-		</div>
-	</Footer>
-</Section> -->
