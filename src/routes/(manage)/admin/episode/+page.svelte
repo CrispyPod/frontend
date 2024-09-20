@@ -14,11 +14,17 @@
 		Dropdown,
 		DropdownItem,
 		DropdownDivider,
-		Checkbox
+		Checkbox,
+		Modal
 	} from 'flowbite-svelte';
 	import { Section, TableHeader } from 'flowbite-svelte-blocks';
-	import { EditOutline, PlusOutline, ChevronDownOutline } from 'flowbite-svelte-icons';
-	import { onMount } from 'svelte';
+	import {
+		EditOutline,
+		PlusOutline,
+		ChevronDownOutline,
+		MinusOutline
+	} from 'flowbite-svelte-icons';
+	import { onMount, tick } from 'svelte';
 
 	let sum = 0;
 	let hasNextPage = false;
@@ -28,8 +34,12 @@
 
 	let curPage = 0;
 
+	let showConfirmDeleteDialog = false;
+	let toDeleteEpisodeTitle: string = '';
+	let toDeleteEpisodeId: string = '';
+
 	async function getAllEpisodes(pageIndex: number) {
-		if (curPage == pageIndex) return;
+		// if (curPage == pageIndex) return;
 		curPage = pageIndex;
 		pb.collection(COLLECTION_EPISODE)
 			.getList(pageIndex, 25, {
@@ -46,6 +56,27 @@
 	onMount(() => {
 		getAllEpisodes(1);
 	});
+
+	function handleDelete(id: string, title: string) {
+		showConfirmDeleteDialog = true;
+		toDeleteEpisodeId = id;
+		toDeleteEpisodeTitle = title;
+	}
+
+	async function confirmDelete() {
+		if (toDeleteEpisodeId.length == 0) {
+			return;
+		}
+		pb.collection(COLLECTION_EPISODE)
+			.delete(toDeleteEpisodeId)
+			// .then((v) => {})
+			// .catch((e) => {})
+			.finally(() => {
+				tick().finally(() => {
+					getAllEpisodes(curPage);
+				});
+			});
+	}
 </script>
 
 <TableHeader headerType="search">
@@ -117,6 +148,15 @@
 						<EditOutline />
 						Edit
 					</Button>
+
+					<Button
+						on:click={() => {
+							handleDelete(p.id, p.title);
+						}}
+					>
+						<MinusOutline />
+						Delete
+					</Button>
 				</TableBodyCell>
 			</TableBodyRow>
 		{/each}
@@ -133,3 +173,19 @@
 		}}
 	/>
 {/if}
+
+<Modal title="Delete confirm" bind:open={showConfirmDeleteDialog} autoclose>
+	<p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+		Confirm delete episode titled
+	</p>
+	<h2 class="font-bold text-lg">{toDeleteEpisodeTitle}</h2>
+	<p>Deletion can not be undone.</p>
+	<svelte:fragment slot="footer">
+		<Button
+			on:click={() => {
+				confirmDelete();
+			}}>Confirm</Button
+		>
+		<Button color="alternative">Close</Button>
+	</svelte:fragment>
+</Modal>

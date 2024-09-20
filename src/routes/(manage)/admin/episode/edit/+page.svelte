@@ -75,33 +75,6 @@
 			});
 	}
 
-	function handleDelete() {
-		if (fetchedEpisode.id.length == 0) {
-			return;
-		}
-		let a: any = document.getElementById('confirmDeleteModal');
-		a.showModal();
-	}
-
-	async function confirmDelete() {
-		if (fetchedEpisode.id.length == 0) {
-			return;
-		}
-
-		pb.collection(COLLECTION_EPISODE)
-			.delete(fetchedEpisode.id)
-			.then((v) => {
-				if (v) {
-					goto('/admin/episode');
-				} else {
-					errMessage = 'Failed to delete episode';
-				}
-			})
-			.catch((e) => {
-				errMessage = assembleErrorMessage(e);
-			});
-	}
-
 	function handleForm(e: SubmitEvent) {
 		handleSubmit(e, fetchedEpisode);
 	}
@@ -140,7 +113,7 @@
 </script>
 
 <!-- <svelte:fragment slot="actions"> -->
-<button class="btn btn-error" on:click|preventDefault={handleDelete}>Delete</button>
+<!-- <button class="btn btn-error" on:click|preventDefault={handleDelete}>Delete</button> -->
 <!-- </svelte:fragment> -->
 <form id="modifyEpisodeForm" on:submit|preventDefault={handleForm}>
 	<div class="form-control">
@@ -269,23 +242,3 @@
 		<button type="submit" class="btn btn-active btn-primary">Save</button>
 	</div>
 </form>
-
-{#if fetchedEpisode != null}
-	<dialog id="confirmDeleteModal" class="modal modal-bottom sm:modal-middle">
-		<div class="modal-box">
-			<h3 class="font-bold text-lg alert alert-error my-4">Delete confirm</h3>
-			<p>Are you sure you want to delete podcast titled</p>
-			<br />
-			<h2 class="font-bold text-lg">{fetchedEpisode.title}</h2>
-			<br />
-			<p>Deletion can not be undone.</p>
-			<div class="modal-action">
-				<form method="dialog">
-					<button class="btn btn-error" on:click={confirmDelete}>Confirm</button>
-					<!-- if there is a button in form, it will close the modal -->
-					<button class="btn">Close</button>
-				</form>
-			</div>
-		</div>
-	</dialog>
-{/if}

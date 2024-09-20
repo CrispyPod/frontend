@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '$lib/components/AdminLayout.svelte';
-	import type { SiteConfig } from '$lib/models/siteConfig';
+	import { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
 	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
-	import { Button } from 'flowbite-svelte';
+	import { Button, Label, Input, Checkbox, A, Textarea, Hr, Fileupload } from 'flowbite-svelte';
 
 	let siteConfig: SiteConfig;
 	let errMessage: string | null = null;
@@ -16,7 +15,7 @@
 	let footerAnalytics = '';
 
 	onMount(() => {
-		siteConfig = get(siteConfigS);
+		// siteConfig = get(siteConfigS);
 		siteConfigS.refresh().then(() => {
 			siteConfig = get(siteConfigS);
 		});
@@ -80,6 +79,113 @@
 </script>
 
 <form id="siteConfigForm" on:submit|preventDefault={handleFormSubmit}>
+	<div class="grid gap-6 mb-6 md:grid-cols-2">
+		<div>
+			<Label for="SiteName" class="mb-2">Podcast name</Label>
+			<Input
+				type="text"
+				id="SiteName"
+				name="SiteName"
+				placeholder="Type here"
+				required
+				value={siteConfig == null ? '' : siteConfig.site_name}
+			/>
+		</div>
+		<div>
+			<Label for="SiteUrl" class="mb-2">Podcast Url</Label>
+			<Input
+				type="text"
+				id="SiteUrl"
+				name="SiteUrl"
+				placeholder="Type here"
+				required
+				value={siteConfig == null ? '' : siteConfig.site_url}
+			/>
+		</div>
+	</div>
+	<div class="mb-6">
+		<Label for="SiteDescription" class="mb-2">Podcast description</Label>
+		<Textarea
+			id="SiteDescription"
+			name="SiteDescription"
+			placeholder="Type here"
+			rows="4"
+			value={siteConfig == null ? '' : siteConfig.site_description}
+		/>
+	</div>
+	<Hr classHr="my-8">Icon and Image</Hr>
+	<Label class="space-y-2 mb-2">
+		<span>Website icon</span>
+		<!-- <Fileupload bind:files={websiteIconFileList} /> -->
+
+		{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
+			<img
+				class="w-6 h-6"
+				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
+				alt="website icon"
+			/>
+		{/if}
+		<input
+			class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+			id="afUpload"
+			type="file"
+			accept=".ico"
+			bind:files={websiteIconFileList}
+		/>
+	</Label>
+
+	<Label class="space-y-2 mb-2">
+		<span>Default thumbnail</span>
+		{#if siteConfig != undefined && siteConfig.default_thumbnail != null && siteConfig.default_thumbnail.length > 0}
+			<img
+				class="w-80 h-80"
+				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
+				alt="default episode thumbnail"
+			/>
+		{/if}
+		<input
+			class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+			id="afUpload"
+			type="file"
+			accept=".png,.jpeg,.jpg"
+			bind:files={defaultThumbnailFileList}
+		/>
+	</Label>
+
+	<Hr classHr="my-8">Analytics</Hr>
+
+	<div class="mb-6">
+		<Label for="headAnalytics" class="mb-2">Head analytics</Label>
+		<Textarea id="headAnalytics" name="headAnalytics" placeholder="<scirpt>...</script>" rows="4" />
+	</div>
+
+	<div class="mb-6">
+		<Label for="footerAnalytics" class="mb-2">Foot analytics</Label>
+		<Textarea
+			id="footerAnalytics"
+			name="footerAnalytics"
+			placeholder="<scirpt>...</script>"
+			rows="4"
+		/>
+	</div>
+
+	<div class="mt-6 flex items-center justify-end gap-x-6">
+		{#if errMessage != null}
+			<div class="mr-auto">
+				<div
+					class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+					role="alert"
+				>
+					<strong class="font-bold">{errMessage}</strong>
+				</div>
+			</div>
+		{/if}
+		<Button href="/admin" color="alternative" size="xl">Cancel</Button>
+		<Button color="purple" type="submit" size="xl">Save</Button>
+	</div>
+</form>
+
+<!-- <form id="siteConfigForm" on:submit|preventDefault={handleFormSubmit}>
 	<div class="form-control w-full max-w-xs">
 		<label class="label" for="SiteName">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900">Podcast name</span>
@@ -122,7 +228,6 @@
 		<span class="label-text text-sm font-medium leading-6 text-gray-900"> Website icon</span>
 	</label>
 	{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
-		<!-- {siteConfig.siteIconFile} -->
 		<img
 			class="w-6 h-6"
 			src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
@@ -141,7 +246,6 @@
 		<span class="label-text text-sm font-medium leading-6 text-gray-900">Default thumbnail</span>
 	</label>
 	{#if siteConfig != undefined && siteConfig.default_thumbnail != null && siteConfig.default_thumbnail.length > 0}
-		<!-- {siteConfig.defaultThumbnail} -->
 		<img
 			class="w-80 h-80"
 			src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
@@ -193,8 +297,6 @@
 			</div>
 		{/if}
 		<Button href="/admin" color="alternative" size="xl">Cancel</Button>
-		<!-- <a href="/admin" type="button" class="btn">Cancel</a> -->
-		<!-- <button type="submit" class="btn btn-primary">Save</button> -->
 		<Button color="purple" type="submit" size="xl">Save</Button>
 	</div>
-</form>
+</form> -->
