@@ -7,6 +7,22 @@
 	import { BreadCombItem } from '$lib/models/breadCombItems';
 	import { pb } from '$lib/pb-integrate/pb_client';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
+	import {
+		Avatar,
+		Dropdown,
+		DropdownDivider,
+		DropdownItem,
+		Footer,
+		FooterCopyright,
+		FooterLink,
+		FooterLinkGroup,
+		Navbar,
+		NavBrand,
+		NavHamburger,
+		NavLi,
+		NavUl,
+	} from 'flowbite-svelte';
+	import { Section } from 'flowbite-svelte-blocks';
 
 	function handleSignOut() {
 		pb.authStore.clear();
@@ -71,99 +87,34 @@
 	<title>CrispyPod - Admin</title>
 </svelte:head>
 
-<div class="navbar bg-neutral text-neutral-content">
-	<div class="navbar-start">
-		<div class="dropdown">
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<!-- svelte-ignore a11y-label-has-associated-control -->
-			<label tabindex="0" class="btn btn-neutral lg:hidden">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-5 w-5"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h8m-8 6h16"
-					/></svg
-				>
-			</label>
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
-				<li><a href="/admin/episode" class="btn-neutral">Episodes</a></li>
-				<li><a href="/admin/site-setting" class="btn-neutral">Settings</a></li>
-				<li><a href="/admin/static-deploy" class="btn-neutral">Deploy</a></li>
-				<!-- <li><a href="/admin/hooks" class="btn-neutral">Hooks</a></li> -->
-				<!-- <li>
-					<a>Parent</a>
-					<ul class="p-2">
-						<li><a>Submenu 1</a></li>
-						<li><a>Submenu 2</a></li>
-					</ul>
-				</li> -->
-				<!-- <li><a>Item 3</a></li> -->
-			</ul>
-		</div>
-		<a class="btn btn-neutral normal-case text-xl" href="/admin">CrispyPod</a>
+<Navbar>
+	<NavBrand href="/">
+		<!-- <img src="/images/flowbite-svelte-icon-logo.svg" class="me-3 h-6 sm:h-9" alt="Flowbite Logo" /> -->
+		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+			CrispyPod
+		</span>
+	</NavBrand>
+	<div class="flex items-center md:order-2">
+		<Avatar id="avatar-menu" />
+		<NavHamburger class1="w-full md:flex md:w-auto md:order-1" />
 	</div>
-	<div class="navbar-center hidden lg:flex">
-		{#if $page.url.pathname !== '/admin/setup'}
-			<ul class="menu-horizontal px-1">
-				<li><a href="/admin/episode" class="btn btn-neutral">Episodes</a></li>
-				<li><a href="/admin/site-setting" class="btn btn-neutral">Settings</a></li>
-				<li><a href="/admin/static-deploy" class="btn btn-neutral">Deploy</a></li>
-				<!-- <li><a href="/admin/hooks" class="btn btn-neutral">Hooks</a></li> -->
-				<!-- <li tabindex="0">
-				<details>
-					<summary>Parent</summary>
-					<ul class="p-2">
-						<li><a>Submenu 1</a></li>
-						<li><a>Submenu 2</a></li>
-					</ul>
-				</details>
-			</li>
-			<li><a>Item 3</a></li> -->
-			</ul>
-		{/if}
-	</div>
-	<div class="navbar-end">
-		<div class="dropdown dropdown-end">
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<!-- svelte-ignore a11y-label-has-associated-control -->
-			<label tabindex="0" class="btn btn-ghost btn-circle avatar">
-				<div class="w-10 rounded-full">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="white"
-						class="w-10 h-10"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-						/>
-					</svg>
-				</div>
-			</label>
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<ul
-				tabindex="0"
-				class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 text-black"
-			>
-				<li>
-					<a class="justify-between" href="/admin/profile"> Profile </a>
-				</li>
-				<li><button on:click={handleSignOut}>Logout</button></li>
-			</ul>
-		</div>
-	</div>
-</div>
+	<Dropdown placement="bottom" triggeredBy="#avatar-menu">
+		<!-- <DropdownHeader>
+			<span class="block text-sm">Bonnie Green</span>
+			<span class="block truncate text-sm font-medium">name@flowbite.com</span>
+		</DropdownHeader> -->
+		<DropdownItem href="/admin/profile">Profile</DropdownItem>
+		<!-- <DropdownItem>Settings</DropdownItem>
+		<DropdownItem>Earnings</DropdownItem> -->
+		<DropdownDivider />
+		<DropdownItem on:click={handleSignOut}>Logout</DropdownItem>
+	</Dropdown>
+	<NavUl>
+		<NavLi href="/admin/episode">Episodes</NavLi>
+		<NavLi href="/admin/site-setting">Settings</NavLi>
+		<NavLi href="/admin/static-deploy">Deploy</NavLi>
+	</NavUl>
+</Navbar>
 
 <main>
 	<div class="mx-auto max-w-7xl py-6 lg:px-8 px-6">
@@ -193,3 +144,19 @@
 		<slot />
 	</div>
 </main>
+
+<!-- <Section>
+	<Footer>
+		<div class="sm:flex sm:items-center sm:justify-between">
+			<FooterCopyright href="/" by="Flowbite™" year={2022} />
+			<FooterLinkGroup
+				ulClass="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0"
+			>
+				<FooterLink href="/">About</FooterLink>
+				<FooterLink href="/">Privacy Policy</FooterLink>
+				<FooterLink href="/">Licensing</FooterLink>
+				<FooterLink href="/">Contact</FooterLink>
+			</FooterLinkGroup>
+		</div>
+	</Footer>
+</Section> -->

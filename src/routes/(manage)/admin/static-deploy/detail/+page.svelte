@@ -35,27 +35,25 @@
 	});
 </script>
 
-<AdminLayout pageTitle="Deploy detail">
-	<div class="collapse collapse-arrow bg-base-200 mb-5">
-		<input type="radio" name="my-accordion-2" checked={true} />
-		<div class="collapse-title text-xl font-medium">Build Log</div>
-		<div class="collapse-content overflow-scroll">
-			<pre class="font-mono ">
+<div class="collapse collapse-arrow bg-base-200 mb-5">
+	<input type="radio" name="my-accordion-2" checked={true} />
+	<div class="collapse-title text-xl font-medium">Build Log</div>
+	<div class="collapse-content overflow-scroll">
+		<pre class="font-mono">
 				{#if recordDetail != null}
-					{@html recordDetail.build_log}
-				{/if}
+				{@html recordDetail.build_log}
+			{/if}
 			</pre>
-		</div>
 	</div>
-	<div class="collapse collapse-arrow bg-base-200">
-		<input type="radio" name="my-accordion-2" />
-		<div class="collapse-title text-xl font-medium">Deploy Log</div>
-		<div class="collapse-content overflow-scroll">
-			<pre class="font-mono">
+</div>
+<div class="collapse collapse-arrow bg-base-200">
+	<input type="radio" name="my-accordion-2" />
+	<div class="collapse-title text-xl font-medium">Deploy Log</div>
+	<div class="collapse-content overflow-scroll">
+		<pre class="font-mono">
 				{#if recordDetail != null}
-					{@html recordDetail.deploy_log}
-				{/if}
+				{@html recordDetail.deploy_log}
+			{/if}
 			</pre>
-		</div>
 	</div>
-</AdminLayout>
+</div>

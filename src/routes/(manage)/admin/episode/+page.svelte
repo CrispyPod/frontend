@@ -9,9 +9,15 @@
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
+		TableHeadCell,
+		Search,
+		Dropdown,
+		DropdownItem,
+		DropdownDivider,
+		Checkbox
 	} from 'flowbite-svelte';
-	import { EditOutline, PlusOutline } from 'flowbite-svelte-icons';
+	import { Section, TableHeader } from 'flowbite-svelte-blocks';
+	import { EditOutline, PlusOutline, ChevronDownOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 
 	let sum = 0;
@@ -42,35 +48,57 @@
 	});
 </script>
 
-<!-- <span slot="actions"> -->
-<div class="mt-5 flex lg:ml-4 lg:mt-0">
-	<Button color="purple" size="xl">
-		<PlusOutline />
-		New
+<TableHeader headerType="search">
+	<!-- <Search slot="search" size="md" /> -->
+	<Button href="/admin/episode/new" color="purple">
+		<PlusOutline class="mr-2" />
+		Add episode
 	</Button>
-	<!-- <a class="sm:ml-3" href="/admin/episode/new">
-		<button class="btn btn-active btn-primary">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-6 h-6"
-			>
-				<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-			</svg>
-			New
-		</button>
-	</a> -->
-</div>
-<!-- </span> -->
+	<!-- <Button color="light">
+		Actions<ChevronDownOutline />
+	</Button>
+	<Dropdown>
+		<DropdownItem>Mass Edit</DropdownItem>
+		<DropdownDivider />
+		<DropdownItem>Delete all</DropdownItem>
+	</Dropdown> -->
+	<!-- <Button color="light">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			aria-hidden="true"
+			class="w-4 h-4 mr-2 text-gray-400"
+			viewbox="0 0 20 20"
+			fill="currentColor"
+		>
+			<path
+				fill-rule="evenodd"
+				d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+				clip-rule="evenodd"
+			/>
+		</svg>
+		Filter<ChevronDownOutline />
+	</Button> -->
+	<!-- <Dropdown class="w-48 p-2 text-sm">
+		<h6 class="mb-3 ml-1 text-sm font-medium text-gray-900 dark:text-white">Category</h6>
+		<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+			<Checkbox>Apple (56)</Checkbox>
+		</li>
+		<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+			<Checkbox>Fitbit (56)</Checkbox>
+		</li>
+		<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+			<Checkbox checked>Dell (56)</Checkbox>
+		</li>
+		<li class="rounded p-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+			<Checkbox>Asus (97)</Checkbox>
+		</li>
+	</Dropdown> -->
+</TableHeader>
 
 <Table>
 	<TableHead>
 		<TableHeadCell>Episode Title</TableHeadCell>
 		<TableHeadCell>Status</TableHeadCell>
-		<!-- <TableHeadCell>Category</TableHeadCell> -->
 		<TableHeadCell>Action</TableHeadCell>
 	</TableHead>
 	<TableBody tableBodyClass="divide-y">
@@ -90,37 +118,18 @@
 						Edit
 					</Button>
 				</TableBodyCell>
-				<!-- <TableBodyCell>$1999</TableBodyCell> -->
 			</TableBodyRow>
-			<!-- <EpisodeItem episode={p} /> -->
 		{/each}
-
-		<!-- <TableBodyRow>
-			<TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-			<TableBodyCell>Sliver</TableBodyCell>
-			<TableBodyCell>Laptop</TableBodyCell>
-			<TableBodyCell>$2999</TableBodyCell>
-		</TableBodyRow>
-		<TableBodyRow>
-			<TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-			<TableBodyCell>White</TableBodyCell>
-			<TableBodyCell>Laptop PC</TableBodyCell>
-			<TableBodyCell>$1999</TableBodyCell>
-		</TableBodyRow>
-		<TableBodyRow>
-			<TableBodyCell>Magic Mouse 2</TableBodyCell>
-			<TableBodyCell>Black</TableBodyCell>
-			<TableBodyCell>Accessories</TableBodyCell>
-			<TableBodyCell>$99</TableBodyCell>
-		</TableBodyRow> -->
 	</TableBody>
 </Table>
 
-<AdminPagination
-	{sum}
-	{hasNextPage}
-	{hasPreviousPage}
-	handlePageClick={(pageIndex) => {
-		getAllEpisodes(pageIndex);
-	}}
-/>
+{#if episodes.length > 25}
+	<AdminPagination
+		{sum}
+		{hasNextPage}
+		{hasPreviousPage}
+		handlePageClick={(pageIndex) => {
+			getAllEpisodes(pageIndex);
+		}}
+	/>
+{/if}

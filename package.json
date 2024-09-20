@@ -45,6 +45,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "^2.0.2",
 		"@sveltejs/adapter-static": "^3.0.1",
+		"cherry-markdown": "^0.8.47",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
 		"express-http-proxy": "^2.0.0",
