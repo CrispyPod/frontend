@@ -50,7 +50,6 @@
 		"express": "^4.19.2",
 		"express-http-proxy": "^2.0.0",
 		"pocketbase": "^0.21.2",
-		"quill": "^2.0.2",
 		"wavesurfer.js": "^7.5.3"
 	}
 }

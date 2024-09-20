@@ -1,22 +1,17 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
 	import { onMount } from 'svelte';
-	import Quill from 'quill';
-	import 'quill/dist/quill.snow.css';
 	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
+	import 'cherry-markdown/dist/cherry-markdown.css';
+	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 
-	let editor: HTMLElement;
-	let quill: Quill;
+	let cherryInstance: Cherry;
 
 	onMount(() => {
-		quill = new Quill(editor, {
-			debug: 'error',
-			modules: {
-				toolbar: true
-			},
-			placeholder: 'Compose an epic...',
-			theme: 'snow'
+		cherryInstance = new Cherry({
+			id: 'markdown-container',
+			value: '# welcome to cherry editor!'
 		});
 	});
 
@@ -25,7 +20,7 @@
 
 	let errMessage: string | null = null;
 	function onFormSubmit(e: SubmitEvent) {
-		if (quill.root.innerHTML.length == 0) {
+		if (cherryInstance.getHtml().length == 0) {
 			errMessage = 'Please type in description of this episode.';
 			return;
 		}
@@ -33,7 +28,8 @@
 		const formData = new FormData(form!);
 		const data = {
 			title: formData.get('title'),
-			description: quill.root.innerHTML,
+			description: cherryInstance.getHtml(),
+			description_plain: cherryInstance.getValue(),
 			status: 'draft'
 		};
 
@@ -65,9 +61,10 @@
 
 		<label for="description" class="label-text mt-4">Description</label>
 		<div class="mt-2 h-fit">
-			<div class="w-full h-40 mb-10">
+			<div id="markdown-container"></div>
+			<!-- <div class="w-full h-40 mb-10">
 				<div bind:this={editor} />
-			</div>
+			</div> -->
 		</div>
 	</div>
 

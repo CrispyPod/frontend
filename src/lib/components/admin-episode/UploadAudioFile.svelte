@@ -25,6 +25,7 @@
 	$: episodeData && checkCanClickNext();
 
 	async function uploadAudioFile() {
+		errMessage = '';
 		const formData = new FormData();
 		let file = audioFileList.item(0);
 		formData.append('audio_file', file!);
@@ -62,7 +63,9 @@
 		</div>
 	{:else}
 		<div class="w-full">
-			<WaveForm fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.audio_file}`} />
+			<WaveForm
+				fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.audio_file}`}
+			/>
 
 			<div class="w-full flex mt-2">
 				<button

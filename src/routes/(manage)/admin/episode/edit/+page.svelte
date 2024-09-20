@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { type Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
 	import EpisodeListItem from '$lib/components/EpisodeListItem.svelte';
 	import EpisodeDetailAudio from '$lib/components/EpisodeDetailAudio.svelte';
-	import Quill from 'quill';
-	import 'quill/dist/quill.snow.css';
 	import { page } from '$app/stores';
 	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import { goto } from '$app/navigation';
+	import 'cherry-markdown/dist/cherry-markdown.css';
+	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 
-	let fetchedEpisode: Episode;
+	let fetchedEpisode: any;
 	let errMessage: string | null = null;
 
 	let audioFileList: FileList;
@@ -24,8 +23,7 @@
 	$: audioFileList && uploadAudioFile();
 	$: thumbnailFileList && uploadThumbnail();
 
-	let editor: HTMLElement;
-	let quill: Quill;
+	let cherryInstance: Cherry;
 
 	onMount(() => {
 		const params = $page.url.searchParams;
@@ -34,13 +32,9 @@
 			return;
 		}
 
-		quill = new Quill(editor, {
-			debug: 'error',
-			modules: {
-				toolbar: true
-			},
-			placeholder: 'Compose an epic...',
-			theme: 'snow'
+		cherryInstance = new Cherry({
+			id: 'markdown-container',
+			value: '# welcome to cherry editor!'
 		});
 
 		const episodeId = params.get('e');
@@ -48,8 +42,8 @@
 		pb.collection(COLLECTION_EPISODE)
 			.getFirstListItem(`id="${episodeId}"`)
 			.then((v) => {
-				fetchedEpisode = v as unknown as Episode;
-				quill.root.innerHTML = fetchedEpisode.description;
+				fetchedEpisode = v;
+				cherryInstance.setValue(v.description_plain);
 			})
 			.catch((e) => {
 				errMessage = assembleErrorMessage(e);
@@ -57,7 +51,7 @@
 	});
 
 	async function handleSubmit(e: SubmitEvent, episodeData: Episode) {
-		if (quill.root.innerHTML.length == 0) {
+		if (cherryInstance.getHtml().length == 0) {
 			errMessage = 'Please type in description of this episode.';
 			return;
 		}
@@ -66,7 +60,8 @@
 		const formData = new FormData(form!);
 		const data = {
 			title: formData.get('title')!.toString(),
-			description: quill.root.innerHTML,
+			description: cherryInstance.getHtml(),
+			description_plain: cherryInstance.getValue(),
 			status: formData.get('status')!.toString()
 		};
 
@@ -168,9 +163,7 @@
 		</label>
 
 		<div class="mt-2 h-fit">
-			<div class="w-full h-40 mb-10">
-				<div bind:this={editor} />
-			</div>
+			<div id="markdown-container"></div>
 		</div>
 	</div>
 
