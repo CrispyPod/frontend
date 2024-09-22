@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import { COLLECTION_STAITC_DEPLOY_LOG, pb } from '$lib/pb-integrate/pb_client';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';

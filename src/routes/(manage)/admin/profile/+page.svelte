@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import type { AuthModel } from 'pocketbase';
 	import { COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
 	import { goto } from '$app/navigation';
@@ -26,7 +25,7 @@
 		const formData = new FormData(form as HTMLFormElement);
 		const data = {
 			username: formData.get('UserName'),
-			email: formData.get('Email'),
+			// email: formData.get('Email'),
 			name: formData.get('DisplayName')
 		};
 
@@ -120,7 +119,7 @@
 			class="input input-bordered w-full max-w-xs"
 		/>
 
-		<label class="label" for="Email">
+		<!-- <label class="label" for="Email">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900">Email</span>
 		</label>
 		<input
@@ -130,7 +129,7 @@
 			value={user == null ? '' : user.email}
 			placeholder="Type here"
 			class="input input-bordered w-full max-w-xs"
-		/>
+		/> -->
 	</div>
 	<div class="mt-6 flex items-center justify-end gap-x-6">
 		{#if errMessage != null}

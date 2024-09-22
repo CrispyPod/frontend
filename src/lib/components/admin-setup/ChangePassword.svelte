@@ -41,7 +41,7 @@
 		const data = {
 			username: formData.get('UserName'),
 			name: formData.get('DisplayName'),
-			email: formData.get('Email'),
+			// email: formData.get('Email'),
 			password: formData.get('password'),
 			passwordConfirm: formData.get('passwordConfirm'),
 			oldPassword: 'password'
@@ -52,7 +52,7 @@
 			.then((v) => {
 				console.log(v);
 				pb.collection(COLLECTION_USER)
-					.authWithPassword(v.email, data.password!.toString())
+					.authWithPassword(v.username, data.password!.toString())
 					.then((v) => {
 						handleNext();
 					});
@@ -100,7 +100,7 @@ First, let's change profile for admin.
 			required
 		/>
 
-		<label class="label" for="Email">
+		<!-- <label class="label" for="Email">
 			<span class="label-text text-sm font-medium leading-6 text-gray-900"
 				><span class="text-red-600">*</span> Email</span
 			>
@@ -113,7 +113,7 @@ First, let's change profile for admin.
 			placeholder="Type here"
 			class="input input-bordered w-full max-w-xs"
 			required
-		/>
+		/> -->
 
 		<div class="divider"></div>
 
