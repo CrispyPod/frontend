@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import AdminLayout from '$lib/components/AdminLayout.svelte';
 	import AdminPagination from '$lib/components/AdminPagination.svelte';
 	import { COLLECTION_STAITC_DEPLOY_LOG, pb } from '$lib/pb-integrate/pb_client';
 	import type { ListResult, RecordModel } from 'pocketbase';
@@ -101,6 +100,7 @@
 		</table>
 	</div>
 {/if}
+
 {#if fetchedList != null && fetchedList.totalPages > 1}
 	<AdminPagination
 		{sum}
