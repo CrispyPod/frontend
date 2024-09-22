@@ -12,7 +12,17 @@ app.get('/healthcheck', (req, res) => {
 let proxyFunc = proxy(`${process.env.PUBLIC_PB_ENDPOINT}`, {
     limit: '50mb',
     proxyReqPathResolver: function (req) {
-        var newUrl = `${process.env.PUBLIC_PB_ENDPOINT}${req.baseUrl}`;
+        let endpoint = process.env.PUBLIC_PB_ENDPOINT;
+        if (endpoint.endsWith('/')) {
+            endpoint = endpoint.substring(0, endpoint.length - 1);
+        }
+        let queryStr = '';
+        Object.keys(req.query).forEach(element => {
+            queryStr += `${element}=${req.query[element]}&`
+        })
+
+        const url = `${endpoint}${req.baseUrl}?${queryStr}`;
+        var newUrl = url;
         return newUrl;
     }
 });

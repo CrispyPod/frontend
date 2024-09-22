@@ -5,7 +5,7 @@
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
+	import { adminSiteConfigS } from '$lib/stores/adminSiteConfigStore';
 	import {
 		Avatar,
 		Dropdown,
@@ -37,8 +37,8 @@
 			return;
 		}
 
-		siteConfigS.init().then(() => {
-			const siteConfig = get(siteConfigS);
+		adminSiteConfigS.init().then(() => {
+			const siteConfig = get(adminSiteConfigS);
 			if (siteConfig.setup_step != 'done') {
 				goto('/admin/setup');
 			}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { SiteConfig } from '$lib/models/siteConfig';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
+	import { adminSiteConfigS } from '$lib/stores/adminSiteConfigStore';
 	import { get } from 'svelte/store';
 	import { COLLECTION_SITE_CONFIG, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
@@ -14,8 +14,8 @@
 	let errMessage: string | null = null;
 
 	onMount(() => {
-		siteConfig = get(siteConfigS);
-		siteConfigSub = siteConfigS.subscribe((v) => {
+		siteConfig = get(adminSiteConfigS);
+		siteConfigSub = adminSiteConfigS.subscribe((v) => {
 			siteConfig = v;
 		});
 	});
@@ -38,10 +38,11 @@
 			foot_analytics: formData.get('headAnalytics')
 		};
 
-		backend_pb.collection(COLLECTION_SITE_CONFIG)
+		backend_pb
+			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, data)
 			.then((v) => {
-				siteConfigS.set(v as unknown as SiteConfig);
+				adminSiteConfigS.set(v as unknown as SiteConfig);
 			})
 			.catch((e) => {
 				errMessage = assembleErrorMessage(e);
@@ -58,7 +59,8 @@
 		const formData = new FormData();
 		let file = defaultThumbnailFileList.item(0);
 		formData.append('default_thumbnail', file!);
-		backend_pb.collection(COLLECTION_SITE_CONFIG)
+		backend_pb
+			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, formData)
 			.then((v) => {
 				siteConfig = v as unknown as SiteConfig;
@@ -72,7 +74,8 @@
 		const formData = new FormData();
 		let file = websiteIconFileList.item(0);
 		formData.append('site_icon', file!);
-		backend_pb.collection(COLLECTION_SITE_CONFIG)
+		backend_pb
+			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, formData)
 			.then((v) => {
 				siteConfig = v as unknown as SiteConfig;
