@@ -6,7 +6,6 @@
 	import EpisodeDetailAudio from '$lib/components/EpisodeDetailAudio.svelte';
 	import { page } from '$app/stores';
 	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import { goto } from '$app/navigation';
 	import 'cherry-markdown/dist/cherry-markdown.css';
@@ -155,7 +154,7 @@
 			<!-- {siteConfig.siteIconFile} -->
 			<img
 				class="w-64 h-64"
-				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`}
+				src={`/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`}
 				alt="website icon"
 			/>
 		{/if}
@@ -174,7 +173,7 @@
 			</div>
 		{:else}
 			<WaveForm
-				fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.audio_file}`}
+				fileUrl={`/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.audio_file}`}
 			/>
 
 			<div class="w-full flex mt-2">
@@ -192,7 +191,7 @@
 			linked={false}
 			episode={{
 				...fetchedEpisode,
-				thumbnailFileName: `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`
+				thumbnailFileName: `/api/files/${COLLECTION_EPISODE}/${fetchedEpisode.id}/${fetchedEpisode.thumbnail}`
 			}}
 		/>
 		<EpisodeDetailAudio episodeData={fetchedEpisode} />

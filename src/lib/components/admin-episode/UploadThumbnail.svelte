@@ -78,7 +78,7 @@
 				linked={false}
 				episode={{
 					...episodeData,
-					thumbnailFileName: `${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.thumbnail}`
+					thumbnailFileName: `/api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.thumbnail}`
 				}}
 			/>
 			<EpisodeDetailAudio {episodeData} />

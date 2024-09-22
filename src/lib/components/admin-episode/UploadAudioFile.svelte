@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
@@ -64,7 +63,7 @@
 	{:else}
 		<div class="w-full">
 			<WaveForm
-				fileUrl={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.audio_file}`}
+				fileUrl={`/api/files/${COLLECTION_EPISODE}/${episodeData.id}/${episodeData.audio_file}`}
 			/>
 
 			<div class="w-full flex mt-2">

@@ -126,7 +126,7 @@
 		{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
 			<img
 				class="w-6 h-6"
-				src={`${pb_addr}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
+				src={`/api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
 				alt="website icon"
 			/>
 		{/if}
@@ -144,7 +144,7 @@
 		{#if siteConfig != undefined && siteConfig.default_thumbnail != null && siteConfig.default_thumbnail.length > 0}
 			<img
 				class="w-80 h-80"
-				src={`${pb_addr}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
+				src={`/api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
 				alt="default episode thumbnail"
 			/>
 		{/if}
