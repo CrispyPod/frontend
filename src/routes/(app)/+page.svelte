@@ -3,8 +3,14 @@
 	import { ArrowRightOutline, VideoCameraSolid } from 'flowbite-svelte-icons';
 	import { Section, News, HeroHeader, HeroBody } from 'flowbite-svelte-blocks';
 	import PagedEpisodes from '$lib/components/PagedEpisodes.svelte';
+	import { onMount } from 'svelte';
+	import { SiteConfig } from '$lib/models/siteConfig';
+	import { siteConfigS } from '$lib/stores/siteConfigStore';
 
 	export let data: any;
+	onMount(() =>{
+		siteConfigS.set(data.siteConfig);
+	})
 </script>
 
 <svelte:head>

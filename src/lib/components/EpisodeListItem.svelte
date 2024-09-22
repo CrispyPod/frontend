@@ -1,8 +1,21 @@
 <script lang="ts">
-	import { COLLECTION_EPISODE } from '$lib/pb-integrate/pb_client';
+	import type { SiteConfig } from '$lib/models/siteConfig';
+	import { COLLECTION_EPISODE, COLLECTION_SITE_CONFIG } from '$lib/pb-integrate/pb_client';
+	import { siteConfigS } from '$lib/stores/siteConfigStore';
+	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	export let episode: any;
 	export let linked: boolean = true;
+
+	let sc: SiteConfig | null;
+
+	onMount(() => {
+		sc = get(siteConfigS);
+		siteConfigS.subscribe((v) => {
+			sc = v;
+		});
+	});
 </script>
 
 <!-- 
@@ -23,10 +36,17 @@
 	<a href={!linked || episode.slug == undefined ? 'javascript:;' : `/episode/${episode.slug}`}>
 		<div class="card w-64 md:w-96 shadow-xl m-10 bg-base-200">
 			<figure>
-				<img
-					src={`/files/${COLLECTION_EPISODE}/${episode.id}/${episode.thumbnail}`}
-					alt={episode.title}
-				/>
+				{#if episode.thumbnail == null || episode.thumbnail.length == 0}
+					<img
+						src={`/files/${COLLECTION_SITE_CONFIG}/${sc?.id}/${sc?.default_thumbnail}`}
+						alt={episode.title}
+					/>
+				{:else}
+					<img
+						src={`/files/${COLLECTION_EPISODE}/${episode.id}/${episode.thumbnail}`}
+						alt={episode.title}
+					/>
+				{/if}
 			</figure>
 			<div class="card-body">
 				<h2 class="card-title">

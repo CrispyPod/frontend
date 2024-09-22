@@ -1,8 +1,13 @@
 <script lang="ts">
 	import PagedEpisodes from '$lib/components/PagedEpisodes.svelte';
+	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { Section } from 'flowbite-svelte-blocks';
+	import { onMount } from 'svelte';
 
 	export let data: any;
+	onMount(() => {
+		siteConfigS.set(data.siteConfig);
+	});
 </script>
 
 <svelte:head>

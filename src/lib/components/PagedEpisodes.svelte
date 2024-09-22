@@ -7,7 +7,7 @@
 	export let data: ListResult<RecordModel>;
 </script>
 
-<Heading class="text-center my-10">Episodes</Heading>
+<Heading class="text-center my-10" tag="h3">Episodes</Heading>
 <div class="grid lg:grid-cols-2">
 	{#each data.items as e}
 		<EpisodeListItem episode={e} />
