@@ -3,8 +3,7 @@
 	import { SiteConfig } from '$lib/models/siteConfig';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { get } from 'svelte/store';
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
-	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_SITE_CONFIG, pb, pb_addr } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import { Button, Label, Input, Textarea, Hr } from 'flowbite-svelte';
 	import type { Unsubscriber } from 'svelte/motion';
@@ -127,7 +126,7 @@
 		{#if siteConfig != undefined && siteConfig.site_icon != null && siteConfig.site_icon.length > 0}
 			<img
 				class="w-6 h-6"
-				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
+				src={`${pb_addr}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.site_icon}`}
 				alt="website icon"
 			/>
 		{/if}
@@ -145,7 +144,7 @@
 		{#if siteConfig != undefined && siteConfig.default_thumbnail != null && siteConfig.default_thumbnail.length > 0}
 			<img
 				class="w-80 h-80"
-				src={`${PUBLIC_PB_ENDPOINT}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
+				src={`${pb_addr}api/files/${COLLECTION_SITE_CONFIG}/${siteConfig.id}/${siteConfig.default_thumbnail}`}
 				alt="default episode thumbnail"
 			/>
 		{/if}
