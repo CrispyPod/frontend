@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
-	import { backend_pb, COLLECTION_USER } from '$lib/pb-integrate/admin_pb';
+	import { pb, COLLECTION_USER } from '$lib/pb-integrate/pb_client';
 	import { Button, Input, Label } from 'flowbite-svelte';
 	import { Register, Section } from 'flowbite-svelte-blocks';
 	import { onMount } from 'svelte';
@@ -11,7 +11,7 @@
 	function handleSubmit() {
 		const email = document.getElementById('email') as HTMLInputElement;
 		const password = document.getElementById('password') as HTMLInputElement;
-		backend_pb
+		pb
 			.collection(COLLECTION_USER)
 			.authWithPassword(email.value, password.value)
 			.then((v) => {
@@ -23,7 +23,7 @@
 	}
 
 	onMount(() => {
-		if (backend_pb.authStore.isValid) {
+		if (pb.authStore.isValid) {
 			goto('/admin');
 			return;
 		}

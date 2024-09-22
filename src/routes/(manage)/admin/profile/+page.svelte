@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { AuthModel } from 'pocketbase';
-	import { COLLECTION_USER, backend_pb } from '$lib/pb-integrate/admin_pb';
+	import { COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
 	import { goto } from '$app/navigation';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
@@ -11,9 +11,9 @@
 	let toasts: { class: string; message: string }[] = [];
 
 	onMount(() => {
-		user = backend_pb.authStore.model;
+		user = pb.authStore.model;
 
-		backend_pb.collection(COLLECTION_USER)
+		pb.collection(COLLECTION_USER)
 			.authRefresh()
 			.then((v) => {
 				user = v.record;
@@ -29,7 +29,7 @@
 			name: formData.get('DisplayName')
 		};
 
-		backend_pb.collection(COLLECTION_USER)
+		pb.collection(COLLECTION_USER)
 			.update(user!.id, data)
 			.then((v) => {
 				const newToast = {
@@ -73,10 +73,10 @@
 			oldPassword: oldPassword
 		};
 
-		backend_pb.collection(COLLECTION_USER)
-			.update(backend_pb.authStore.model!.id, data)
+		pb.collection(COLLECTION_USER)
+			.update(pb.authStore.model!.id, data)
 			.then((v) => {
-				backend_pb.authStore.clear();
+				pb.authStore.clear();
 				goto('/admin/password-changed');
 			})
 			.catch((e) => {

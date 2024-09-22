@@ -5,7 +5,7 @@
 	import EpisodeListItem from '$lib/components/EpisodeListItem.svelte';
 	import EpisodeDetailAudio from '$lib/components/EpisodeDetailAudio.svelte';
 	import { page } from '$app/stores';
-	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
+	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import { goto } from '$app/navigation';
 	import 'cherry-markdown/dist/cherry-markdown.css';
@@ -38,7 +38,7 @@
 
 		const episodeId = params.get('e');
 
-		backend_pb.collection(COLLECTION_EPISODE)
+		pb.collection(COLLECTION_EPISODE)
 			.getFirstListItem(`id="${episodeId}"`)
 			.then((v) => {
 				fetchedEpisode = v;
@@ -64,7 +64,7 @@
 			status: formData.get('status')!.toString()
 		};
 
-		backend_pb.collection(COLLECTION_EPISODE)
+		pb.collection(COLLECTION_EPISODE)
 			.update(episodeData.id, data)
 			.then((v) => {
 				goto('/admin/episode');
@@ -86,7 +86,7 @@
 		const formData = new FormData();
 		let file = audioFileList.item(0);
 		formData.append('audio_file', file!);
-		backend_pb.collection(COLLECTION_EPISODE)
+		pb.collection(COLLECTION_EPISODE)
 			.update(fetchedEpisode.id, formData)
 			.then((v) => {
 				fetchedEpisode = v as unknown as Episode;
@@ -100,7 +100,7 @@
 		const formData = new FormData();
 		let file = thumbnailFileList.item(0);
 		formData.append('thumbnail', file!);
-		backend_pb.collection(COLLECTION_EPISODE)
+		pb.collection(COLLECTION_EPISODE)
 			.update(fetchedEpisode.id, formData)
 			.then((v) => {
 				fetchedEpisode = v as unknown as Episode;

@@ -5,7 +5,7 @@
 	import Finish from '$lib/components/admin-setup/Finish.svelte';
 	import Welcome from '$lib/components/admin-setup/Welcome.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { COLLECTION_SITE_CONFIG, COLLECTION_USER, backend_pb } from '$lib/pb-integrate/admin_pb';
+	import { COLLECTION_SITE_CONFIG, COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { get, type Unsubscriber } from 'svelte/store';
@@ -13,7 +13,7 @@
 	let curStepComponent = Welcome;
 
 	function handleNext() {
-		if (!backend_pb.authStore.isValid) {
+		if (!pb.authStore.isValid) {
 			goto('/admin/signin');
 			return;
 		}
@@ -39,7 +39,7 @@
 				break;
 		}
 
-		backend_pb.collection(COLLECTION_SITE_CONFIG)
+		pb.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, data)
 			.then((v) => {
 				siteConfigS.set(v as unknown as SiteConfig);
@@ -51,12 +51,12 @@
 	let configSub: Unsubscriber;
 
 	onMount(() => {
-		if (backend_pb.authStore.isValid) {
-			backend_pb.collection(COLLECTION_USER)
+		if (pb.authStore.isValid) {
+			pb.collection(COLLECTION_USER)
 				.authRefresh()
 				.then(() => {})
 				.catch((e) => {
-					backend_pb.authStore.clear();
+					pb.authStore.clear();
 					goto('/admin/signin');
 				});
 		}

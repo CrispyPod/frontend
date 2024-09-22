@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import AdminPagination from '$lib/components/AdminPagination.svelte';
-	import { backend_pb, COLLECTION_STAITC_DEPLOY_LOG } from '$lib/pb-integrate/admin_pb';
+	import { pb, COLLECTION_STAITC_DEPLOY_LOG } from '$lib/pb-integrate/pb_client';
 	import type { ListResult, RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
@@ -15,7 +15,7 @@
 	function getAllLogs(pageIndex: number) {
 		if (curPage == pageIndex) return;
 		curPage = pageIndex;
-		backend_pb
+		pb
 			.collection(COLLECTION_STAITC_DEPLOY_LOG)
 			.getList(curPage, 25, { sort: '-created' })
 			.then((v) => {
@@ -33,7 +33,7 @@
 	async function triggerDeploy() {
 		let headers: Record<string, any> = {
 			'Content-Type': 'application/json',
-			Authorization: backend_pb.authStore.token
+			Authorization: pb.authStore.token
 		};
 		const result = await fetch('/admin/static-deploy', {
 			method: 'POST',
@@ -48,7 +48,7 @@
 	}
 
 	function handleNewDeploy() {
-		backend_pb
+		pb
 			.collection(COLLECTION_STAITC_DEPLOY_LOG)
 			.getFirstListItem(`status='started' || status='building' || status='deploying'`)
 			.then((v) => {

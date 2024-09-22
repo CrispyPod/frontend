@@ -3,7 +3,7 @@
 	import { SiteConfig } from '$lib/models/siteConfig';
 	import { adminSiteConfigS } from '$lib/stores/adminSiteConfigStore';
 	import { get } from 'svelte/store';
-	import { COLLECTION_SITE_CONFIG, backend_pb } from '$lib/pb-integrate/admin_pb';
+	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import { Button, Label, Input, Textarea, Hr } from 'flowbite-svelte';
 	import type { Unsubscriber } from 'svelte/motion';
@@ -38,7 +38,7 @@
 			foot_analytics: formData.get('headAnalytics')
 		};
 
-		backend_pb
+		pb
 			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, data)
 			.then((v) => {
@@ -59,7 +59,7 @@
 		const formData = new FormData();
 		let file = defaultThumbnailFileList.item(0);
 		formData.append('default_thumbnail', file!);
-		backend_pb
+		pb
 			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, formData)
 			.then((v) => {
@@ -74,7 +74,7 @@
 		const formData = new FormData();
 		let file = websiteIconFileList.item(0);
 		formData.append('site_icon', file!);
-		backend_pb
+		pb
 			.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, formData)
 			.then((v) => {
