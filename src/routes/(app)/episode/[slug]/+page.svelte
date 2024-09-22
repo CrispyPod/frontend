@@ -47,7 +47,7 @@
 				</div>
 			{/if}
 
-			<div class="mr-6 prose">
+			<div class="mx-auto prose">
 				{@html data.episode.description}
 			</div>
 		{/if}
