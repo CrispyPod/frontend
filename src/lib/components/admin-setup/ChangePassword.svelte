@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PasswordInput from '../PasswordInput.svelte';
 	import { onMount } from 'svelte';
-	import { COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_USER, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { goto } from '$app/navigation';
 	import type { AuthModel } from 'pocketbase';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
@@ -26,12 +26,12 @@
 	}
 
 	onMount(() => {
-		if (!pb.authStore.isValid) {
+		if (!backend_pb.authStore.isValid) {
 			goto('/admin/signin');
 			return;
 		}
 
-		user = pb.authStore.model;
+		user = backend_pb.authStore.model;
 	});
 
 	function handleForm() {
@@ -46,12 +46,12 @@
 			passwordConfirm: formData.get('passwordConfirm'),
 			oldPassword: 'password'
 		};
-		console.log(pb.authStore.model);
-		pb.collection(COLLECTION_USER)
-			.update(pb.authStore.model!.id, data)
+		// console.log(backend_pb.authStore.model);
+		backend_pb.collection(COLLECTION_USER)
+			.update(backend_pb.authStore.model!.id, data)
 			.then((v) => {
-				console.log(v);
-				pb.collection(COLLECTION_USER)
+				// console.log(v);
+				backend_pb.collection(COLLECTION_USER)
 					.authWithPassword(v.username, data.password!.toString())
 					.then((v) => {
 						handleNext();

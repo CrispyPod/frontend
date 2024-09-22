@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import AdminSetupLayout from '$lib/components/admin-setup/AdminSetupLayout.svelte';
 	import ChangePassword from '$lib/components/admin-setup/ChangePassword.svelte';
 	import ChangeSiteSetting from '$lib/components/admin-setup/ChangeSiteSetting.svelte';
 	import Finish from '$lib/components/admin-setup/Finish.svelte';
 	import Welcome from '$lib/components/admin-setup/Welcome.svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { COLLECTION_SITE_CONFIG, COLLECTION_USER, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_SITE_CONFIG, COLLECTION_USER, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { get, type Unsubscriber } from 'svelte/store';
@@ -14,7 +13,7 @@
 	let curStepComponent = Welcome;
 
 	function handleNext() {
-		if (!pb.authStore.isValid) {
+		if (!backend_pb.authStore.isValid) {
 			goto('/admin/signin');
 			return;
 		}
@@ -40,7 +39,7 @@
 				break;
 		}
 
-		pb.collection(COLLECTION_SITE_CONFIG)
+		backend_pb.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, data)
 			.then((v) => {
 				siteConfigS.set(v as unknown as SiteConfig);
@@ -52,12 +51,12 @@
 	let configSub: Unsubscriber;
 
 	onMount(() => {
-		if (pb.authStore.isValid) {
-			pb.collection(COLLECTION_USER)
+		if (backend_pb.authStore.isValid) {
+			backend_pb.collection(COLLECTION_USER)
 				.authRefresh()
 				.then(() => {})
 				.catch((e) => {
-					pb.authStore.clear();
+					backend_pb.authStore.clear();
 					goto('/admin/signin');
 				});
 		}

@@ -5,7 +5,6 @@
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import { BreadCombItem } from '$lib/models/breadCombItems';
-	import { pb } from '$lib/pb-integrate/pb_client';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import {
 		Avatar,
@@ -18,21 +17,22 @@
 		NavLi,
 		NavUl
 	} from 'flowbite-svelte';
+	import { backend_pb } from '$lib/pb-integrate/admin_pb';
 
 	function handleSignOut() {
-		pb.authStore.clear();
+		backend_pb.authStore.clear();
 		goto('/signin');
 	}
 
 	let breadCombItems: Array<BreadCombItem> = [];
 
 	onMount(() => {
-		if ($page.url.pathname == '/admin/signin' && pb.authStore.isValid) {
+		if ($page.url.pathname == '/admin/signin' && backend_pb.authStore.isValid) {
 			goto('/admin');
 			return;
 		}
 
-		if (!pb.authStore.isValid) {
+		if (!backend_pb.authStore.isValid) {
 			goto('/signin');
 			return;
 		}
@@ -52,7 +52,7 @@
 	});
 
 	export function loginCheck() {
-		if (pb.authStore.isValid) {
+		if (backend_pb.authStore.isValid) {
 			goto('/signin');
 		}
 	}

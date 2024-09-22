@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { COLLECTION_STAITC_DEPLOY_LOG, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_STAITC_DEPLOY_LOG, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
@@ -14,15 +14,16 @@
 			return;
 		}
 
-		pb.collection(COLLECTION_STAITC_DEPLOY_LOG)
+		backend_pb
+			.collection(COLLECTION_STAITC_DEPLOY_LOG)
 			.getFirstListItem(`id="${logId}"`, {})
 			.then((v) => {
 				recordDetail = v;
 				if (v.status != 'finished' || v.status != 'failed') {
-					pb.collection(COLLECTION_STAITC_DEPLOY_LOG).subscribe(v.id, (e) => {
+					backend_pb.collection(COLLECTION_STAITC_DEPLOY_LOG).subscribe(v.id, (e) => {
 						recordDetail = e.record;
 						if (e.record.status == 'finished' || e.record.status == 'failed') {
-							pb.collection(COLLECTION_STAITC_DEPLOY_LOG).unsubscribe(e.record.id);
+							backend_pb.collection(COLLECTION_STAITC_DEPLOY_LOG).unsubscribe(e.record.id);
 						}
 					});
 				}

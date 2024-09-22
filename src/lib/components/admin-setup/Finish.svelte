@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { pb } from '$lib/pb-integrate/pb_client';
+	import { backend_pb } from '$lib/pb-integrate/admin_pb';
 
 	let errMessage: string | null = null;
 	export let handleNext: () => any;
 
 	async function handleFinish() {
-		if (!pb.authStore.isValid) {
+		if (!backend_pb.authStore.isValid) {
 			goto('/admin/signin');
 			return;
 		}

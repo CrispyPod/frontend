@@ -4,10 +4,9 @@
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onMount } from 'svelte';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { PUBLIC_PB_ENDPOINT } from '$env/static/public';
 	import EpisodeListItem from '../EpisodeListItem.svelte';
 	import EpisodeDetailAudio from '../EpisodeDetailAudio.svelte';
-	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
 	export let episodeData: Episode | null;
@@ -40,7 +39,7 @@
 		const formData = new FormData();
 		let file = thumbnailFileList.item(0);
 		formData.append('thumbnail', file!);
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb.collection(COLLECTION_EPISODE)
 			.update(episodeData!.id, formData)
 			.then((v) => {
 				episodeData = v as unknown as Episode;

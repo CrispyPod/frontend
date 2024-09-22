@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AdminPagination from '$lib/components/AdminPagination.svelte';
 	import type { Episode } from '$lib/models/episode';
-	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import {
 		Button,
 		Table,
@@ -41,7 +41,7 @@
 	async function getAllEpisodes(pageIndex: number) {
 		// if (curPage == pageIndex) return;
 		curPage = pageIndex;
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb.collection(COLLECTION_EPISODE)
 			.getList(pageIndex, 25, {
 				sort: '-created'
 			})
@@ -67,7 +67,7 @@
 		if (toDeleteEpisodeId.length == 0) {
 			return;
 		}
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb.collection(COLLECTION_EPISODE)
 			.delete(toDeleteEpisodeId)
 			// .then((v) => {})
 			// .catch((e) => {})

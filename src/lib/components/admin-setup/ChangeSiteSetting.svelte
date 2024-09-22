@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import type { SiteConfig } from '$lib/models/siteConfig';
-	import { COLLECTION_SITE_CONFIG, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_SITE_CONFIG, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { siteConfigS } from '$lib/stores/siteConfigStore';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
@@ -26,7 +26,7 @@
 			site_url: formData.get('SiteUrl'),
 			site_description: formData.get('SiteDescription')
 		};
-		pb.collection(COLLECTION_SITE_CONFIG)
+		backend_pb.collection(COLLECTION_SITE_CONFIG)
 			.update(siteConfig.id, data)
 			.then((v) => {
 				siteConfigS.set(v as unknown as SiteConfig);

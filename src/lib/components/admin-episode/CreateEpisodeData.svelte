@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
 	import { onMount } from 'svelte';
-	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import 'cherry-markdown/dist/cherry-markdown.css';
 	import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
@@ -33,7 +33,7 @@
 			status: 'draft'
 		};
 
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb.collection(COLLECTION_EPISODE)
 			.create(data)
 			.then((v) => {
 				episodeData = v as unknown as Episode;

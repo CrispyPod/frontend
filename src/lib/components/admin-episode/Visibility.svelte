@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 	import type { Episode } from '$lib/models/episode';
-	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
 
 	export let episodeData: Episode | null;
 	export let handleNext: (e: Episode) => any;
@@ -14,7 +14,8 @@
 			status: formData.get('status')!.toString()
 		};
 
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb
+			.collection(COLLECTION_EPISODE)
 			.update(episodeData!.id, data)
 			.then((v) => {
 				handleNext(episodeData!);

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Episode } from '$lib/models/episode';
 	import WaveForm from '$lib/components/WaveForm.svelte';
-	import { COLLECTION_EPISODE, pb } from '$lib/pb-integrate/pb_client';
+	import { COLLECTION_EPISODE, backend_pb } from '$lib/pb-integrate/admin_pb';
 	import { assembleErrorMessage } from '$lib/helpers/assembleErrorMessages';
 
 	export let episodeData: Episode | null;
@@ -28,7 +28,7 @@
 		const formData = new FormData();
 		let file = audioFileList.item(0);
 		formData.append('audio_file', file!);
-		pb.collection(COLLECTION_EPISODE)
+		backend_pb.collection(COLLECTION_EPISODE)
 			.update(episodeData!.id, formData)
 			.then((v) => {
 				episodeData = v as unknown as Episode;

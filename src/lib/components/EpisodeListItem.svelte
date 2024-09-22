@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { COLLECTION_EPISODE } from '$lib/pb-integrate/pb_client';
-	import { Card } from 'flowbite-svelte';
 
 	export let episode: any;
 	export let linked: boolean = true;
