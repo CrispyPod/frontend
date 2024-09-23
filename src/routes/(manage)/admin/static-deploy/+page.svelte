@@ -43,7 +43,7 @@
 		const data = await result.json();
 		console.log(data.id);
 		if (Object.hasOwn(data, 'id')) {
-			goto(`/admin/static-deploy/detail?d=${data.id}`);
+			goto(`/admin/static-deploy/detail?id=${data.id}`);
 		}
 	}
 
@@ -86,7 +86,7 @@
 						>
 						<td>{l.status}</td>
 						<td>
-							<a href={`/admin/static-deploy/detail?d=${l.id}`}>
+							<a href={`/admin/static-deploy/detail?id=${l.id}`}>
 								<button class="btn btn-link">View detail</button>
 							</a>
 						</td>

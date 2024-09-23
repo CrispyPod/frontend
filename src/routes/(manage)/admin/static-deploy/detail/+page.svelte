@@ -8,7 +8,7 @@
 	let recordDetail: RecordModel;
 
 	onMount(() => {
-		const logId = $page.url.searchParams.get('d');
+		const logId = $page.url.searchParams.get('id');
 		if (logId == null || logId.length == 0) {
 			goto('/admin/static-deploy');
 			return;
