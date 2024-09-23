@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { query } from 'express';
 import { handler } from './build-node/handler.js';
 import proxy from 'express-http-proxy';
 
@@ -21,7 +21,7 @@ let proxyFunc = proxy(`${process.env.PUBLIC_PB_ENDPOINT}`, {
             queryStr += `${element}=${req.query[element]}&`
         })
 
-        const url = `${endpoint}${req.baseUrl}?${queryStr}`;
+        const url = `${endpoint}${req.baseUrl}?${encodeURIComponent(queryStr)}`;
         var newUrl = url;
         return newUrl;
     }

@@ -50,7 +50,7 @@
 	function handleNewDeploy() {
 		pb
 			.collection(COLLECTION_STAITC_DEPLOY_LOG)
-			.getFirstListItem(`status="started" || status="building" || status="deploying"`)
+			.getFirstListItem(`status='started' || status='building' || status='deploying'`)
 			.then((v) => {
 				console.log(v);
 			})
