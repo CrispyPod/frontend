@@ -15,8 +15,7 @@
 	function getAllLogs(pageIndex: number) {
 		if (curPage == pageIndex) return;
 		curPage = pageIndex;
-		pb
-			.collection(COLLECTION_STAITC_DEPLOY_LOG)
+		pb.collection(COLLECTION_STAITC_DEPLOY_LOG)
 			.getList(curPage, 25, { sort: '-created' })
 			.then((v) => {
 				sum = v.totalItems;
@@ -48,11 +47,15 @@
 	}
 
 	function handleNewDeploy() {
-		pb
-			.collection(COLLECTION_STAITC_DEPLOY_LOG)
-			.getFirstListItem(`status='started' || status='building' || status='deploying'`)
+		pb.collection(COLLECTION_STAITC_DEPLOY_LOG)
+			.getFirstListItem(`status='started' || status='building' || status='deploying'`, {
+				fields: 'created,status,id,updated'
+			})
 			.then((v) => {
-				console.log(v);
+				// console.log(v);
+				if (v.totalItems == 0) {
+					triggerDeploy();
+				}
 			})
 			.catch((e) => {
 				if (e.status == 404) {
@@ -81,9 +84,9 @@
 				{#each fetchedList.items as l}
 					<tr>
 						<th>{l.created.split('.')[0]}</th>
-						<th
-							>{l.status == 'finished' || l.status == 'failed' ? l.updated.split('.')[0] : '--'}</th
-						>
+						<th>
+							{l.status == 'finished' || l.status == 'failed' ? l.updated.split('.')[0] : '--'}
+						</th>
 						<td>{l.status}</td>
 						<td>
 							<a href={`/admin/static-deploy/detail?id=${l.id}`}>

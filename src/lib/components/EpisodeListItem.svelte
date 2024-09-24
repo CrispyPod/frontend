@@ -1,21 +1,11 @@
 <script lang="ts">
-	import type { SiteConfig } from '$lib/models/siteConfig';
+	import { page } from '$app/stores';
 	import { COLLECTION_EPISODE, COLLECTION_SITE_CONFIG } from '$lib/pb-integrate/pb_client';
-	import { siteConfigS } from '$lib/stores/siteConfigStore';
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 
 	export let episode: any;
 	export let linked: boolean = true;
 
-	let sc: SiteConfig | null;
-
-	onMount(() => {
-		sc = get(siteConfigS);
-		siteConfigS.subscribe((v) => {
-			sc = v;
-		});
-	});
+	let sc = $page.data.siteConfig;
 </script>
 
 <!-- 

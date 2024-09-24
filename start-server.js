@@ -18,12 +18,11 @@ let proxyFunc = proxy(`${process.env.PUBLIC_PB_ENDPOINT}`, {
         }
         let queryStr = '';
         Object.keys(req.query).forEach(element => {
-            queryStr += `${element}=${req.query[element]}&`
+            queryStr += `${element}=${encodeURIComponent(req.query[element])}&`
         })
 
-        const url = `${endpoint}${req.baseUrl}?${encodeURIComponent(queryStr)}`;
-        var newUrl = url;
-        return newUrl;
+        const url = `${endpoint}${req.baseUrl}?${queryStr.substring(0, queryStr.length - 1)}`;
+        return url;
     }
 });
 

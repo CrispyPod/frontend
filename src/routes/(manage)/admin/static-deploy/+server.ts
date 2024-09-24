@@ -5,12 +5,12 @@ import { spawn } from 'child_process';
 import { configDotenv } from "dotenv";
 import type { RecordModel } from "pocketbase";
 
-let buildLog: string = "";
-let deployLog: string = "";
 
 function startBuild(record: RecordModel, callback: () => any) {
+
     configDotenv();
     console.log("Start build");
+    let buildLog: string = "";
     const intervalCancel = setInterval(() => {
         const data = {
             build_log: buildLog,
@@ -72,6 +72,7 @@ function startBuild(record: RecordModel, callback: () => any) {
 }
 
 function startDeploy(record: RecordModel) {
+    let deployLog: string = "";
     console.log("Start deploy");
     const intervalCancel = setInterval(() => {
         const data = {
@@ -137,7 +138,6 @@ export const POST: RequestHandler = async ({ request }) => {
     pb.authStore.save(headers!);
 
     const newLog = await pb.collection(COLLECTION_STAITC_DEPLOY_LOG).create({ status: 'building' });
-
 
     startBuild(newLog, () => {
         startDeploy(newLog);

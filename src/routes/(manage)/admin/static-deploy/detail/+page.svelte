@@ -2,6 +2,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { COLLECTION_STAITC_DEPLOY_LOG, pb } from '$lib/pb-integrate/pb_client';
+	import { Accordion, AccordionItem, Heading, P } from 'flowbite-svelte';
+	import { Section } from 'flowbite-svelte-blocks';
 	import type { RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 
@@ -14,8 +16,7 @@
 			return;
 		}
 
-		pb
-			.collection(COLLECTION_STAITC_DEPLOY_LOG)
+		pb.collection(COLLECTION_STAITC_DEPLOY_LOG)
 			.getFirstListItem(`id="${logId}"`, {})
 			.then((v) => {
 				recordDetail = v;
@@ -35,25 +36,42 @@
 	});
 </script>
 
-<div class="collapse collapse-arrow bg-base-200 mb-5">
-	<input type="radio" name="my-accordion-2" checked={true} />
-	<div class="collapse-title text-xl font-medium">Build Log</div>
-	<div class="collapse-content overflow-scroll">
+{#if recordDetail != null}
+	<Section>
+		<div class="grid grid-cols-2">
+			<div>
+				<Heading tag="h3">{recordDetail.status}</Heading>
+				<P class="text-gray-500">Status</P>
+			</div>
+			<div>
+				<Heading tag="h5"
+					>{recordDetail.created.split('.')[0]} ~ {recordDetail.status == 'finished' ||
+					recordDetail.status == 'failed'
+						? recordDetail.updated.split('.')[0]
+						: '--'}</Heading
+				>
+				<P class="text-gray-500">Duration</P>
+			</div>
+		</div>
+	</Section>
+{/if}
+
+<Accordion>
+	<AccordionItem open>
+		<span slot="header">Build Log</span>
 		<pre class="font-mono">
-				{#if recordDetail != null}
+			{#if recordDetail != null}
 				{@html recordDetail.build_log}
 			{/if}
-			</pre>
-	</div>
-</div>
-<div class="collapse collapse-arrow bg-base-200">
-	<input type="radio" name="my-accordion-2" />
-	<div class="collapse-title text-xl font-medium">Deploy Log</div>
-	<div class="collapse-content overflow-scroll">
+		</pre>
+	</AccordionItem>
+	<AccordionItem>
+		<span slot="header">Deploy Log</span>
+
 		<pre class="font-mono">
-				{#if recordDetail != null}
+			{#if recordDetail != null}
 				{@html recordDetail.deploy_log}
 			{/if}
-			</pre>
-	</div>
-</div>
+		</pre>
+	</AccordionItem>
+</Accordion>
