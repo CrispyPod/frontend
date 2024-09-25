@@ -46,7 +46,7 @@
 		<NavHamburger />
 		<NavUl>
 			<NavLi href="/episode/page/1">Episodes</NavLi>
-			<NavLi href="/about">About</NavLi>
+			<!-- <NavLi href="/about">About</NavLi> -->
 			<NavLi href="/rss.xml">RSS</NavLi>
 		</NavUl>
 	</Navbar>
@@ -67,13 +67,15 @@
 			<FooterLinkGroup
 				ulClass="flex flex-wrap justify-center items-center mb-6 text-gray-900 dark:text-white"
 			>
-				<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/episode/page/1"
-					>Episodes</FooterLink
-				>
-				<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/about">About</FooterLink
-				>
-				<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/rss.xml">RSS</FooterLink
-				>
+				<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/episode/page/1">
+					Episodes
+				</FooterLink>
+				<!-- <FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/about">
+					About
+				</FooterLink> -->
+				<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/rss.xml">
+					RSS
+				</FooterLink>
 				<!-- <FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/">Blog</FooterLink>
 			<FooterLink liClass="" aClass="mr-4 hover:underline md:mr-6" href="/"
 				>Affiliate Program</FooterLink
